@@ -2,12 +2,18 @@
 
 export type SubmitType = "none" | "check" | "link" | "file" | "linkOrFile";
 
+export type StepLink = {
+  label: string;
+  url: string;
+};
+
 export type StepDef = {
   stepId: string;
   order: number;
   title: string;
   desc: string;
   resourceUrl?: string;
+  links?: StepLink[]; // 순서대로 따라가는 실습 링크 여러 개
   submitType: SubmitType;
   parallel?: boolean; // 이전 단계 완료 없이도 병행 가능
   deferrable?: boolean; // 나중에 완료 허용 (AICE 가입 등)

@@ -72,10 +72,18 @@ const DAY1 = {
       stepId: "codiny-tour",
       order: 4,
       title: "코디니 기능 투어",
-      desc: "AI 코디니 intro 체험: TTS → STT → 호출어 → AI비서 → 워드클라우드 → 단순회귀 순서로 둘러보세요.",
+      desc: "AI 코디니 intro 체험 후, 아래 6가지 기능을 순서대로 직접 따라 해보세요. (마이크/이어폰 필요)",
       submitType: "check",
       resourceUrl: "https://aicodiny.com/intro",
       micRequired: true,
+      links: [
+        { label: "① TTS (음성 합성)", url: "https://aicodiny.com/edu-basic/blocks?eduId=r158455azu83" },
+        { label: "② STT (음성 인식)", url: "https://aicodiny.com/edu-basic/blocks?eduId=blkeduvlf419950yuyk" },
+        { label: "③ 호출어", url: "https://aicodiny.com/edu-basic/blocks?eduId=mfc185352ed512" },
+        { label: "④ AI 비서", url: "https://aicodiny.com/edu-basic/blocks?eduId=blkeduidb421909ohrx" },
+        { label: "⑤ 워드클라우드", url: "https://aicodiny.com/edu-basic/blocks?eduId=e158810oyc29" },
+        { label: "⑥ 단순회귀", url: "https://aicodiny.com/edu-basic/blocks?eduId=i158814nir982" },
+      ],
     },
     {
       stepId: "aice-signup",
@@ -83,15 +91,15 @@ const DAY1 = {
       title: "AICE 회원가입",
       desc: "aice.study 에서 회원가입을 진행하세요. 중1은 본인인증 이슈로 지연될 수 있어요 — 가정에서 완료해도 괜찮아요.",
       submitType: "check",
-      resourceUrl: "https://aice.study",
+      resourceUrl: "https://aice.study/main",
       deferrable: true,
     },
     {
       stepId: "codex-submit",
       order: 6,
       title: "codex 작품 제출",
-      desc: "\"지니야 호출 → TTS 응답\" 수준의 작품을 완성해 링크 또는 .gen 파일로 제출하세요.",
-      submitType: "linkOrFile",
+      desc: "\"지니야 호출 → TTS 응답\" 수준의 작품을 완성하세요. codex는 링크 공유가 안 되니, 프로젝트를 .gen 파일로 내려받아 업로드해 제출하세요.",
+      submitType: "file",
       resourceUrl: "https://aicodiny.com/codex",
       parallel: true,
     },
@@ -109,22 +117,22 @@ const DAY2 = {
   ],
   steps: [
     { stepId: "concept", order: 1, title: "함수 개념 익히기", desc: "함수의 정의·호출·매개변수·반환값 개념을 정리합니다. (콘텐츠 준비 중)", submitType: "check" },
-    { stepId: "problem-1-together", order: 2, title: "문제 1 함께 풀기 (숫자확인)", desc: "선생님과 함께 함수 호출 구조를 완성합니다.", submitType: "check", problemFileName: "problem-1.gen", hints: [
+    { stepId: "problem-1-together", order: 2, title: "문제 1 함께 풀기 (숫자확인)", desc: "선생님과 함께 함수 호출 구조를 완성합니다. 아래 실습 링크에서 직접 블록을 조립해보세요.", submitType: "check", resourceUrl: "https://aicodiny.com/edu-basic/blocks?eduId=mti191054pp917", problemFileName: "problem-1.gen", hints: [
       "함수는 정의만 하면 실행되지 않아요. 무엇이 필요할까요?",
       "시작 스택의 빈 자리에 들어갈 블록을 '함수' 카테고리에서 찾아보세요.",
       "'숫자확인' 호출 블록을 연결하고, 인수 자리에 '입력' 변수를 넣으세요.",
     ] },
-    { stepId: "problem-2-challenge", order: 3, title: "문제 2 개인 도전 (홀수짝수)", desc: "매개변수와 반환값을 사용하는 함수를 완성해 .gen으로 제출하세요.", submitType: "file", problemFileName: "problem-2.gen", hints: [
+    { stepId: "problem-2-challenge", order: 3, title: "문제 2 개인 도전 (홀수짝수)", desc: "매개변수와 반환값을 사용하는 함수를 완성해 .gen으로 제출하세요. 아래 실습 링크에서 풀어보세요.", submitType: "file", resourceUrl: "https://aicodiny.com/edu-basic/blocks?eduId=xmr191056jrn583", problemFileName: "problem-2.gen", hints: [
       "이 함수는 값을 '돌려주는' 함수예요. 빈 곳이 세 군데예요.",
       "if 조건에는 \"x가 짝수인가?\"를 판별하는 블록이, 반환 자리에는 '결과' 변수가 필요해요.",
       "호출할 때 '입력' 변수를 인수로 전달하세요.",
     ] },
-    { stepId: "problem-3-challenge", order: 4, title: "문제 3 개인 도전 (평균계산)", desc: "매개변수 3개를 갖는 함수를 완성해 .gen으로 제출하세요.", submitType: "file", problemFileName: "problem-3.gen", hints: [
+    { stepId: "problem-3-challenge", order: 4, title: "문제 3 개인 도전 (평균계산)", desc: "매개변수 3개를 갖는 함수를 완성해 .gen으로 제출하세요. 아래 실습 링크에서 풀어보세요.", submitType: "file", resourceUrl: "https://aicodiny.com/edu-basic/blocks?eduId=dh191058dk37", problemFileName: "problem-3.gen", hints: [
       "매개변수가 3개인 함수예요. 호출할 때 몇 개를 전달해야 할까요?",
       "국어·수학·영어 점수를 순서대로 인수에 연결하고, 함수의 반환 자리에 '평균'을 넣으세요.",
       "말하기 블록에 '평균 점수' 변수를 이어 붙이세요.",
     ] },
-    { stepId: "problem-4-challenge", order: 5, title: "문제 4 개인 도전 (자판기)", desc: "함수 두 개를 순서대로 호출하는 문제를 완성해 .gen으로 제출하세요.", submitType: "file", problemFileName: "problem-4.gen", hints: [
+    { stepId: "problem-4-challenge", order: 5, title: "문제 4 개인 도전 (자판기)", desc: "함수 두 개를 순서대로 호출하는 문제를 완성해 .gen으로 제출하세요. 아래 실습 링크에서 풀어보세요.", submitType: "file", resourceUrl: "https://aicodiny.com/edu-basic/blocks?eduId=obu191060pm03", problemFileName: "problem-4.gen", hints: [
       "함수 두 개를 '순서대로' 호출해야 해요. 어떤 순서일까요?",
       "'가격 확인' 다음에 '거스름돈 계산'. 거스름돈은 무엇에서 무엇을 뺀 값일까요?",
       "빼기 연산 블록에 '지불 금액'과 '가격'을 넣어 거스름돈 말하기에 연결하세요.",
