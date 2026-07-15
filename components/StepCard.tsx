@@ -90,7 +90,12 @@ export function StepCard({
 
           {step.links && step.links.length > 0 && unlocked && (
             <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
-              <p className="text-xs font-semibold text-slate-600">순서대로 따라 해보세요</p>
+              <p className="text-xs font-semibold text-slate-600">
+                {step.linksLabel ??
+                  (step.linksType === "choice"
+                    ? "이 중 하나를 골라 사용하세요"
+                    : "순서대로 따라 해보세요")}
+              </p>
               <ol className="mt-2 space-y-1">
                 {step.links.map((link, i) => (
                   <li key={link.url}>
@@ -100,9 +105,15 @@ export function StepCard({
                       rel="noreferrer"
                       className="inline-flex items-center gap-2 text-sm text-indigo-600 hover:underline"
                     >
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700">
-                        {i + 1}
-                      </span>
+                      {step.linksType === "choice" ? (
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700">
+                          •
+                        </span>
+                      ) : (
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700">
+                          {i + 1}
+                        </span>
+                      )}
                       {link.label} →
                     </a>
                   </li>

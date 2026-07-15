@@ -74,6 +74,8 @@ const DAY1 = {
       title: "입장 · 참고 사이트 둘러보기",
       desc: "캠프에 온 것을 환영해요! 오늘 사용할 사이트들을 하나씩 열어 둘러본 뒤, 아래 완료 버튼을 눌러주세요.",
       submitType: "check",
+      linksType: "choice",
+      linksLabel: "오늘 사용할 사이트 목록 — 하나씩 열어보세요",
       links: [
         { label: "AICE 공식 홈페이지", url: "https://aice.study/main" },
         { label: "AICE Future 소개", url: "https://aice.study/info/aice/future" },
@@ -96,6 +98,8 @@ const DAY1 = {
       desc: "선생님이 올려준 이론 자료(사진)를 내려받아, 아래 AI 도구 중 하나로 스스로 학습·요약해 나만의 산출물을 만들고 링크를 제출하세요.",
       submitType: "link",
       materialsPath: "materials/day1",
+      linksType: "choice",
+      linksLabel: "AI 도구 — 셋 중 하나를 골라 사용하세요",
       links: [
         { label: "Canva AI (교육용 팀 참여)", url: "https://www.canva.com/brand/join?token=SzX1bRZsMAJe5nNeK4T89g&brandingVariant=edu&referrer=team-invite" },
         { label: "Gemini", url: "https://gemini.google.com/" },

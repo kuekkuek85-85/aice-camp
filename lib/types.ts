@@ -7,13 +7,17 @@ export type StepLink = {
   url: string;
 };
 
+export type LinksType = "ordered" | "choice"; // ordered: 순서대로 진행, choice: 이 중 하나 선택
+
 export type StepDef = {
   stepId: string;
   order: number;
   title: string;
   desc: string;
   resourceUrl?: string;
-  links?: StepLink[]; // 순서대로 따라가는 실습 링크 여러 개
+  links?: StepLink[]; // 실습/참고 링크 여러 개
+  linksType?: LinksType; // 기본 "ordered"
+  linksLabel?: string; // 링크 목록 위 안내 문구 (미지정 시 linksType별 기본 문구)
   submitType: SubmitType;
   parallel?: boolean; // 이전 단계 완료 없이도 병행 가능
   deferrable?: boolean; // 나중에 완료 허용 (AICE 가입 등)
