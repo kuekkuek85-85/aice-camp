@@ -48,7 +48,7 @@ async function callLogin(studentId: string, name: string) {
   if (!res.ok) {
     throw new Error(data.error ?? "로그인에 실패했습니다.");
   }
-  return data as { token: string; name: string; grade: number; hasLevel2: boolean };
+  return data as { token: string; studentId: string; name: string; grade: number; hasLevel2: boolean };
 }
 
 export function StudentSessionProvider({ children }: { children: ReactNode }) {
@@ -72,7 +72,7 @@ export function StudentSessionProvider({ children }: { children: ReactNode }) {
           const data = await callLogin(local.studentId, local.name);
           await signInWithCustomToken(auth, data.token);
           const restored: LocalSession = {
-            studentId: local.studentId,
+            studentId: data.studentId ?? local.studentId,
             name: data.name,
             grade: data.grade,
           };
@@ -97,7 +97,11 @@ export function StudentSessionProvider({ children }: { children: ReactNode }) {
     try {
       const data = await callLogin(studentId, name);
       await signInWithCustomToken(getFirebaseAuth(), data.token);
-      const newSession: LocalSession = { studentId, name: data.name, grade: data.grade };
+      const newSession: LocalSession = {
+        studentId: data.studentId ?? studentId,
+        name: data.name,
+        grade: data.grade,
+      };
       window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newSession));
       setSession(newSession);
       setStatus("ready");

@@ -52,27 +52,20 @@ export async function POST(req: NextRequest) {
 
     const entry = matched.data() as { name: string; grade: number; hasLevel2?: boolean; studentId?: string };
 
-    // 이미 다른 학번으로 입장한 이름이면 차단 (오입력·도용 방지)
-    if (entry.studentId && entry.studentId !== studentId) {
-      const masked = `${entry.studentId.slice(0, 2)}***`;
-      return NextResponse.json(
-        { error: `"${entry.name}" 학생은 이미 학번 ${masked} 으로 입장했어요. 처음 입력했던 학번을 사용하거나, 잘못 입력했다면 선생님께 말씀해주세요.` },
-        { status: 409 }
-      );
-    }
-
     const now = Date.now();
 
-    // 첫 로그인: 이 학번을 명단에 바인딩
+    // 학년+이름만 맞으면 입장. 진행 기록이 갈라지지 않도록,
+    // 첫 로그인 때 입력한 학번을 이 학생의 고정 ID로 쓰고 이후에는 입력값과 달라도 그 ID로 이어준다.
+    const canonicalId = entry.studentId ?? studentId;
     if (!entry.studentId) {
-      await matched.ref.set({ studentId, boundAt: now }, { merge: true });
+      await matched.ref.set({ studentId: canonicalId, boundAt: now }, { merge: true });
     }
 
-    const studentRef = db.doc(`students/${studentId}`);
+    const studentRef = db.doc(`students/${canonicalId}`);
     const studentSnap = await studentRef.get();
     await studentRef.set(
       {
-        studentId,
+        studentId: canonicalId,
         name: entry.name,
         grade: entry.grade,
         firstLoginAt: studentSnap.exists ? studentSnap.data()?.firstLoginAt ?? now : now,
@@ -81,13 +74,14 @@ export async function POST(req: NextRequest) {
       { merge: true }
     );
 
-    const token = await adminAuth().createCustomToken(studentId, {
+    const token = await adminAuth().createCustomToken(canonicalId, {
       role: "student",
       grade: entry.grade,
     });
 
     return NextResponse.json({
       token,
+      studentId: canonicalId,
       name: entry.name,
       grade: entry.grade,
       hasLevel2: entry.hasLevel2 ?? false,
