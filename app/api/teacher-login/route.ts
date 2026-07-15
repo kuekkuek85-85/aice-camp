@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminAuth } from "@/lib/firebase/admin";
+import { createCustomToken } from "@/lib/firebase/admin-token";
 
 export async function POST(req: NextRequest) {
   let body: { pin?: string };
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const token = await adminAuth().createCustomToken("teacher", { teacher: true });
+    const token = createCustomToken("teacher", { teacher: true });
     return NextResponse.json({ token });
   } catch (e) {
     console.error("teacher-login error:", e);

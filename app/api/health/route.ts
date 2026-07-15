@@ -17,14 +17,23 @@ export async function GET() {
     TEACHER_PIN: Boolean(process.env.TEACHER_PIN),
   };
 
-  let adminInit = "not-tried";
+  let tokenSign = "not-tried";
   try {
-    const { adminAuth } = await import("@/lib/firebase/admin");
-    await adminAuth().createCustomToken("health-check");
-    adminInit = "ok";
+    const { createCustomToken } = await import("@/lib/firebase/admin-token");
+    createCustomToken("health-check");
+    tokenSign = "ok";
   } catch (e) {
-    adminInit = `error: ${e instanceof Error ? e.message.slice(0, 200) : String(e)}`;
+    tokenSign = `error: ${e instanceof Error ? e.message.slice(0, 200) : String(e)}`;
   }
 
-  return NextResponse.json({ env: envCheck, adminInit });
+  let firestore = "not-tried";
+  try {
+    const { adminDb } = await import("@/lib/firebase/admin");
+    await adminDb().doc("config/global").get();
+    firestore = "ok";
+  } catch (e) {
+    firestore = `error: ${e instanceof Error ? e.message.slice(0, 200) : String(e)}`;
+  }
+
+  return NextResponse.json({ env: envCheck, tokenSign, firestore });
 }

@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminAuth, adminStorage } from "@/lib/firebase/admin";
+import { adminStorage } from "@/lib/firebase/admin";
+import { verifyIdToken } from "@/lib/firebase/admin-token";
 
 async function requireTeacher(req: NextRequest) {
   const authHeader = req.headers.get("authorization") ?? "";
   const idToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
   if (!idToken) return false;
   try {
-    const decoded = await adminAuth().verifyIdToken(idToken);
-    return decoded.teacher === true;
+    const decoded = await verifyIdToken(idToken);
+    return decoded.claims.teacher === true;
   } catch {
     return false;
   }

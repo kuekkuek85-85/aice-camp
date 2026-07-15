@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminAuth, adminDb } from "@/lib/firebase/admin";
+import { adminDb } from "@/lib/firebase/admin";
+import { createCustomToken } from "@/lib/firebase/admin-token";
 
 const STUDENT_ID_RE = /^\d{5}$/;
 
@@ -74,7 +75,7 @@ export async function POST(req: NextRequest) {
       { merge: true }
     );
 
-    const token = await adminAuth().createCustomToken(canonicalId, {
+    const token = createCustomToken(canonicalId, {
       role: "student",
       grade: entry.grade,
     });
