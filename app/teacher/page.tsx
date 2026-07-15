@@ -7,6 +7,7 @@ import { HelpQueue } from "@/components/teacher/HelpQueue";
 import { StudentGrid, CompletionBars } from "@/components/teacher/StudentGrid";
 import { SubmissionsList } from "@/components/teacher/SubmissionsList";
 import { AnswerDownloads } from "@/components/teacher/AnswerDownloads";
+import { DangerZone } from "@/components/teacher/DangerZone";
 import { useTeacherData } from "@/lib/hooks/useTeacherData";
 import { useDay } from "@/lib/hooks/useDay";
 import { dayIds } from "@/lib/firestore-paths";
@@ -95,6 +96,8 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
         </div>
 
         <SubmissionsList roster={roster} progress={progress} masking={masking} />
+
+        <DangerZone />
       </main>
     </div>
   );

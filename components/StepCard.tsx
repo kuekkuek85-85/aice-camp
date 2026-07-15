@@ -34,6 +34,22 @@ export function StepCard({
   const isDone = status === "done";
   const isDeferred = status === "deferred";
 
+  // 제출 완료 후에도 "수정하기"로 다시 제출할 수 있게 한다
+  const [editing, setEditing] = useState(false);
+  const showSubmitForm = !isDone || editing;
+
+  async function handleSubmitLink(url: string) {
+    const ok = await onSubmitLink(url);
+    if (ok) setEditing(false);
+    return ok;
+  }
+
+  async function handleSubmitFile(file: File) {
+    const ok = await onSubmitFile(file);
+    if (ok) setEditing(false);
+    return ok;
+  }
+
   return (
     <div
       className={`rounded-xl border p-5 transition ${
@@ -153,18 +169,18 @@ export function StepCard({
                 </div>
               )}
 
-              {step.submitType === "link" && !isDone && (
-                <LinkSubmitForm onSubmit={onSubmitLink} />
+              {step.submitType === "link" && showSubmitForm && (
+                <LinkSubmitForm onSubmit={handleSubmitLink} />
               )}
 
-              {step.submitType === "file" && !isDone && (
-                <FileSubmitForm onSubmit={onSubmitFile} uploading={uploading} />
+              {step.submitType === "file" && showSubmitForm && (
+                <FileSubmitForm onSubmit={handleSubmitFile} uploading={uploading} />
               )}
 
-              {step.submitType === "linkOrFile" && !isDone && (
+              {step.submitType === "linkOrFile" && showSubmitForm && (
                 <LinkOrFileSubmitForm
-                  onSubmitLink={onSubmitLink}
-                  onSubmitFile={onSubmitFile}
+                  onSubmitLink={handleSubmitLink}
+                  onSubmitFile={handleSubmitFile}
                   uploading={uploading}
                 />
               )}
@@ -176,7 +192,12 @@ export function StepCard({
               )}
 
               {isDone && progress?.submission && (
-                <SubmissionSummary submission={progress.submission} />
+                <SubmissionSummary
+                  submission={progress.submission}
+                  editing={editing}
+                  onEdit={() => setEditing(true)}
+                  onCancelEdit={() => setEditing(false)}
+                />
               )}
             </div>
           )}
@@ -304,18 +325,45 @@ function LinkOrFileSubmitForm({
   );
 }
 
-function SubmissionSummary({ submission }: { submission: NonNullable<StepProgress["submission"]> }) {
+function SubmissionSummary({
+  submission,
+  editing,
+  onEdit,
+  onCancelEdit,
+}: {
+  submission: NonNullable<StepProgress["submission"]>;
+  editing: boolean;
+  onEdit: () => void;
+  onCancelEdit: () => void;
+}) {
   return (
-    <div className="mt-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
-      제출 완료 ·{" "}
-      {submission.type === "link" ? (
-        <a href={submission.url} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">
-          제출한 링크 열기
-        </a>
+    <div className="mt-2 flex flex-wrap items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
+      <span>
+        제출 완료 ·{" "}
+        {submission.type === "link" ? (
+          <a href={submission.url} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">
+            제출한 링크 열기
+          </a>
+        ) : (
+          <span>{submission.fileName}</span>
+        )}
+        <span className="ml-2">{new Date(submission.submittedAt).toLocaleString("ko-KR")}</span>
+      </span>
+      {editing ? (
+        <button
+          onClick={onCancelEdit}
+          className="rounded-md border border-slate-300 px-2 py-1 font-medium text-slate-500 hover:bg-slate-100"
+        >
+          수정 취소
+        </button>
       ) : (
-        <span>{submission.fileName}</span>
+        <button
+          onClick={onEdit}
+          className="rounded-md border border-indigo-300 bg-indigo-50 px-2 py-1 font-medium text-indigo-600 hover:bg-indigo-100"
+        >
+          ✏️ 수정하기
+        </button>
       )}
-      <span className="ml-2">{new Date(submission.submittedAt).toLocaleString("ko-KR")}</span>
     </div>
   );
 }
