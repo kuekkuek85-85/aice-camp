@@ -72,10 +72,12 @@ export function useDayProgress(dayId: string) {
     async (stepId: string, patch: Partial<StepProgress>) => {
       if (!session) return;
       const ref_ = doc(getFirebaseDb(), "progress", progressDocId(session.studentId, dayId));
-      const data: Record<string, unknown> = { studentId: session.studentId, dayId };
-      for (const [key, value] of Object.entries(patch)) {
-        data[`steps.${stepId}.${key}`] = value;
-      }
+      // 주의: 점(.) 경로 키는 setDoc(merge)에서 통짜 필드명으로 저장되므로 반드시 중첩 객체로 쓴다.
+      const data = {
+        studentId: session.studentId,
+        dayId,
+        steps: { [stepId]: patch },
+      };
       await setDoc(ref_, data, { merge: true });
 
       const merged: Record<string, StepProgress> = { ...(progress?.steps ?? {}) };

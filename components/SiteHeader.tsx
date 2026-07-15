@@ -19,9 +19,6 @@ export function SiteHeader() {
           <Link href="/board" className="hover:text-indigo-600">
             동료 현황판
           </Link>
-          <Link href="/making" className="hover:text-indigo-600">
-            만든 과정
-          </Link>
           {session && (
             <span className="flex items-center gap-2 border-l border-slate-200 pl-4">
               <span className="text-slate-500">{session.name}님</span>
