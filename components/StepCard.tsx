@@ -185,6 +185,42 @@ export function StepCard({
                 />
               )}
 
+              {step.submitType === "fileOrCheck" && (
+                <div className="space-y-2">
+                  {showSubmitForm && (
+                    <FileSubmitForm onSubmit={handleSubmitFile} uploading={uploading} />
+                  )}
+                  {!isDone && (
+                    <button
+                      onClick={onDone}
+                      className="rounded-full border border-hairline bg-canvas px-5 py-2 text-sm font-medium text-ink hover:bg-surface-soft"
+                    >
+                      파일 없이 완료했어요 ✓
+                    </button>
+                  )}
+                  {isDone && !progress?.submission && (
+                    <div className="flex flex-wrap items-center gap-2 rounded-lg bg-canvas px-3 py-2 text-xs text-ink">
+                      <span>완료됨 · 산출물은 나중에 올려도 돼요</span>
+                      {editing ? (
+                        <button
+                          onClick={() => setEditing(false)}
+                          className="rounded-full border border-hairline bg-canvas px-3 py-1 font-medium text-ink hover:bg-surface-soft"
+                        >
+                          닫기
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setEditing(true)}
+                          className="rounded-full bg-ink px-3 py-1 font-semibold text-canvas hover:opacity-80"
+                        >
+                          📎 산출물 올리기
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {submitError && (
                 <p className="mt-2 rounded-lg bg-surface-soft px-3 py-2 text-sm font-medium text-magenta">
                   {submitError}

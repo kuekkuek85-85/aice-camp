@@ -119,8 +119,8 @@ const DAY1 = {
       stepId: "codiny-practice",
       order: 5,
       title: "AI 코디니 실습 · 작품 제출",
-      desc: "기초 강의를 순서대로 따라 한 뒤, codex에서 \"지니야 호출 → TTS 응답\" 작품을 완성하세요. codex는 링크 공유가 안 되니 프로젝트를 .gen 파일로 내려받아 업로드로 제출해요. (함수 강의는 2일차에 다시 사용해요)",
-      submitType: "file",
+      desc: "기초 강의를 순서대로 따라 한 뒤, codex에서 \"지니야 호출 → TTS 응답\" 작품을 완성하세요. 작품은 .gen 파일로 내려받아 업로드하면 좋아요. 업로드가 어려우면 \"파일 없이 완료했어요\"를 눌러 다음 단계로 넘어가도 됩니다. (함수 강의는 2일차에 다시 사용해요)",
+      submitType: "fileOrCheck",
       resourceUrl: "https://aicodiny.com/codex",
       micRequired: true,
       links: [

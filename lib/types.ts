@@ -1,6 +1,7 @@
 // 데이터 모델 타입 — PRD 4번 섹션 기준
 
-export type SubmitType = "none" | "check" | "link" | "file" | "linkOrFile";
+export type SubmitType = "none" | "check" | "link" | "file" | "linkOrFile" | "fileOrCheck";
+// fileOrCheck: .gen 업로드는 선택 — 업로드 없이 "완료했어요" 버튼만으로도 완료 가능
 
 export type StepLink = {
   label: string;
