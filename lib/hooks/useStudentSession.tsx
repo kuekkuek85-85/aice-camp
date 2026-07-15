@@ -61,6 +61,17 @@ export function StudentSessionProvider({ children }: { children: ReactNode }) {
     const auth = getFirebaseAuth();
 
     const unsub = onAuthStateChanged(auth, async (user) => {
+      // 교사로 로그인된 상태면 학생 세션 복구가 끼어들지 않는다
+      // (같은 브라우저에 학생 localStorage가 남아 있어도 교사 인증을 덮어쓰지 않도록)
+      if (user) {
+        const tokenResult = await user.getIdTokenResult();
+        if (tokenResult.claims.teacher === true) {
+          setSession(null);
+          setStatus("guest");
+          return;
+        }
+      }
+
       if (user && local && user.uid === local.studentId) {
         setSession(local);
         setStatus("ready");
