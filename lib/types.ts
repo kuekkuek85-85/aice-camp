@@ -20,6 +20,7 @@ export type StepDef = {
   hints?: [string, string, string];
   micRequired?: boolean;
   problemFileName?: string; // Storage problems/{problemFileName} 공개 다운로드
+  materialsPath?: string; // Storage 폴더(예: materials/day1) — 교사가 올린 자료를 자동 목록화
 };
 
 export type TimelineBlock = {

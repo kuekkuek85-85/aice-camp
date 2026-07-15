@@ -9,6 +9,12 @@ service firebase.storage {
       allow write: if false;
     }
 
+    // 수업 자료(이론 사진 등) — 공개 읽기, 교사가 콘솔에서 업로드
+    match /materials/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     // 정답 .gen 파일 — 클라이언트 접근 전면 차단. /api/answer-download 서버 라우트(관리자 SDK)로만 다운로드
     match /answers/{fileName} {
       allow read, write: if false;

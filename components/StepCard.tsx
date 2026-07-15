@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { StepDef, StepProgress } from "@/lib/types";
 import { ProblemFileDownload } from "@/components/ProblemFileDownload";
+import { MaterialsList } from "@/components/MaterialsList";
 
 type Props = {
   step: StepDef;
@@ -109,6 +110,8 @@ export function StepCard({
               </ol>
             </div>
           )}
+
+          {step.materialsPath && unlocked && <MaterialsList path={step.materialsPath} />}
 
           {step.problemFileName && unlocked && (
             <ProblemFileDownload fileName={step.problemFileName} />
