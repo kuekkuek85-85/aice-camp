@@ -1,0 +1,67 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isTeacher() {
+      return request.auth != null && request.auth.token.teacher == true;
+    }
+
+    function isSelf(studentId) {
+      return request.auth != null && request.auth.uid == studentId;
+    }
+
+    // 사전 등록 명단 — 서버(관리자 SDK)에서만 기록, 교사 대시보드에서만 열람
+    match /roster/{studentId} {
+      allow read: if isTeacher();
+      allow write: if false;
+    }
+
+    // 일차별 콘텐츠 — 로그인한 사용자는 읽기만
+    match /days/{dayId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // 전역 설정 — 로그인한 사용자는 읽기만
+    match /config/{docId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // 함수 문제 메타데이터(힌트 포함) — 로그인한 사용자는 읽기만
+    match /problems/{problemId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // 학생 문서 — 본인 또는 교사만 읽기/쓰기 (막혔어요 플래그 등)
+    match /students/{studentId} {
+      allow read: if isSelf(studentId) || isTeacher();
+      allow write: if isSelf(studentId) || isTeacher();
+    }
+
+    // 진행 기록 — 본인 또는 교사만 읽기/쓰기. 문서 필드의 studentId가 항상 본인과 일치해야 함
+    match /progress/{docId} {
+      allow read: if isTeacher() ||
+        (request.auth != null && resource != null && resource.data.studentId == request.auth.uid);
+      allow create: if request.auth != null &&
+        request.resource.data.studentId == request.auth.uid;
+      allow update: if isTeacher() ||
+        (request.auth != null &&
+          resource.data.studentId == request.auth.uid &&
+          request.resource.data.studentId == resource.data.studentId &&
+          request.resource.data.dayId == resource.data.dayId);
+    }
+
+    // 동료 현황판용 공개 진행 정보 — 이름/현재 단계/막혔어요만. 본인만 쓰기, 전체 공개 읽기
+    match /publicProgress/{studentId} {
+      allow read: if request.auth != null;
+      allow write: if isSelf(studentId) &&
+        request.resource.data.keys().hasOnly([
+          "studentId", "name", "grade", "currentDayId",
+          "currentStepOrder", "currentStepTitle", "helpFlag", "updatedAt"
+        ]);
+    }
+  }
+}

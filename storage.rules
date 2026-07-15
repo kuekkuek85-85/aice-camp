@@ -1,0 +1,27 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // 문제 .gen 파일 — 공개 읽기, 클라이언트 쓰기 금지(교사가 콘솔/관리 스크립트로 업로드)
+    match /problems/{fileName} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // 정답 .gen 파일 — 클라이언트 접근 전면 차단. /api/answer-download 서버 라우트(관리자 SDK)로만 다운로드
+    match /answers/{fileName} {
+      allow read, write: if false;
+    }
+
+    // 학생 제출물 — 본인만 쓰기, 본인 또는 교사만 읽기. .gen 확장자·5MB 제한
+    match /submissions/{studentId}/{dayId}/{fileName} {
+      allow read: if request.auth != null &&
+        (request.auth.uid == studentId || request.auth.token.teacher == true);
+      allow write: if request.auth != null &&
+        request.auth.uid == studentId &&
+        fileName.matches(".*\\.gen$") &&
+        request.resource.size < 5 * 1024 * 1024;
+    }
+  }
+}
