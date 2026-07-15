@@ -9,14 +9,14 @@ export function HelpButton({ dayId, stepId }: { dayId: string; stepId: string })
   return active ? (
     <button
       onClick={clearHelp}
-      className="rounded-full bg-red-500 px-4 py-2 text-sm font-semibold text-white shadow-sm animate-pulse"
+      className="animate-pulse rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-canvas shadow-lg"
     >
       🙋 선생님을 기다리는 중... (취소)
     </button>
   ) : (
     <button
       onClick={raiseHelp}
-      className="rounded-full border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-100"
+      className="rounded-full bg-magenta px-5 py-2.5 text-sm font-semibold text-canvas shadow-lg transition hover:opacity-80"
     >
       🙋 막혔어요
     </button>

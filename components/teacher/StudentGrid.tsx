@@ -46,9 +46,9 @@ export function StudentGrid({ roster, students, progress, day, masking, onlyAice
   });
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
+    <div className="overflow-x-auto rounded-3xl border border-hairline bg-canvas">
       <table className="w-full min-w-[600px] text-sm">
-        <thead className="bg-slate-50 text-left text-xs text-slate-500">
+        <thead className="bg-surface-soft text-left font-mono text-[11px] uppercase tracking-widest text-ink">
           <tr>
             <th className="px-3 py-2">학년</th>
             <th className="px-3 py-2">이름</th>
@@ -67,18 +67,18 @@ export function StudentGrid({ roster, students, progress, day, masking, onlyAice
             const student = sid ? students[sid] : undefined;
             const prog = sid ? progressByStudent.get(sid) : undefined;
             return (
-              <tr key={r.rosterId ?? `${r.grade}-${r.name}`} className="border-t border-slate-100">
-                <td className="px-3 py-2 text-slate-500">{r.grade}학년</td>
-                <td className="px-3 py-2 font-medium text-slate-800">
+              <tr key={r.rosterId ?? `${r.grade}-${r.name}`} className="border-t border-hairline-soft">
+                <td className="px-3 py-2 text-ink">{r.grade}학년</td>
+                <td className="px-3 py-2 font-medium text-ink">
                   {maskName(r.name, masking)}
                   {student?.helpFlag?.active && <span className="ml-1">🙋</span>}
                 </td>
-                <td className="px-3 py-2 text-slate-500">{sid ?? "—"}</td>
+                <td className="px-3 py-2 font-mono text-xs text-ink">{sid ?? "—"}</td>
                 <td className="px-3 py-2 text-xs">
                   {student ? (
-                    <span className="text-emerald-600">접속함</span>
+                    <span className="font-medium text-success">접속함</span>
                   ) : (
-                    <span className="text-slate-300">미입장</span>
+                    <span className="text-ink/30">미입장</span>
                   )}
                 </td>
                 {steps.map((s) => (
@@ -101,8 +101,8 @@ export function CompletionBars({ roster, progress, day }: Omit<Props, "students"
   const total = roster.length || 1;
 
   return (
-    <div className="space-y-2 rounded-xl border border-slate-200 bg-white p-4">
-      <h2 className="text-sm font-bold text-slate-700">단계별 완료율</h2>
+    <div className="space-y-2 rounded-3xl border border-hairline bg-canvas p-4">
+      <h2 className="font-mono text-[11px] uppercase tracking-widest text-ink">단계별 완료율</h2>
       {steps.map((s) => {
         const done = progress.filter(
           (p) => p.dayId === day.dayId && p.steps?.[s.stepId]?.status === "done"
@@ -110,12 +110,12 @@ export function CompletionBars({ roster, progress, day }: Omit<Props, "students"
         const pct = Math.round((done / total) * 100);
         return (
           <div key={s.stepId}>
-            <div className="flex justify-between text-xs text-slate-500">
+            <div className="flex justify-between text-xs text-ink">
               <span>{s.order}. {s.title}</span>
               <span>{done}/{roster.length} ({pct}%)</span>
             </div>
-            <div className="mt-1 h-2 rounded-full bg-slate-100">
-              <div className="h-2 rounded-full bg-indigo-500" style={{ width: `${pct}%` }} />
+            <div className="mt-1 h-2 rounded-full bg-hairline-soft">
+              <div className="h-2 rounded-full bg-ink" style={{ width: `${pct}%` }} />
             </div>
           </div>
         );

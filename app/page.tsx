@@ -16,7 +16,9 @@ export default function Home() {
 
   if (status === "loading") {
     return (
-      <div className="flex flex-1 items-center justify-center text-slate-400">불러오는 중...</div>
+      <div className="flex flex-1 items-center justify-center font-mono text-xs uppercase tracking-widest text-ink">
+        Loading...
+      </div>
     );
   }
 
@@ -33,11 +35,14 @@ function CampHome({ studentName }: { studentName: string }) {
   return (
     <div className="flex flex-1 flex-col">
       <SiteHeader />
-      <main className="mx-auto w-full max-w-5xl flex-1 space-y-8 px-4 py-8">
+      <main className="mx-auto w-full max-w-5xl flex-1 space-y-10 px-4 py-10">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">환영해요, {studentName}님 👋</h1>
-          <p className="mt-1 text-sm text-slate-500">
-            오늘은 캠프 {config.currentDay}일차예요. 아래에서 오늘의 학습을 시작해보세요.
+          <h1 className="text-3xl font-medium tracking-tight text-ink">
+            환영해요, {studentName}님 👋
+          </h1>
+          <p className="mt-2 text-base text-ink">
+            오늘은 캠프 <span className="font-semibold">{config.currentDay}일차</span>예요. 아래에서
+            오늘의 학습을 시작해보세요.
           </p>
         </div>
 

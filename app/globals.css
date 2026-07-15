@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
+/* DESIGN.md 토큰 — 흑백 에디토리얼 코어 + 파스텔 컬러블록 */
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #ffffff;
+  --foreground: #000000;
 }
 
 @theme inline {
@@ -10,6 +11,26 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* core */
+  --color-ink: #000000;
+  --color-canvas: #ffffff;
+  --color-hairline: #e6e6e6;
+  --color-hairline-soft: #f1f1f1;
+  --color-surface-soft: #f7f7f5;
+
+  /* pastel color blocks */
+  --color-block-lime: #dceeb1;
+  --color-block-lilac: #c5b0f4;
+  --color-block-cream: #f4ecd6;
+  --color-block-pink: #efd4d4;
+  --color-block-mint: #c8e6cd;
+  --color-block-coral: #f3c9b6;
+  --color-block-navy: #1f1d3d;
+
+  /* accents */
+  --color-magenta: #ff3d8b;
+  --color-success: #1ea64a;
 }
 
 body {

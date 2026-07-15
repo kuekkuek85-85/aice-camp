@@ -34,10 +34,10 @@ export function MaterialsList({ path }: { path: string }) {
   if (files === null) return null; // 로딩 중엔 아무것도 표시하지 않음
 
   return (
-    <div className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 p-3">
-      <p className="text-xs font-semibold text-emerald-800">📚 오늘의 이론 자료</p>
+    <div className="mt-3 rounded-lg bg-block-pink p-3">
+      <p className="font-mono text-[11px] uppercase tracking-widest text-ink">📚 오늘의 이론 자료</p>
       {files.length === 0 ? (
-        <p className="mt-1 text-xs text-emerald-600">선생님이 자료를 올리면 여기에 나타나요. 조금만 기다려주세요!</p>
+        <p className="mt-1 text-xs text-ink">선생님이 자료를 올리면 여기에 나타나요. 조금만 기다려주세요!</p>
       ) : (
         <ul className="mt-2 space-y-1">
           {files.map((file) => (
@@ -46,7 +46,7 @@ export function MaterialsList({ path }: { path: string }) {
                 href={file.url}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm text-emerald-700 hover:underline"
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-ink hover:underline"
               >
                 📥 {file.name}
               </a>

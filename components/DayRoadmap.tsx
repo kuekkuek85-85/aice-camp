@@ -17,8 +17,9 @@ export function DayRoadmap({ currentDay }: { currentDay: number }) {
 
   return (
     <section>
-      <h2 className="text-lg font-bold text-slate-900">5일 로드맵</h2>
-      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-5">
+      <p className="font-mono text-xs uppercase tracking-widest text-ink">ROADMAP</p>
+      <h2 className="mt-1 text-xl font-semibold tracking-tight text-ink">5일 로드맵</h2>
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-5">
         {dayIds.map((dayId) => {
           const n = Number(dayId);
           const isToday = n === currentDay;
@@ -28,18 +29,20 @@ export function DayRoadmap({ currentDay }: { currentDay: number }) {
 
           const card = (
             <div
-              className={`flex h-full flex-col items-center justify-center rounded-xl border p-4 text-center transition ${
+              className={`flex h-full flex-col items-center justify-center rounded-3xl p-4 text-center transition ${
                 isToday
-                  ? "border-indigo-400 bg-indigo-50 ring-2 ring-indigo-300"
+                  ? "bg-ink text-canvas"
                   : isLocked
-                    ? "border-slate-200 bg-slate-100 text-slate-400"
-                    : "border-slate-200 bg-white hover:border-indigo-300"
+                    ? "bg-surface-soft text-ink/30"
+                    : "border border-hairline bg-canvas text-ink hover:bg-surface-soft"
               }`}
             >
               <span className="text-2xl">{stamped ? "🏅" : isLocked ? "🔒" : "📘"}</span>
               <span className="mt-2 text-sm font-semibold">{DAY_TITLES[dayId]}</span>
-              {isToday && <span className="mt-1 text-xs font-medium text-indigo-600">오늘</span>}
-              {isPast && !isToday && <span className="mt-1 text-xs text-slate-400">열람 가능</span>}
+              {isToday && (
+                <span className="mt-1 font-mono text-[11px] uppercase tracking-widest">TODAY</span>
+              )}
+              {isPast && !isToday && <span className="mt-1 text-xs">열람 가능</span>}
             </div>
           );
 

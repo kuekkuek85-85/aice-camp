@@ -7,19 +7,20 @@ const LINKS = [
 
 export function QuickLinks() {
   return (
-    <section>
-      <h2 className="text-lg font-bold text-slate-900">바로가기</h2>
-      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="rounded-3xl bg-block-lime p-6">
+      <p className="font-mono text-xs uppercase tracking-widest text-ink">LINKS</p>
+      <h2 className="mt-1 text-xl font-semibold tracking-tight text-ink">바로가기</h2>
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {LINKS.map((link) => (
           <a
             key={link.name}
             href={link.url}
             target="_blank"
             rel="noreferrer"
-            className="rounded-xl border border-slate-200 bg-white p-4 transition hover:border-indigo-300 hover:shadow-sm"
+            className="rounded-lg bg-canvas p-4 transition hover:opacity-80"
           >
-            <div className="font-semibold text-slate-900">{link.name}</div>
-            <div className="mt-1 text-xs text-slate-500">{link.desc}</div>
+            <div className="font-semibold text-ink">{link.name}</div>
+            <div className="mt-1 text-xs text-ink">{link.desc}</div>
           </a>
         ))}
       </div>

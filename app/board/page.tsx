@@ -42,8 +42,8 @@ export default function BoardPage() {
       <SiteHeader />
       <main className="mx-auto w-full max-w-4xl flex-1 space-y-6 px-4 py-8">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">동료 현황판</h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <h1 className="text-3xl font-medium tracking-tight text-ink">동료 현황판</h1>
+          <p className="mt-2 text-base text-ink">
             친구들의 이름과 현재 단계만 볼 수 있어요. 제출물과 링크는 비공개예요.
           </p>
         </div>
@@ -60,13 +60,13 @@ export default function BoardPage() {
         </div>
 
         {summary.length > 0 && (
-          <div className="rounded-xl border border-slate-200 bg-white p-4">
-            <h2 className="text-sm font-bold text-slate-700">단계별 인원</h2>
+          <div className="rounded-3xl bg-block-cream p-4">
+            <h2 className="font-mono text-[11px] uppercase tracking-widest text-ink">단계별 인원</h2>
             <div className="mt-2 flex flex-wrap gap-2">
               {summary.map(([label, count]) => (
                 <span
                   key={label}
-                  className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700"
+                  className="rounded-full bg-canvas px-3 py-1 text-xs font-medium text-ink"
                 >
                   {label} · {count}명
                 </span>
@@ -75,9 +75,9 @@ export default function BoardPage() {
           </div>
         )}
 
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <div className="overflow-hidden rounded-3xl border border-hairline bg-canvas">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs text-slate-500">
+            <thead className="bg-surface-soft text-left font-mono text-[11px] uppercase tracking-widest text-ink">
               <tr>
                 <th className="px-4 py-2">이름</th>
                 <th className="px-4 py-2">일차</th>
@@ -88,32 +88,32 @@ export default function BoardPage() {
             <tbody>
               {loading && (
                 <tr>
-                  <td colSpan={4} className="px-4 py-6 text-center text-slate-400">
-                    불러오는 중...
+                  <td colSpan={4} className="px-4 py-6 text-center font-mono text-xs uppercase tracking-widest text-ink">
+                    Loading...
                   </td>
                 </tr>
               )}
               {!loading && sorted.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-4 py-6 text-center text-slate-400">
+                  <td colSpan={4} className="px-4 py-6 text-center text-sm text-ink">
                     아직 데이터가 없어요.
                   </td>
                 </tr>
               )}
               {sorted.map((p) => (
-                <tr key={p.studentId} className="border-t border-slate-100">
-                  <td className="px-4 py-2 font-medium text-slate-800">{p.name}</td>
-                  <td className="px-4 py-2 text-slate-500">{p.currentDayId}일차</td>
-                  <td className="px-4 py-2 text-slate-600">
+                <tr key={p.studentId} className="border-t border-hairline-soft">
+                  <td className="px-4 py-2 font-medium text-ink">{p.name}</td>
+                  <td className="px-4 py-2 text-ink">{p.currentDayId}일차</td>
+                  <td className="px-4 py-2 text-ink">
                     {p.currentStepOrder}. {p.currentStepTitle}
                   </td>
                   <td className="px-4 py-2">
                     {p.helpFlag?.active ? (
-                      <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-600">
+                      <span className="rounded-full bg-magenta px-2 py-0.5 text-xs font-semibold text-canvas">
                         🙋 막혔어요
                       </span>
                     ) : (
-                      <span className="text-xs text-emerald-600">진행 중</span>
+                      <span className="text-xs font-medium text-success">진행 중</span>
                     )}
                   </td>
                 </tr>
@@ -138,8 +138,8 @@ function TabButton({
   return (
     <button
       onClick={onClick}
-      className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
-        active ? "bg-indigo-600 text-white" : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50"
+      className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+        active ? "bg-ink text-canvas" : "border border-hairline bg-canvas text-ink hover:bg-surface-soft"
       }`}
     >
       {children}

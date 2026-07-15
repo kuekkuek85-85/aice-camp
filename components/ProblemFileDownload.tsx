@@ -26,11 +26,11 @@ export function ProblemFileDownload({ fileName }: { fileName: string }) {
       <button
         onClick={handleClick}
         disabled={busy}
-        className="rounded-lg border border-indigo-300 bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 disabled:opacity-60"
+        className="rounded-full bg-ink px-4 py-1.5 text-xs font-semibold text-canvas transition hover:opacity-80 disabled:opacity-50"
       >
         📥 문제 파일(.gen) 다운로드
       </button>
-      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
+      {error && <p className="mt-1 text-xs font-medium text-magenta">{error}</p>}
     </div>
   );
 }

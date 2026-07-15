@@ -7,24 +7,24 @@ export function SiteHeader() {
   const { session, logout } = useStudentSession();
 
   return (
-    <header className="border-b border-slate-200 bg-white">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-        <Link href="/" className="font-bold text-slate-900">
+    <header className="border-b border-hairline bg-canvas">
+      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
+        <Link href="/" className="font-semibold tracking-tight text-ink">
           🎓 AICE 자격증 캠프
         </Link>
-        <nav className="flex items-center gap-4 text-sm text-slate-600">
-          <Link href="/" className="hover:text-indigo-600">
+        <nav className="flex items-center gap-2 text-sm text-ink">
+          <Link href="/" className="rounded-full px-3 py-1.5 font-medium hover:bg-surface-soft">
             홈
           </Link>
-          <Link href="/board" className="hover:text-indigo-600">
+          <Link href="/board" className="rounded-full px-3 py-1.5 font-medium hover:bg-surface-soft">
             동료 현황판
           </Link>
           {session && (
-            <span className="flex items-center gap-2 border-l border-slate-200 pl-4">
-              <span className="text-slate-500">{session.name}님</span>
+            <span className="ml-2 flex items-center gap-2 border-l border-hairline pl-4">
+              <span className="font-medium">{session.name}님</span>
               <button
                 onClick={logout}
-                className="rounded-md px-2 py-1 text-xs text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                className="rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-medium text-ink hover:bg-surface-soft"
               >
                 다른 사람이에요
               </button>

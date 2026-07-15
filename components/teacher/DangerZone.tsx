@@ -39,20 +39,20 @@ export function DangerZone() {
   }
 
   return (
-    <section className="rounded-xl border border-red-300 bg-red-50 p-4">
-      <h2 className="text-sm font-bold text-red-800">⚠️ 데이터 초기화</h2>
-      <p className="mt-1 text-xs text-red-600">
+    <section className="rounded-3xl bg-block-navy p-5">
+      <h2 className="text-sm font-semibold text-canvas">⚠️ 데이터 초기화</h2>
+      <p className="mt-1 text-xs text-canvas/80">
         학생 접속·진행·제출 기록과 업로드 파일을 전부 삭제하고 학번 연결을 초기화합니다.
         명단(이름·학년), 일차 콘텐츠, 이론 자료, 문제 파일은 유지됩니다. 되돌릴 수 없어요.
       </p>
       <button
         onClick={handleReset}
         disabled={busy}
-        className="mt-3 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60"
+        className="mt-3 rounded-full bg-magenta px-5 py-2 text-sm font-semibold text-canvas transition hover:opacity-80 disabled:opacity-50"
       >
         {busy ? "초기화 중..." : "학생 기록 전체 초기화"}
       </button>
-      {message && <p className="mt-2 text-xs font-medium text-red-800">{message}</p>}
+      {message && <p className="mt-2 text-xs font-medium text-canvas">{message}</p>}
     </section>
   );
 }

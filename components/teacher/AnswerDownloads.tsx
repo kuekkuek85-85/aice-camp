@@ -36,18 +36,18 @@ export function AnswerDownloads({ problems }: { problems: ProblemDoc[] }) {
   }
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-4">
-      <h2 className="text-sm font-bold text-slate-700">정답 .gen 다운로드 (교사 전용)</h2>
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+    <section className="rounded-3xl border border-hairline bg-canvas p-4">
+      <h2 className="font-mono text-[11px] uppercase tracking-widest text-ink">정답 .gen 다운로드 (교사 전용)</h2>
+      {error && <p className="mt-2 text-sm font-medium text-magenta">{error}</p>}
       <div className="mt-2 space-y-1">
-        {problems.length === 0 && <p className="text-sm text-slate-400">등록된 문제가 없어요.</p>}
+        {problems.length === 0 && <p className="text-sm text-ink">등록된 문제가 없어요.</p>}
         {problems.map((p) => (
-          <div key={p.problemId} className="flex items-center justify-between rounded-lg px-3 py-2 text-sm odd:bg-slate-50">
-            <span>{p.title}</span>
+          <div key={p.problemId} className="flex items-center justify-between rounded-lg px-3 py-2 text-sm odd:bg-surface-soft">
+            <span className="text-ink">{p.title}</span>
             <button
               onClick={() => download(p)}
               disabled={busy === p.problemId}
-              className="rounded-md bg-slate-900 px-3 py-1 text-xs font-semibold text-white hover:bg-slate-800 disabled:opacity-60"
+              className="rounded-full bg-ink px-3 py-1 text-xs font-semibold text-canvas hover:opacity-80 disabled:opacity-50"
             >
               {busy === p.problemId ? "다운로드 중..." : "정답 다운로드"}
             </button>

@@ -14,19 +14,20 @@ export function ToolMenu() {
 
   return (
     <section>
-      <h2 className="text-lg font-bold text-slate-900">AI 공부노트 도구 메뉴판</h2>
-      <p className="mt-1 text-sm text-slate-500">아래 도구 중 하나를 골라 오늘의 공부노트를 만들어보세요.</p>
-      <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <p className="font-mono text-xs uppercase tracking-widest text-ink">AI TOOLS</p>
+      <h2 className="mt-1 text-xl font-semibold tracking-tight text-ink">AI 공부노트 도구 메뉴판</h2>
+      <p className="mt-1 text-sm text-ink">아래 도구 중 하나를 골라 오늘의 공부노트를 만들어보세요.</p>
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
         {tools.map((tool) => (
           <a
             key={tool.name}
             href={tool.url}
             target="_blank"
             rel="noreferrer"
-            className="rounded-xl border border-slate-200 bg-white p-4 transition hover:border-indigo-300 hover:shadow-sm"
+            className="rounded-lg bg-surface-soft p-4 transition hover:bg-hairline-soft"
           >
-            <div className="font-semibold text-slate-900">{tool.name}</div>
-            <div className="mt-1 text-xs text-slate-500">{tool.desc}</div>
+            <div className="font-semibold text-ink">{tool.name}</div>
+            <div className="mt-1 text-xs text-ink">{tool.desc}</div>
           </a>
         ))}
       </div>

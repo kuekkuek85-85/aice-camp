@@ -26,18 +26,18 @@ export function SubmissionsList({ roster, progress, masking }: Props) {
     .sort((a, b) => b.submission.submittedAt - a.submission.submittedAt);
 
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-4">
-      <h2 className="text-sm font-bold text-slate-700">제출물 ({items.length})</h2>
+    <section className="rounded-3xl border border-hairline bg-canvas p-4">
+      <h2 className="font-mono text-[11px] uppercase tracking-widest text-ink">제출물 ({items.length})</h2>
       <div className="mt-2 max-h-96 space-y-1 overflow-y-auto">
-        {items.length === 0 && <p className="text-sm text-slate-400">아직 제출물이 없어요.</p>}
+        {items.length === 0 && <p className="text-sm text-ink">아직 제출물이 없어요.</p>}
         {items.map((item, i) => (
           <div
             key={i}
-            className="flex items-center justify-between rounded-lg px-3 py-2 text-sm odd:bg-slate-50"
+            className="flex items-center justify-between rounded-lg px-3 py-2 text-sm odd:bg-surface-soft"
           >
             <span>
-              <span className="font-medium">{maskName(nameOf(item.studentId), masking)}</span>
-              <span className="ml-2 text-xs text-slate-400">
+              <span className="font-medium text-ink">{maskName(nameOf(item.studentId), masking)}</span>
+              <span className="ml-2 font-mono text-xs text-ink">
                 {item.dayId}일차 · {item.stepId}
               </span>
             </span>
@@ -45,7 +45,7 @@ export function SubmissionsList({ roster, progress, masking }: Props) {
               href={item.submission.url}
               target="_blank"
               rel="noreferrer"
-              className="rounded-md bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100"
+              className="rounded-full bg-ink px-3 py-1 text-xs font-semibold text-canvas hover:opacity-80"
             >
               {item.submission.type === "link" ? "링크 열기" : `${item.submission.fileName ?? "파일"} 열기`}
             </a>

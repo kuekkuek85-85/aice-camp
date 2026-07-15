@@ -52,61 +52,61 @@ export function StepCard({
 
   return (
     <div
-      className={`rounded-xl border p-5 transition ${
+      className={`rounded-3xl p-5 transition ${
         !unlocked
-          ? "border-slate-200 bg-slate-50 opacity-60"
+          ? "bg-surface-soft opacity-50"
           : isDone
-            ? "border-emerald-200 bg-emerald-50"
-            : "border-slate-200 bg-white"
+            ? "bg-block-mint"
+            : "border border-hairline bg-canvas"
       }`}
     >
       <div className="flex items-start gap-3">
         <div
           className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
             isDone
-              ? "bg-emerald-500 text-white"
+              ? "bg-ink text-canvas"
               : unlocked
-                ? "bg-indigo-100 text-indigo-700"
-                : "bg-slate-200 text-slate-400"
+                ? "bg-surface-soft text-ink"
+                : "bg-hairline text-ink/40"
           }`}
         >
           {isDone ? "✓" : unlocked ? step.order : "🔒"}
         </div>
         <div className="flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="font-bold text-slate-900">{step.title}</h3>
+            <h3 className="font-semibold tracking-tight text-ink">{step.title}</h3>
             {step.micRequired && (
-              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+              <span className="rounded-full bg-block-cream px-2 py-0.5 text-xs font-medium text-ink">
                 🎧 마이크(이어폰) 필요
               </span>
             )}
             {step.deferrable && (
-              <span className="rounded-full bg-sky-100 px-2 py-0.5 text-xs font-medium text-sky-700">
+              <span className="rounded-full bg-block-lilac px-2 py-0.5 text-xs font-medium text-ink">
                 나중에 완료 가능
               </span>
             )}
             {isDeferred && (
-              <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-medium text-slate-600">
+              <span className="rounded-full bg-canvas px-2 py-0.5 text-xs font-medium text-ink">
                 나중에 완료 예정
               </span>
             )}
           </div>
-          <p className="mt-1 text-sm text-slate-600">{step.desc}</p>
+          <p className="mt-1 text-sm text-ink">{step.desc}</p>
 
           {step.resourceUrl && unlocked && (
             <a
               href={step.resourceUrl}
               target="_blank"
               rel="noreferrer"
-              className="mt-2 inline-block text-sm font-medium text-indigo-600 hover:underline"
+              className="mt-2 inline-block rounded-full border border-hairline bg-canvas px-3 py-1 text-sm font-medium text-ink hover:bg-surface-soft"
             >
               자료 열기 →
             </a>
           )}
 
           {step.links && step.links.length > 0 && unlocked && (
-            <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
-              <p className="text-xs font-semibold text-slate-600">
+            <div className="mt-3 rounded-lg bg-surface-soft p-3">
+              <p className="font-mono text-[11px] uppercase tracking-widest text-ink">
                 {step.linksLabel ??
                   (step.linksType === "choice"
                     ? "이 중 하나를 골라 사용하세요"
@@ -119,14 +119,14 @@ export function StepCard({
                       href={link.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 text-sm text-indigo-600 hover:underline"
+                      className="inline-flex items-center gap-2 text-sm font-medium text-ink hover:underline"
                     >
                       {step.linksType === "choice" ? (
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-canvas text-xs font-bold text-ink">
                           •
                         </span>
                       ) : (
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-indigo-100 text-xs font-bold text-indigo-700">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-ink text-xs font-bold text-canvas">
                           {i + 1}
                         </span>
                       )}
@@ -154,14 +154,14 @@ export function StepCard({
                 <div className="flex flex-wrap gap-2">
                   <button
                     onClick={onDone}
-                    className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+                    className="rounded-full bg-ink px-5 py-2 text-sm font-semibold text-canvas transition hover:opacity-80"
                   >
                     완료했어요 ✓
                   </button>
                   {step.deferrable && (
                     <button
                       onClick={onDeferred}
-                      className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+                      className="rounded-full border border-hairline bg-canvas px-5 py-2 text-sm font-medium text-ink hover:bg-surface-soft"
                     >
                       나중에 할게요
                     </button>
@@ -186,7 +186,7 @@ export function StepCard({
               )}
 
               {submitError && (
-                <p className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+                <p className="mt-2 rounded-lg bg-surface-soft px-3 py-2 text-sm font-medium text-magenta">
                   {submitError}
                 </p>
               )}
@@ -217,17 +217,17 @@ function HintPanel({
   onOpen: () => void;
 }) {
   return (
-    <div className="mt-3 space-y-2 rounded-lg bg-amber-50 p-3">
-      <p className="text-xs font-semibold text-amber-800">힌트가 필요하면 순서대로 열어보세요</p>
+    <div className="mt-3 space-y-2 rounded-lg bg-block-cream p-3">
+      <p className="font-mono text-[11px] uppercase tracking-widest text-ink">힌트 — 순서대로 열어보세요</p>
       {hints.slice(0, opened).map((h, i) => (
-        <p key={i} className="text-sm text-amber-900">
+        <p key={i} className="text-sm text-ink">
           <span className="font-semibold">힌트{i + 1}.</span> {h}
         </p>
       ))}
       {opened < hints.length && (
         <button
           onClick={onOpen}
-          className="rounded-md border border-amber-300 bg-white px-3 py-1 text-xs font-medium text-amber-700 hover:bg-amber-100"
+          className="rounded-full bg-canvas px-3 py-1 text-xs font-semibold text-ink hover:opacity-80"
         >
           힌트{opened + 1} 보기
         </button>
@@ -246,7 +246,7 @@ function LinkSubmitForm({ onSubmit }: { onSubmit: (url: string) => Promise<boole
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         placeholder="https://..."
-        className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none"
+        className="flex-1 rounded-lg border border-hairline bg-canvas px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-ink"
       />
       <button
         disabled={busy || !url}
@@ -255,7 +255,7 @@ function LinkSubmitForm({ onSubmit }: { onSubmit: (url: string) => Promise<boole
           await onSubmit(url);
           setBusy(false);
         }}
-        className="shrink-0 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60"
+        className="shrink-0 rounded-full bg-ink px-5 py-2 text-sm font-semibold text-canvas transition hover:opacity-80 disabled:opacity-50"
       >
         제출
       </button>
@@ -281,10 +281,10 @@ function FileSubmitForm({
           if (file) await onSubmit(file);
           e.target.value = "";
         }}
-        className="block w-full text-sm text-slate-600 file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-indigo-700"
+        className="block w-full text-sm text-ink file:mr-3 file:rounded-full file:border-0 file:bg-ink file:px-5 file:py-2 file:text-sm file:font-semibold file:text-canvas hover:file:opacity-80"
       />
-      {uploading && <p className="mt-1 text-xs text-slate-400">업로드 중...</p>}
-      <p className="mt-1 text-xs text-slate-400">.gen 파일만, 5MB 이하</p>
+      {uploading && <p className="mt-1 font-mono text-xs uppercase tracking-widest text-ink">Uploading...</p>}
+      <p className="mt-1 text-xs text-ink">.gen 파일만, 5MB 이하</p>
     </div>
   );
 }
@@ -305,13 +305,13 @@ function LinkOrFileSubmitForm({
       <div className="mb-2 flex gap-1 text-xs">
         <button
           onClick={() => setMode("link")}
-          className={`rounded-md px-2 py-1 font-medium ${mode === "link" ? "bg-indigo-100 text-indigo-700" : "text-slate-400"}`}
+          className={`rounded-full px-3 py-1 font-semibold ${mode === "link" ? "bg-ink text-canvas" : "border border-hairline bg-canvas text-ink"}`}
         >
           링크로 제출
         </button>
         <button
           onClick={() => setMode("file")}
-          className={`rounded-md px-2 py-1 font-medium ${mode === "file" ? "bg-indigo-100 text-indigo-700" : "text-slate-400"}`}
+          className={`rounded-full px-3 py-1 font-semibold ${mode === "file" ? "bg-ink text-canvas" : "border border-hairline bg-canvas text-ink"}`}
         >
           .gen 파일로 제출
         </button>
@@ -337,11 +337,11 @@ function SubmissionSummary({
   onCancelEdit: () => void;
 }) {
   return (
-    <div className="mt-2 flex flex-wrap items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-500">
+    <div className="mt-2 flex flex-wrap items-center gap-2 rounded-lg bg-canvas px-3 py-2 text-xs text-ink">
       <span>
         제출 완료 ·{" "}
         {submission.type === "link" ? (
-          <a href={submission.url} target="_blank" rel="noreferrer" className="text-indigo-600 hover:underline">
+          <a href={submission.url} target="_blank" rel="noreferrer" className="font-semibold text-ink underline">
             제출한 링크 열기
           </a>
         ) : (
@@ -352,14 +352,14 @@ function SubmissionSummary({
       {editing ? (
         <button
           onClick={onCancelEdit}
-          className="rounded-md border border-slate-300 px-2 py-1 font-medium text-slate-500 hover:bg-slate-100"
+          className="rounded-full border border-hairline bg-canvas px-3 py-1 font-medium text-ink hover:bg-surface-soft"
         >
           수정 취소
         </button>
       ) : (
         <button
           onClick={onEdit}
-          className="rounded-md border border-indigo-300 bg-indigo-50 px-2 py-1 font-medium text-indigo-600 hover:bg-indigo-100"
+          className="rounded-full bg-ink px-3 py-1 font-semibold text-canvas hover:opacity-80"
         >
           ✏️ 수정하기
         </button>

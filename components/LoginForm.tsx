@@ -29,16 +29,16 @@ export function LoginForm() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-4">
-      <div className="w-full rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
-        <h1 className="text-center text-2xl font-bold text-slate-900">
-          AICE 자격증 캠프
-        </h1>
-        <p className="mt-1 text-center text-sm text-slate-500">장평중학교 방과후 캠프</p>
+    <div className="mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center px-4">
+      <p className="font-mono text-xs uppercase tracking-widest text-ink">JANGPYEONG MIDDLE SCHOOL</p>
+      <h1 className="mt-2 text-center text-4xl font-medium tracking-tight text-ink">
+        AICE 자격증 캠프
+      </h1>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+      <div className="mt-8 w-full rounded-3xl bg-block-lime p-8">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="studentId" className="block text-sm font-medium text-slate-700">
+            <label htmlFor="studentId" className="block text-sm font-semibold text-ink">
               학번 (5자리)
             </label>
             <input
@@ -48,13 +48,13 @@ export function LoginForm() {
               placeholder="예: 10203"
               value={studentId}
               onChange={(e) => setStudentId(e.target.value.replace(/\D/g, "").slice(0, 5))}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-3 text-lg tracking-widest focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              className="mt-1 w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-lg tracking-widest text-ink focus:outline-none focus:ring-2 focus:ring-ink"
             />
-            <p className="mt-1 text-xs text-slate-400">학년(1) + 반(2) + 번호(2) 예) 1학년 2반 3번 → 10203</p>
+            <p className="mt-1 text-xs text-ink">학년(1) + 반(2) + 번호(2) 예) 1학년 2반 3번 → 10203</p>
           </div>
 
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-slate-700">
+            <label htmlFor="name" className="block text-sm font-semibold text-ink">
               이름
             </label>
             <input
@@ -62,12 +62,12 @@ export function LoginForm() {
               placeholder="홍길동"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-3 text-lg focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              className="mt-1 w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-lg text-ink focus:outline-none focus:ring-2 focus:ring-ink"
             />
           </div>
 
           {(localError || error) && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+            <p className="rounded-lg bg-canvas px-3 py-2 text-sm font-medium text-magenta">
               {localError || error}
             </p>
           )}
@@ -75,16 +75,16 @@ export function LoginForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full rounded-lg bg-indigo-600 px-4 py-3 font-semibold text-white transition hover:bg-indigo-700 disabled:opacity-60"
+            className="w-full rounded-full bg-ink px-5 py-3 font-semibold text-canvas transition hover:opacity-80 disabled:opacity-50"
           >
             {submitting ? "확인 중..." : "입장하기"}
           </button>
         </form>
-
-        <p className="mt-6 text-center text-xs text-slate-400">
-          비밀번호는 없어요. 학번과 이름만 정확히 입력하면 돼요.
-        </p>
       </div>
+
+      <p className="mt-6 text-center text-xs text-ink">
+        비밀번호는 없어요. 학번과 이름만 정확히 입력하면 돼요.
+      </p>
     </div>
   );
 }

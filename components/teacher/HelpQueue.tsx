@@ -25,31 +25,31 @@ export function HelpQueue({ students, masking }: Props) {
   }
 
   return (
-    <section className="rounded-xl border border-red-200 bg-red-50 p-4">
-      <h2 className="text-sm font-bold text-red-800">🙋 막혔어요 큐 ({queue.length})</h2>
+    <section className="rounded-3xl bg-block-pink p-4">
+      <h2 className="text-sm font-semibold text-ink">🙋 막혔어요 큐 ({queue.length})</h2>
       {queue.length === 0 ? (
-        <p className="mt-2 text-sm text-red-400">현재 도움을 요청한 학생이 없어요.</p>
+        <p className="mt-2 text-sm text-ink">현재 도움을 요청한 학생이 없어요.</p>
       ) : (
         <ul className="mt-2 space-y-2">
           {queue.map(([studentId, s]) => (
             <li
               key={studentId}
-              className="flex items-center justify-between rounded-lg bg-white px-3 py-2 text-sm shadow-sm"
+              className="flex items-center justify-between rounded-lg bg-canvas px-3 py-2 text-sm"
             >
               <span>
-                <span className="font-semibold">{maskName(s.name, masking)}</span>
-                <span className="ml-2 text-xs text-slate-400">
+                <span className="font-semibold text-ink">{maskName(s.name, masking)}</span>
+                <span className="ml-2 font-mono text-xs text-ink">
                   {s.helpFlag?.dayId}일차 · {s.helpFlag?.stepId}
                 </span>
                 {s.helpFlag?.at && (
-                  <span className="ml-2 text-xs text-slate-400">
+                  <span className="ml-2 font-mono text-xs text-ink">
                     {new Date(s.helpFlag.at).toLocaleTimeString("ko-KR")}
                   </span>
                 )}
               </span>
               <button
                 onClick={() => resolve(studentId)}
-                className="rounded-md bg-red-600 px-3 py-1 text-xs font-semibold text-white hover:bg-red-700"
+                className="rounded-full bg-ink px-3 py-1 text-xs font-semibold text-canvas hover:opacity-80"
               >
                 해결됨
               </button>

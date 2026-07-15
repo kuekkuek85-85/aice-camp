@@ -35,33 +35,37 @@ export default function MakingPage() {
       <SiteHeader />
       <main className="mx-auto w-full max-w-3xl flex-1 space-y-8 px-4 py-8">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">✨ 이 사이트는 이렇게 만들었어요</h1>
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="font-mono text-xs uppercase tracking-widest text-ink">MAKING OF</p>
+          <h1 className="mt-1 text-3xl font-medium tracking-tight text-ink">✨ 이 사이트는 이렇게 만들었어요</h1>
+          <p className="mt-2 text-base text-ink">
             이 캠프 사이트는 선생님이 AI(Claude)와 대화하며 직접 만든 &ldquo;바이브 코딩&rdquo;
             결과물이에요. 실제로 어떤 대화를 나눴는지 살짝 공개할게요.
           </p>
         </div>
 
         <div className="space-y-4">
-          {SCENES.map((scene) => (
-            <div key={scene.title} className="rounded-xl border border-slate-200 bg-white p-5">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">{scene.emoji}</span>
-                <h2 className="font-bold text-slate-900">{scene.title}</h2>
+          {SCENES.map((scene, i) => {
+            const blocks = ["bg-block-lime", "bg-block-lilac", "bg-block-cream", "bg-block-mint"];
+            return (
+              <div key={scene.title} className={`rounded-3xl p-6 ${blocks[i % blocks.length]}`}>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">{scene.emoji}</span>
+                  <h2 className="font-semibold tracking-tight text-ink">{scene.title}</h2>
+                </div>
+                <p className="mt-3 rounded-lg bg-canvas px-3 py-2 font-mono text-xs text-ink">
+                  {scene.prompt}
+                </p>
+                <p className="mt-2 text-sm text-ink">{scene.desc}</p>
               </div>
-              <p className="mt-2 rounded-lg bg-slate-50 px-3 py-2 font-mono text-xs text-slate-600">
-                {scene.prompt}
-              </p>
-              <p className="mt-2 text-sm text-slate-600">{scene.desc}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-6 text-center">
-          <p className="text-sm font-medium text-indigo-700">
-            이 사이트를 만드는 데 걸린 시간: 약 N시간.
+        <div className="rounded-3xl bg-block-navy p-8 text-center">
+          <p className="font-mono text-xs uppercase tracking-widest text-canvas/80">
+            이 사이트를 만드는 데 걸린 시간: 약 N시간
           </p>
-          <p className="mt-1 text-lg font-bold text-indigo-900">
+          <p className="mt-2 text-xl font-medium tracking-tight text-canvas">
             여러분도 곧, 여러분만의 것을 만들 수 있어요. 🌱
           </p>
         </div>

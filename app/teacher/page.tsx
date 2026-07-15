@@ -24,7 +24,11 @@ function TeacherGate() {
   const { status, logout } = useTeacherSession();
 
   if (status === "loading") {
-    return <div className="flex flex-1 items-center justify-center text-slate-400">불러오는 중...</div>;
+    return (
+      <div className="flex flex-1 items-center justify-center font-mono text-xs uppercase tracking-widest text-ink">
+        Loading...
+      </div>
+    );
   }
   if (status === "guest") {
     return <TeacherLoginForm />;
@@ -41,10 +45,13 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <h1 className="font-bold text-slate-900">🧑‍🏫 교사 대시보드</h1>
-          <button onClick={onLogout} className="text-sm text-slate-400 hover:text-slate-600">
+      <header className="border-b border-hairline bg-canvas">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
+          <h1 className="font-semibold tracking-tight text-ink">🧑‍🏫 교사 대시보드</h1>
+          <button
+            onClick={onLogout}
+            className="rounded-full border border-hairline bg-canvas px-3 py-1 text-xs font-medium text-ink hover:bg-surface-soft"
+          >
             로그아웃
           </button>
         </div>
@@ -52,24 +59,24 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
 
       <main className="mx-auto w-full max-w-6xl flex-1 space-y-6 px-4 py-6">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-sm font-medium text-slate-500">일차</span>
+          <span className="font-mono text-xs uppercase tracking-widest text-ink">DAY</span>
           {dayIds.map((d) => (
             <button
               key={d}
               onClick={() => setDayId(d)}
-              className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
-                dayId === d ? "bg-indigo-600 text-white" : "bg-white text-slate-600 ring-1 ring-slate-200"
+              className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+                dayId === d ? "bg-ink text-canvas" : "border border-hairline bg-canvas text-ink hover:bg-surface-soft"
               }`}
             >
               {d}일차
             </button>
           ))}
 
-          <label className="ml-auto flex items-center gap-2 text-sm text-slate-600">
+          <label className="ml-auto flex items-center gap-2 text-sm text-ink">
             <input type="checkbox" checked={masking} onChange={(e) => setMasking(e.target.checked)} />
             이름 마스킹
           </label>
-          <label className="flex items-center gap-2 text-sm text-slate-600">
+          <label className="flex items-center gap-2 text-sm text-ink">
             <input
               type="checkbox"
               checked={onlyAiceIncomplete}
