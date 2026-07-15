@@ -16,7 +16,7 @@ export function useTeacherData() {
     const db = getFirebaseDb();
     const unsubs = [
       onSnapshot(collection(db, "roster"), (snap) => {
-        setRoster(snap.docs.map((d) => d.data() as RosterEntry));
+        setRoster(snap.docs.map((d) => ({ rosterId: d.id, ...(d.data() as RosterEntry) })));
       }),
       onSnapshot(collection(db, "students"), (snap) => {
         const map: Record<string, StudentDoc> = {};

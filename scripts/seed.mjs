@@ -20,11 +20,33 @@ const app = initializeApp({
 
 const db = getFirestore(app);
 
-// ⚠️ 예시 데이터 — 실제 23명 명단으로 교체하세요.
+// 실제 캠프 명단 (2026 여름, 23명) — 학번은 학생 첫 로그인 시 자동 바인딩된다.
+// hasLevel2(작년 Future 2급 취득)는 파악되는 대로 교사가 콘솔에서 true로 바꿔주면 된다.
 const ROSTER = [
-  { studentId: "10101", name: "예시학생", grade: 1, hasLevel2: false },
-  { studentId: "30101", name: "테스트학생", grade: 3, hasLevel2: true },
-];
+  { name: "김재우", grade: 1 },
+  { name: "김준희", grade: 1 },
+  { name: "이경섭", grade: 1 },
+  { name: "이정우", grade: 1 },
+  { name: "장새하", grade: 1 },
+  { name: "장윤슬", grade: 1 },
+  { name: "박강민", grade: 2 },
+  { name: "박찬민", grade: 2 },
+  { name: "서재윤", grade: 2 },
+  { name: "서재희", grade: 2 },
+  { name: "김승범", grade: 3 },
+  { name: "김준혁", grade: 3 },
+  { name: "김하정", grade: 3 },
+  { name: "민준원", grade: 3 },
+  { name: "민지원", grade: 3 },
+  { name: "박소희", grade: 3 },
+  { name: "박진아", grade: 3 },
+  { name: "서은지", grade: 3 },
+  { name: "설지후", grade: 3 },
+  { name: "손우림", grade: 3 },
+  { name: "이열정", grade: 3 },
+  { name: "이준성", grade: 3 },
+  { name: "함지운", grade: 3 },
+].map((s) => ({ ...s, hasLevel2: false }));
 
 const CONFIG_GLOBAL = {
   currentDay: 1,
@@ -195,8 +217,18 @@ const PROBLEMS = [
 
 async function main() {
   console.log("roster 시딩...");
+  // 문서 ID는 g{학년}-{이름}. merge라서 재실행해도 바인딩된 studentId가 보존된다.
+  const validIds = new Set(ROSTER.map((e) => `g${e.grade}-${e.name}`));
   for (const entry of ROSTER) {
-    await db.doc(`roster/${entry.studentId}`).set(entry);
+    await db.doc(`roster/g${entry.grade}-${entry.name}`).set(entry, { merge: true });
+  }
+  // 명단에 없는 옛 항목(예시/테스트 데이터) 정리
+  const existing = await db.collection("roster").get();
+  for (const doc of existing.docs) {
+    if (!validIds.has(doc.id)) {
+      console.log(`  - 명단 외 항목 삭제: ${doc.id}`);
+      await doc.ref.delete();
+    }
   }
 
   console.log("config/global 시딩...");

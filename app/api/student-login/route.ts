@@ -3,6 +3,8 @@ import { adminAuth, adminDb } from "@/lib/firebase/admin";
 
 const STUDENT_ID_RE = /^\d{5}$/;
 
+const normalize = (s: string) => s.replace(/\s+/g, "");
+
 export async function POST(req: NextRequest) {
   let body: { studentId?: string; name?: string };
   try {
@@ -24,33 +26,55 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "이름을 입력해주세요." }, { status: 400 });
   }
 
+  const grade = Number(studentId[0]);
+  if (grade < 1 || grade > 3) {
+    return NextResponse.json(
+      { error: "학번 첫 자리는 학년(1~3)이어야 해요. 학번을 다시 확인해주세요." },
+      { status: 400 }
+    );
+  }
+
   try {
     const db = adminDb();
-    const rosterSnap = await db.doc(`roster/${studentId}`).get();
-    if (!rosterSnap.exists) {
+
+    // 명단 대조: 학년 + 이름으로 찾는다 (사전에 정확한 학번을 몰라도 등록 가능하도록).
+    const rosterSnap = await db.collection("roster").where("grade", "==", grade).get();
+    const matched = rosterSnap.docs.find(
+      (d) => normalize((d.data().name as string) ?? "") === normalize(name)
+    );
+
+    if (!matched) {
       return NextResponse.json(
-        { error: "명단에서 학번을 찾을 수 없습니다. 학번을 다시 확인해주세요." },
+        { error: `명단에서 ${grade}학년 "${name}" 학생을 찾을 수 없습니다. 학번(학년)과 이름을 다시 확인해주세요.` },
         { status: 404 }
       );
     }
 
-    const roster = rosterSnap.data() as { name: string; grade: number; hasLevel2?: boolean };
-    const normalize = (s: string) => s.replace(/\s+/g, "");
-    if (normalize(roster.name) !== normalize(name)) {
+    const entry = matched.data() as { name: string; grade: number; hasLevel2?: boolean; studentId?: string };
+
+    // 이미 다른 학번으로 입장한 이름이면 차단 (오입력·도용 방지)
+    if (entry.studentId && entry.studentId !== studentId) {
+      const masked = `${entry.studentId.slice(0, 2)}***`;
       return NextResponse.json(
-        { error: "이름이 명단과 일치하지 않습니다. 학번과 이름을 다시 확인해주세요." },
-        { status: 400 }
+        { error: `"${entry.name}" 학생은 이미 학번 ${masked} 으로 입장했어요. 처음 입력했던 학번을 사용하거나, 잘못 입력했다면 선생님께 말씀해주세요.` },
+        { status: 409 }
       );
     }
 
     const now = Date.now();
+
+    // 첫 로그인: 이 학번을 명단에 바인딩
+    if (!entry.studentId) {
+      await matched.ref.set({ studentId, boundAt: now }, { merge: true });
+    }
+
     const studentRef = db.doc(`students/${studentId}`);
     const studentSnap = await studentRef.get();
     await studentRef.set(
       {
         studentId,
-        name: roster.name,
-        grade: roster.grade,
+        name: entry.name,
+        grade: entry.grade,
         firstLoginAt: studentSnap.exists ? studentSnap.data()?.firstLoginAt ?? now : now,
         lastSeenAt: now,
       },
@@ -59,14 +83,14 @@ export async function POST(req: NextRequest) {
 
     const token = await adminAuth().createCustomToken(studentId, {
       role: "student",
-      grade: roster.grade,
+      grade: entry.grade,
     });
 
     return NextResponse.json({
       token,
-      name: roster.name,
-      grade: roster.grade,
-      hasLevel2: roster.hasLevel2 ?? false,
+      name: entry.name,
+      grade: entry.grade,
+      hasLevel2: entry.hasLevel2 ?? false,
     });
   } catch (e) {
     console.error("student-login error:", e);

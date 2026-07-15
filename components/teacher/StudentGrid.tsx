@@ -21,6 +21,10 @@ function statusIcon(status: string | undefined) {
   return "⬜";
 }
 
+function sortRoster(roster: RosterEntry[]) {
+  return [...roster].sort((a, b) => a.grade - b.grade || a.name.localeCompare(b.name, "ko"));
+}
+
 export function StudentGrid({ roster, students, progress, day, masking, onlyAiceIncomplete }: Props) {
   const steps = day ? [...day.steps].sort((a, b) => a.order - b.order) : [];
 
@@ -34,21 +38,21 @@ export function StudentGrid({ roster, students, progress, day, masking, onlyAice
     if (p.dayId === AICE_SIGNUP_DAY_ID) aiceProgressByStudent.set(p.studentId, p);
   }
 
-  const rows = [...roster]
-    .sort((a, b) => a.studentId.localeCompare(b.studentId))
-    .filter((r) => {
-      if (!onlyAiceIncomplete) return true;
-      const status = aiceProgressByStudent.get(r.studentId)?.steps?.[AICE_SIGNUP_STEP_ID]?.status;
-      return status !== "done";
-    });
+  const rows = sortRoster(roster).filter((r) => {
+    if (!onlyAiceIncomplete) return true;
+    if (!r.studentId) return true; // 미입장 학생은 가입도 미완료
+    const status = aiceProgressByStudent.get(r.studentId)?.steps?.[AICE_SIGNUP_STEP_ID]?.status;
+    return status !== "done";
+  });
 
   return (
     <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
       <table className="w-full min-w-[600px] text-sm">
         <thead className="bg-slate-50 text-left text-xs text-slate-500">
           <tr>
-            <th className="px-3 py-2">학번</th>
+            <th className="px-3 py-2">학년</th>
             <th className="px-3 py-2">이름</th>
+            <th className="px-3 py-2">학번</th>
             <th className="px-3 py-2">접속</th>
             {steps.map((s) => (
               <th key={s.stepId} className="px-3 py-2 text-center" title={s.title}>
@@ -59,20 +63,22 @@ export function StudentGrid({ roster, students, progress, day, masking, onlyAice
         </thead>
         <tbody>
           {rows.map((r) => {
-            const student = students[r.studentId];
-            const prog = progressByStudent.get(r.studentId);
+            const sid = r.studentId;
+            const student = sid ? students[sid] : undefined;
+            const prog = sid ? progressByStudent.get(sid) : undefined;
             return (
-              <tr key={r.studentId} className="border-t border-slate-100">
-                <td className="px-3 py-2 text-slate-500">{r.studentId}</td>
+              <tr key={r.rosterId ?? `${r.grade}-${r.name}`} className="border-t border-slate-100">
+                <td className="px-3 py-2 text-slate-500">{r.grade}학년</td>
                 <td className="px-3 py-2 font-medium text-slate-800">
                   {maskName(r.name, masking)}
                   {student?.helpFlag?.active && <span className="ml-1">🙋</span>}
                 </td>
+                <td className="px-3 py-2 text-slate-500">{sid ?? "—"}</td>
                 <td className="px-3 py-2 text-xs">
                   {student ? (
                     <span className="text-emerald-600">접속함</span>
                   ) : (
-                    <span className="text-slate-300">미접속</span>
+                    <span className="text-slate-300">미입장</span>
                   )}
                 </td>
                 {steps.map((s) => (

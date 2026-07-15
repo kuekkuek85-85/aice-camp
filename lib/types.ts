@@ -78,10 +78,12 @@ export type StudentDoc = {
 };
 
 export type RosterEntry = {
-  studentId: string;
+  rosterId?: string; // Firestore 문서 ID (예: g1-김재우)
   name: string;
   grade: number;
   hasLevel2?: boolean;
+  studentId?: string; // 첫 로그인 시 바인딩되는 실제 5자리 학번
+  boundAt?: number;
 };
 
 export type PublicProgressDoc = {
