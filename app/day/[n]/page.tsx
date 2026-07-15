@@ -87,6 +87,35 @@ export default function DayPage({ params }: { params: Promise<{ n: string }> }) 
           <p className="mt-1 text-sm text-slate-500">{day.goal}</p>
         </div>
 
+        {/* 오늘의 학습 순서 한눈에 보기 */}
+        <div className="rounded-xl border border-indigo-200 bg-indigo-50 p-4">
+          <h2 className="text-sm font-bold text-indigo-900">오늘의 학습 순서</h2>
+          <ol className="mt-2 flex flex-wrap items-center gap-y-1 text-sm">
+            {steps.map((step, i) => {
+              const st = progress?.steps?.[step.stepId]?.status;
+              const done = st === "done" || st === "deferred";
+              const isCurrent = !done && step.stepId === currentStepId;
+              return (
+                <li key={step.stepId} className="flex items-center">
+                  <span
+                    className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                      done
+                        ? "bg-emerald-100 text-emerald-700"
+                        : isCurrent
+                          ? "bg-indigo-600 text-white"
+                          : "bg-white text-slate-500 ring-1 ring-slate-200"
+                    }`}
+                  >
+                    {done ? "✓ " : `${step.order}. `}
+                    {step.title}
+                  </span>
+                  {i < steps.length - 1 && <span className="mx-1 text-indigo-300">→</span>}
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+
         {day.timeline?.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {day.timeline.map((block, i) => (
