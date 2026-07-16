@@ -54,10 +54,11 @@ const modulo = (dividendXml, divisorXml) =>
 const compare = (op, aXml, bXml) =>
   `<block type="logic_compare" id="${uid()}"><field name="OP">${op}</field><value name="A">${aXml}</value><value name="B">${bXml}</value></block>`;
 const boolBlock = (v) => `<block type="logic_boolean" id="${uid()}"><field name="BOOL">${v}</field></block>`;
-const repeatTimes = (timesXml, doXml) =>
-  `<block type="controls_repeat_ext" id="${uid()}"><value name="TIMES">${num(10)}${timesXml}</value><statement name="DO">${doXml}</statement></block>`;
-const forLoop = (v, fromXml, toXml, doXml) =>
-  `<block type="controls_for" id="${uid()}"><field name="VAR" id="${v.id}">${esc(v.name)}</field><value name="FROM">${num(1)}${fromXml}</value><value name="TO">${num(9)}${toXml}</value><value name="BY">${num(1)}</value><statement name="DO">${doXml}</statement></block>`;
+// 코디니의 for 반복 블록 (교사 검증 파일에서 확인): controls_custom_for — FROM/TO만 있고 BY 없음
+// from/to: 숫자를 주면 shadow 값으로, 문자열(XML)을 주면 기본 shadow + 블록으로 넣는다
+const forVal = (v) => (typeof v === "number" ? num(v) : `${num(1)}${v}`);
+const forLoop = (v, from, to, doXml) =>
+  `<block type="controls_custom_for" id="${uid()}"><field name="VAR" id="${v.id}">${esc(v.name)}</field><value name="FROM">${forVal(from)}</value><value name="TO">${forVal(to)}</value><statement name="DO">${doXml}</statement></block>`;
 const ifBlock = (condXml, doXml) =>
   `<block type="controls_if" id="${uid()}"><value name="IF0">${condXml}</value><statement name="DO0">${doXml}</statement></block>`;
 const ifElse = (condXml, doXml, elseXml) =>
@@ -120,18 +121,18 @@ const V = (name) => ({ name, id: uid() });
 
 // ---------- 문제 3: 거듭제곱 (반복문 + 반환값) ----------
 {
-  const x = V("x"), y = V("y"), result = V("결과");
+  const x = V("x"), y = V("y"), result = V("결과"), i = V("i");
   const fn = "거듭제곱 구하기";
   const stack = chain(
     setVar(result, numBlock(1)),
-    repeatTimes(getVar(y), setVar(result, arith("MULTIPLY", getVar(result), getVar(x))))
+    forLoop(i, 1, getVar(y), setVar(result, arith("MULTIPLY", getVar(result), getVar(x))))
   );
   const def = defReturn(fn, [x, y], stack, getVar(result), 340);
   const main = startClick(chain(
     chat(callReturn(fn, [x, y], [numBlock(2), numBlock(10)])),
     chat(callReturn(fn, [x, y], [prompt("밑(x)을 입력해주세요: "), prompt("지수(y)를 입력해주세요: ")]))
   ));
-  writeGen("problem-3.gen", "미션1 거듭제곱 구하기 (답안)", [x, y, result], main + def);
+  writeGen("problem-3.gen", "미션1 거듭제곱 구하기 (답안)", [x, y, result, i], main + def);
 }
 
 // ---------- 문제 4: 구구단 (반복문) ----------
@@ -139,7 +140,7 @@ const V = (name) => ({ name, id: uid() });
   const dan = V("단"), i = V("i");
   const fn = "구구단";
   const line = textJoin([getVar(dan), textBlock(" × "), getVar(i), textBlock(" = "), arith("MULTIPLY", getVar(dan), getVar(i))]);
-  const def = defNoReturn(fn, [dan], forLoop(i, numBlock(1), numBlock(9), chat(line)), 300);
+  const def = defNoReturn(fn, [dan], forLoop(i, 1, 9, chat(line)), 300);
   const main = startClick(callNoReturn(fn, [dan], [prompt("몇 단을 출력할까요?")]));
   writeGen("problem-4.gen", "미션2 구구단 구하기 (답안)", [dan, i], main + def);
 }
@@ -151,13 +152,13 @@ const V = (name) => ({ name, id: uid() });
   const fnSkip = "단 제외 구구단";
   const gugudanDef = defNoReturn(
     gugudan, [dan],
-    forLoop(i, numBlock(1), numBlock(9),
+    forLoop(i, 1, 9,
       chat(textJoin([getVar(dan), textBlock(" × "), getVar(i), textBlock(" = "), arith("MULTIPLY", getVar(dan), getVar(i))]))),
     300
   );
   const skipDef = defNoReturn(
     fnSkip, [skip],
-    forLoop(j, numBlock(2), numBlock(9),
+    forLoop(j, 2, 9,
       ifBlock(compare("NEQ", getVar(j), getVar(skip)), callNoReturn(gugudan, [dan], [getVar(j)]))),
     620
   );
@@ -186,7 +187,7 @@ const V = (name) => ({ name, id: uid() });
 {
   const n = V("수"), i = V("i"), found = V("약수 있음");
   const fn = "소수 판별";
-  const loop = forLoop(i, numBlock(2), arith("MINUS", getVar(n), numBlock(1)),
+  const loop = forLoop(i, 2, arith("MINUS", getVar(n), numBlock(1)),
     ifBlock(compare("EQ", modulo(getVar(n), getVar(i)), numBlock(0)), setVar(found, boolBlock("TRUE"))));
   const judge = ifElse(compare("EQ", getVar(found), boolBlock("TRUE")),
     chatText("소수가 아니에요"), chatText("소수예요"));
