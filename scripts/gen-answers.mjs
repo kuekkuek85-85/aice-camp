@@ -73,6 +73,9 @@ const startClick = (nextXml) =>
 // 호출어 인식 블록 (교사 예제에서 확인): kws_loop — KEYWORD 필드 + DO0 statement
 const kwsLoop = (keyword, doXml) =>
   `<block type="kws_loop" id="${uid()}"><field name="KEYWORD">${esc(keyword)}</field><statement name="DO0">${doXml}</statement></block>`;
+// TTS 음성 합성 블록 (교사 예제에서 확인): tts_play_text — LANG 필드 + TEXT value
+const ttsText = (text) =>
+  `<block type="tts_play_text" id="${uid()}"><field name="LANG">ko-KR</field><value name="TEXT"><shadow type="text" id="${uid()}"><field name="TEXT">${esc(text)}</field></shadow></value></block>`;
 
 function defNoReturn(name, args, stackXml, y) {
   const mutation = args.map((a) => `<arg name="${esc(a.name)}" varid="${a.id}"></arg>`).join("");
@@ -169,7 +172,7 @@ const V = (name) => ({ name, id: uid() });
   writeGen("problem-5.gen", "미션3 단 제외 구구단 (답안)", [dan, i, skip, j], main + gugudanDef + skipDef);
 }
 
-// ---------- 문제 6: 3의 배수 판별 (나머지 연산) — ⚠️ TTS 블록은 말하기로 임시 대체 ----------
+// ---------- 문제 6: 3의 배수 판별 (나머지 연산 + TTS 음성 출력) ----------
 {
   const n = V("수");
   const fn = "삼의 배수 판별";
@@ -177,13 +180,13 @@ const V = (name) => ({ name, id: uid() });
     fn, [n],
     ifElse(
       compare("EQ", modulo(getVar(n), numBlock(3)), numBlock(0)),
-      chatText("3의 배수예요, 짝!"),
-      chatText("3의 배수가 아니에요")
+      ttsText("3의 배수예요, 짝!"),
+      ttsText("3의 배수가 아니에요")
     ),
     300
   );
   const main = startClick(callNoReturn(fn, [n], [prompt("숫자를 입력해주세요: ")]));
-  writeGen("problem-6.gen", "미션4 3의 배수 판별 (답안·TTS 블록 교체 필요)", [n], main + def);
+  writeGen("problem-6.gen", "미션4 3의 배수 TTS 판별 (답안)", [n], main + def);
 }
 
 // ---------- 문제 7: 소수 판별 (반복문 + 나머지 연산) — ⚠️ 지니야 호출어 블록은 시작 이벤트로 임시 대체 ----------
@@ -198,7 +201,7 @@ const V = (name) => ({ name, id: uid() });
       setVar(count, arith("ADD", getVar(count), numBlock(1)))
     ));
   const judge = ifElse(compare("EQ", getVar(count), numBlock(2)),
-    chatText("소수가 맞아요!"), chatText("소수가 아니에요"));
+    ttsText("소수가 맞아요!"), ttsText("소수가 아니에요"));
   const body = chain(setVar(count, numBlock(0)), loop, judge);
   const def = defNoReturn(fn, [n], body, 340);
   // "지니야" 호출어가 인식되면 소수 판별 함수 실행
