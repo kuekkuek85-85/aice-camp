@@ -158,7 +158,7 @@ const DAY2 = {
   timeline: [
     { period: "1교시", time: "45'", activity: "따라하기 ① 제곱 출력하기 · ② 제곱 구하기", steps: ["square-print", "square-return"] },
     { period: "2교시", time: "45'", activity: "각자 미션 ① 거듭제곱 · ② 구구단", steps: ["power-mission", "gugudan-mission"] },
-    { period: "3교시", time: "50'", activity: "각자 미션 ③ 단 제외 구구단 · ④ 7의 배수 · ⑤ 소수 → 마무리", steps: ["gugudan-skip-mission", "multiple7-mission", "prime-mission"] },
+    { period: "3교시", time: "50'", activity: "각자 미션 ③ 단 제외 구구단 · ④ 3의 배수 · ⑤ 소수 → 마무리", steps: ["gugudan-skip-mission", "multiple3-mission", "prime-mission"] },
   ],
   steps: [
     {
@@ -237,19 +237,19 @@ const DAY2 = {
       ],
     },
     {
-      stepId: "multiple7-mission",
+      stepId: "multiple3-mission",
       order: 6,
-      title: "각자 미션 ④ 7의 배수인지 음성으로 알려주기 (나머지 연산 + TTS)",
-      desc: "문제 상황: 369 게임에서 7의 배수마다 박수를 쳐야 해요! 매개변수로 숫자를 받아 그 수가 7의 배수인지 아닌지 판별하고, 결과를 화면이 아니라 음성(TTS)으로 말해주는 함수를 스스로 만들어보세요. 함수·나머지 연산·TTS를 함께 사용해야 해요. 완성했으면 완료 버튼을 누르세요.",
+      title: "각자 미션 ④ 3의 배수인지 음성으로 알려주기 (나머지 연산 + TTS)",
+      desc: "문제 상황: 369 게임에서 3의 배수마다 박수를 쳐야 해요! 매개변수로 숫자를 받아 그 수가 3의 배수인지 아닌지 판별하고, 결과를 화면이 아니라 음성(TTS)으로 말해주는 함수를 스스로 만들어보세요. 함수·나머지 연산·TTS를 함께 사용해야 해요. ※ 13, 31처럼 3의 배수는 아니지만 숫자 3이 들어가는 수는 난이도상 다루지 않아요 — '3의 배수'만 판별하면 됩니다. 완성했으면 완료 버튼을 누르세요.",
       submitType: "check",
       micRequired: true,
       linksType: "choice",
       linksLabel: "실습 사이트",
       links: [{ label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL }],
       hints: [
-        "어떤 수가 7의 배수인지 알려면 7로 나눈 '나머지'를 보면 돼요 — 연산 카테고리에서 나머지 블록을 찾아보세요.",
-        "만약 (수를 7로 나눈 나머지) = 0 이면 배수, 아니면 배수가 아니에요 — 조건(만약~아니면) 블록으로 갈라주세요.",
-        "1일차에 써본 TTS(음성 합성) 블록을 기억하나요? 말하기 대신 TTS 블록에 \"7의 배수예요 / 아니에요\"를 넣어 소리로 알려주고, 입력받은 수로 함수를 호출하세요.",
+        "어떤 수가 3의 배수인지 알려면 3으로 나눈 '나머지'를 보면 돼요 — 연산 카테고리에서 나머지 블록을 찾아보세요.",
+        "만약 (수를 3으로 나눈 나머지) = 0 이면 배수(박수 짝!), 아니면 배수가 아니에요 — 조건(만약~아니면) 블록으로 갈라주세요.",
+        "1일차에 써본 TTS(음성 합성) 블록을 기억하나요? 말하기 대신 TTS 블록에 \"3의 배수예요, 짝! / 3의 배수가 아니에요\"를 넣어 소리로 알려주고, 입력받은 수로 함수를 호출하세요.",
       ],
     },
     {
@@ -333,7 +333,7 @@ const PROBLEMS = [
   },
   {
     problemId: "problem-6",
-    title: "미션④ 7의 배수 음성(TTS) 판별",
+    title: "미션④ 3의 배수 음성(TTS) 판별",
     order: 6,
     fileName: "problem-6.gen",
     hints: DAY2.steps[5].hints,
