@@ -28,6 +28,7 @@ export default function DayPage({ params }: { params: Promise<{ n: string }> }) 
     submitLink,
     submitFile,
     openHint,
+    regrade,
   } = useDayProgress(n);
 
   useEffect(() => {
@@ -142,6 +143,7 @@ export default function DayPage({ params }: { params: Promise<{ n: string }> }) 
             <StepCard
               key={step.stepId}
               step={step}
+              dayId={n}
               progress={progress?.steps?.[step.stepId]}
               unlocked={isStepUnlocked(steps, steps.indexOf(step), progress)}
               uploading={uploading === step.stepId}
@@ -152,6 +154,7 @@ export default function DayPage({ params }: { params: Promise<{ n: string }> }) 
               onSubmitLink={(url) => submitLink(step.stepId, url)}
               onSubmitFile={(file) => submitFile(step.stepId, file)}
               onOpenHint={() => openHint(step.stepId)}
+              onRegrade={() => regrade(step.stepId)}
             />
           ))}
         </div>

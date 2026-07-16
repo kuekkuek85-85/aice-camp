@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import type { StepDef, StepGrade, StepProgress } from "@/lib/types";
+import { RUBRICS, rubricKey } from "@/lib/grading/rubrics";
 import { ProblemFileDownload } from "@/components/ProblemFileDownload";
 import { MaterialsList } from "@/components/MaterialsList";
 
 type Props = {
   step: StepDef;
+  dayId: string;
   progress: StepProgress | undefined;
   unlocked: boolean;
   uploading: boolean;
@@ -17,10 +19,12 @@ type Props = {
   onSubmitLink: (url: string) => Promise<boolean>;
   onSubmitFile: (file: File) => Promise<boolean>;
   onOpenHint: () => void;
+  onRegrade: () => void;
 };
 
 export function StepCard({
   step,
+  dayId,
   progress,
   unlocked,
   uploading,
@@ -31,10 +35,16 @@ export function StepCard({
   onSubmitLink,
   onSubmitFile,
   onOpenHint,
+  onRegrade,
 }: Props) {
   const status = progress?.status ?? "todo";
   const isDone = status === "done";
   const isDeferred = status === "deferred";
+
+  // 이 단계가 AI 자동 채점 대상인지, 그리고 파일 제출은 됐는데 아직 채점 결과가 없는지
+  const isGradeable = Boolean(RUBRICS[rubricKey(dayId, step.stepId)]);
+  const awaitingGrade =
+    isGradeable && progress?.submission?.type === "file" && !progress?.grade && !grading;
 
   // 제출 완료 후에도 "수정하기"로 다시 제출할 수 있게 한다
   const [editing, setEditing] = useState(false);
@@ -242,6 +252,18 @@ export function StepCard({
                 <p className="mt-2 rounded-lg bg-block-lilac px-3 py-2 text-sm font-medium text-ink">
                   🤖 AI가 채점하고 있어요... 잠시만요!
                 </p>
+              )}
+
+              {awaitingGrade && (
+                <div className="mt-2 flex flex-wrap items-center gap-2 rounded-lg bg-block-cream px-3 py-2 text-sm text-ink">
+                  <span>아직 AI 채점 결과가 없어요.</span>
+                  <button
+                    onClick={onRegrade}
+                    className="rounded-full bg-ink px-3 py-1 text-xs font-semibold text-canvas hover:opacity-80"
+                  >
+                    🤖 AI 채점 받기
+                  </button>
+                </div>
               )}
 
               {progress?.grade && <GradePanel grade={progress.grade} />}

@@ -36,18 +36,38 @@ export function useDayProgress(dayId: string) {
   const [grading, setGrading] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  // 채점 요청. 콜드 스타트/타임아웃 등 일시적 실패를 대비해 1회 재시도한다.
+  // 성공 여부를 boolean으로 돌려주어 호출부가 실패를 인지할 수 있게 한다.
   const requestGrade = useCallback(
-    async (stepId: string) => {
+    async (stepId: string): Promise<boolean> => {
       const auth = getFirebaseAuth();
       const idToken = await auth.currentUser?.getIdToken();
-      if (!idToken) return;
-      await fetch("/api/grade", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
-        body: JSON.stringify({ dayId, stepId }),
-      }).catch(() => {});
+      if (!idToken) return false;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const res = await fetch("/api/grade", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
+            body: JSON.stringify({ dayId, stepId }),
+          });
+          if (res.ok) return true;
+        } catch {
+          // 네트워크 오류 — 아래에서 재시도
+        }
+        if (attempt === 0) await new Promise((r) => setTimeout(r, 1500));
+      }
+      return false;
     },
     [dayId]
+  );
+
+  // 스피너 상태를 관리하며 채점을 요청한다(자동 채점 실패 후 학생이 다시 누르는 경로 포함).
+  const regrade = useCallback(
+    (stepId: string) => {
+      setGrading(stepId);
+      void requestGrade(stepId).finally(() => setGrading((g) => (g === stepId ? null : g)));
+    },
+    [requestGrade]
   );
 
   useEffect(() => {
@@ -159,8 +179,7 @@ export function useDayProgress(dayId: string) {
         });
         // 채점 대상 단계면 백그라운드로 AI 채점 요청 (결과는 progress 구독으로 자동 반영)
         if (RUBRICS[rubricKey(dayId, stepId)]) {
-          setGrading(stepId);
-          void requestGrade(stepId).finally(() => setGrading((g) => (g === stepId ? null : g)));
+          regrade(stepId);
         }
         return true;
       } catch {
@@ -170,7 +189,7 @@ export function useDayProgress(dayId: string) {
         setUploading(null);
       }
     },
-    [session, dayId, patchStep, requestGrade]
+    [session, dayId, patchStep, regrade]
   );
 
   const openHint = useCallback(
@@ -224,5 +243,6 @@ export function useDayProgress(dayId: string) {
     submitLink,
     submitFile,
     openHint,
+    regrade,
   };
 }
