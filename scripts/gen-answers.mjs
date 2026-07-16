@@ -70,6 +70,9 @@ const textJoin = (parts) =>
 const textBlock = (t) => `<block type="text" id="${uid()}"><field name="TEXT">${esc(t)}</field></block>`;
 const startClick = (nextXml) =>
   `<block type="eventloop_object_start_click" id="${uid()}" x="0" y="0"><next>${nextXml}</next></block>`;
+// 호출어 인식 블록 (교사 예제에서 확인): kws_loop — KEYWORD 필드 + DO0 statement
+const kwsLoop = (keyword, doXml) =>
+  `<block type="kws_loop" id="${uid()}"><field name="KEYWORD">${esc(keyword)}</field><statement name="DO0">${doXml}</statement></block>`;
 
 function defNoReturn(name, args, stackXml, y) {
   const mutation = args.map((a) => `<arg name="${esc(a.name)}" varid="${a.id}"></arg>`).join("");
@@ -198,8 +201,11 @@ const V = (name) => ({ name, id: uid() });
     chatText("소수가 맞아요!"), chatText("소수가 아니에요"));
   const body = chain(setVar(count, numBlock(0)), loop, judge);
   const def = defNoReturn(fn, [n], body, 340);
-  const main = startClick(callNoReturn(fn, [n], [prompt("숫자를 입력해주세요: ")]));
-  writeGen("problem-7.gen", "미션5 소수 판별 (답안·지니야 호출어 블록 교체 필요)", [n, i, count], main + def);
+  // "지니야" 호출어가 인식되면 소수 판별 함수 실행
+  const main = startClick(
+    kwsLoop("지니야", callNoReturn(fn, [n], [prompt("숫자를 입력해주세요: ")]))
+  );
+  writeGen("problem-7.gen", "미션5 지니야 소수 판별 (답안)", [n, i, count], main + def);
 }
 
 console.log("완료:", outDir);
