@@ -105,7 +105,7 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
           <AnswerDownloads problems={problems} />
         </div>
 
-        <SubmissionsList roster={roster} progress={progress} masking={masking} />
+        <SubmissionsList roster={roster} progress={progress} masking={masking} day={day} dayId={dayId} />
 
         <DangerZone />
       </main>
