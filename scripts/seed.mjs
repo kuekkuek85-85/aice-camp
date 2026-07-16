@@ -157,8 +157,8 @@ const DAY2 = {
   goal: "매개변수·반환값이 있는 함수를 따라 만들어보고, 반복문과 함수를 함께 쓰는 미션 2개에 도전한다.",
   timeline: [
     { period: "1교시", time: "45'", activity: "따라하기 ① 제곱 출력하기 · ② 제곱 구하기", steps: ["square-print", "square-return"] },
-    { period: "2교시", time: "45'", activity: "각자 미션 ① 거듭제곱 구하기", steps: ["power-mission"] },
-    { period: "3교시", time: "50'", activity: "각자 미션 ② 구구단 · ③ 단 제외 구구단 → 마무리", steps: ["gugudan-mission", "gugudan-skip-mission"] },
+    { period: "2교시", time: "45'", activity: "각자 미션 ① 거듭제곱 · ② 구구단", steps: ["power-mission", "gugudan-mission"] },
+    { period: "3교시", time: "50'", activity: "각자 미션 ③ 단 제외 구구단 · ④ 7의 배수 · ⑤ 소수 → 마무리", steps: ["gugudan-skip-mission", "multiple7-mission", "prime-mission"] },
   ],
   steps: [
     {
@@ -236,6 +236,36 @@ const DAY2 = {
         "매개변수 '제외할 단'을 받는 함수 안에서, 2~9를 도는 반복 중 제외할 단이 아닐 때만 구구단(지금 단)을 호출하고, 마지막에 원하는 단을 인수로 함수를 호출하세요.",
       ],
     },
+    {
+      stepId: "multiple7-mission",
+      order: 6,
+      title: "각자 미션 ④ 7의 배수인지 판별하기 (나머지 연산 활용)",
+      desc: "문제 상황: 369 게임에서 7의 배수마다 박수를 쳐야 해요! 매개변수로 숫자를 받아 그 수가 7의 배수인지 아닌지 출력하는 함수를 스스로 만들어보세요. 함수와 나머지 연산을 함께 사용해야 해요. 완성했으면 완료 버튼을 누르세요.",
+      submitType: "check",
+      linksType: "choice",
+      linksLabel: "실습 사이트",
+      links: [{ label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL }],
+      hints: [
+        "어떤 수가 7의 배수인지 알려면 7로 나눈 '나머지'를 보면 돼요 — 연산 카테고리에서 나머지 블록을 찾아보세요.",
+        "만약 (수를 7로 나눈 나머지) = 0 이면 배수, 아니면 배수가 아니에요 — 조건(만약~아니면) 블록으로 갈라주세요.",
+        "매개변수 '수'를 받는 함수 안에서 나머지가 0인지 검사해 \"7의 배수예요 / 아니에요\"를 말하게 하고, 사용자에게 입력받은 수로 호출하세요.",
+      ],
+    },
+    {
+      stepId: "prime-mission",
+      order: 7,
+      title: "각자 미션 ⑤ 소수인지 판별하기 (반복문·나머지 연산 활용)",
+      desc: "문제 상황: 수학 탐정이 되어 숫자가 소수인지 밝혀내요! 매개변수로 숫자를 받아 그 수가 소수인지 아닌지 출력하는 함수를 스스로 만들어보세요. 함수, 반복문, 나머지 연산을 모두 사용해야 하는 최종 보스 미션! 완성했으면 완료 버튼을 누르세요.",
+      submitType: "check",
+      linksType: "choice",
+      linksLabel: "실습 사이트",
+      links: [{ label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL }],
+      hints: [
+        "소수는 1과 자기 자신으로만 나누어지는 수예요. 2부터 (수-1)까지 하나씩 나눠보며 나누어떨어지는 수가 있는지 확인해보세요 — 반복문이 필요해요!",
+        "반복 변수 i를 2부터 (수-1)까지 늘리면서, (수를 i로 나눈 나머지) = 0 인 순간이 한 번이라도 있으면 소수가 아니에요 — '약수 있음' 변수를 만들어 기록해두세요.",
+        "매개변수 '수'를 받는 함수에서 반복이 끝난 뒤 약수를 못 찾았으면 \"소수예요\", 찾았으면 \"소수가 아니에요\"를 출력하고 입력받은 수로 호출하세요. (주의: 1은 소수가 아니에요!)",
+      ],
+    },
   ],
 };
 
@@ -298,6 +328,20 @@ const PROBLEMS = [
     order: 5,
     fileName: "problem-5.gen",
     hints: DAY2.steps[4].hints,
+  },
+  {
+    problemId: "problem-6",
+    title: "미션④ 7의 배수 판별",
+    order: 6,
+    fileName: "problem-6.gen",
+    hints: DAY2.steps[5].hints,
+  },
+  {
+    problemId: "problem-7",
+    title: "미션⑤ 소수 판별",
+    order: 7,
+    fileName: "problem-7.gen",
+    hints: DAY2.steps[6].hints,
   },
 ];
 
