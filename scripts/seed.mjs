@@ -158,7 +158,7 @@ const DAY2 = {
   timeline: [
     { period: "1교시", time: "45'", activity: "따라하기 ① 제곱 출력하기 · ② 제곱 구하기", steps: ["square-print", "square-return"] },
     { period: "2교시", time: "45'", activity: "각자 미션 ① 거듭제곱 구하기", steps: ["power-mission"] },
-    { period: "3교시", time: "50'", activity: "각자 미션 ② 구구단 구하기 → 마무리", steps: ["gugudan-mission"] },
+    { period: "3교시", time: "50'", activity: "각자 미션 ② 구구단 · ③ 단 제외 구구단 → 마무리", steps: ["gugudan-mission", "gugudan-skip-mission"] },
   ],
   steps: [
     {
@@ -221,6 +221,21 @@ const DAY2 = {
         "매개변수 '단'을 받는 함수를 정의하고 반복문 안에서 \"단 × i = 결과\" 형태로 출력한 뒤, 원하는 단을 인수로 호출하세요.",
       ],
     },
+    {
+      stepId: "gugudan-skip-mission",
+      order: 5,
+      title: "각자 미션 ③ 입력한 단만 빼고 구구단 출력하기 (반복문 활용)",
+      desc: "문제 상황: 동생이 7단은 이미 외웠대요! 매개변수로 '제외할 단'을 받아, 2~9단 중 그 단만 빼고 나머지 단을 모두 출력하는 함수를 스스로 만들어보세요. 함수와 반복문(그리고 조건!)을 함께 사용해야 해요. 완성했으면 완료 버튼을 누르세요.",
+      submitType: "check",
+      linksType: "choice",
+      linksLabel: "실습 사이트",
+      links: [{ label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL }],
+      hints: [
+        "반복이 두 겹 필요해요 — 2~9단을 도는 바깥 반복과, 각 단에서 1~9를 곱하는 안쪽 반복. 미션②에서 만든 '구구단' 함수를 다시 쓰면 안쪽 반복은 이미 완성돼 있어요!",
+        "바깥 반복에서 \"만약 지금 단 = 제외할 단이면 출력하지 않기(건너뛰기)\" 조건 블록을 넣으세요.",
+        "매개변수 '제외할 단'을 받는 함수 안에서, 2~9를 도는 반복 중 제외할 단이 아닐 때만 구구단(지금 단)을 호출하고, 마지막에 원하는 단을 인수로 함수를 호출하세요.",
+      ],
+    },
   ],
 };
 
@@ -276,6 +291,13 @@ const PROBLEMS = [
     order: 4,
     fileName: "problem-4.gen",
     hints: DAY2.steps[3].hints,
+  },
+  {
+    problemId: "problem-5",
+    title: "미션③ 입력한 단만 빼고 구구단 출력",
+    order: 5,
+    fileName: "problem-5.gen",
+    hints: DAY2.steps[4].hints,
   },
 ];
 
