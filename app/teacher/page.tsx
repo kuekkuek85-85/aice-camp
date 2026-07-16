@@ -8,6 +8,7 @@ import { StudentGrid, CompletionBars } from "@/components/teacher/StudentGrid";
 import { SubmissionsList } from "@/components/teacher/SubmissionsList";
 import { AnswerDownloads } from "@/components/teacher/AnswerDownloads";
 import { DangerZone } from "@/components/teacher/DangerZone";
+import { CurrentDayControl } from "@/components/teacher/CurrentDayControl";
 import { useTeacherData } from "@/lib/hooks/useTeacherData";
 import { useDay } from "@/lib/hooks/useDay";
 import { dayIds } from "@/lib/firestore-paths";
@@ -58,8 +59,10 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
       </header>
 
       <main className="mx-auto w-full max-w-6xl flex-1 space-y-6 px-4 py-6">
+        <CurrentDayControl />
+
         <div className="flex flex-wrap items-center gap-3">
-          <span className="font-mono text-xs uppercase tracking-widest text-ink">DAY</span>
+          <span className="font-mono text-xs uppercase tracking-widest text-ink">대시보드 보기</span>
           {dayIds.map((d) => (
             <button
               key={d}
