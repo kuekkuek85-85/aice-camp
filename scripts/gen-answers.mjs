@@ -184,21 +184,22 @@ const V = (name) => ({ name, id: uid() });
 }
 
 // ---------- 문제 7: 소수 판별 (반복문 + 나머지 연산) — ⚠️ 지니야 호출어 블록은 시작 이벤트로 임시 대체 ----------
+// 중학생 수준 알고리즘: 1부터 수까지 반복하며 나누어떨어지면 약수 개수 +1,
+// 반복이 끝나고 약수 개수가 2면 소수 (1도 자연히 걸러짐 — 예외 처리 불필요)
 {
-  const n = V("수"), i = V("i"), found = V("약수 있음");
+  const n = V("수"), i = V("i"), count = V("약수 개수");
   const fn = "소수 판별";
-  const loop = forLoop(i, 2, arith("MINUS", getVar(n), numBlock(1)),
-    ifBlock(compare("EQ", modulo(getVar(n), getVar(i)), numBlock(0)), setVar(found, boolBlock("TRUE"))));
-  const judge = ifElse(compare("EQ", getVar(found), boolBlock("TRUE")),
-    chatText("소수가 아니에요"), chatText("소수예요"));
-  const body = ifElse(
-    compare("LT", getVar(n), numBlock(2)),
-    chatText("소수가 아니에요"),
-    chain(setVar(found, boolBlock("FALSE")), loop, judge)
-  );
+  const loop = forLoop(i, 1, getVar(n),
+    ifBlock(
+      compare("EQ", modulo(getVar(n), getVar(i)), numBlock(0)),
+      setVar(count, arith("ADD", getVar(count), numBlock(1)))
+    ));
+  const judge = ifElse(compare("EQ", getVar(count), numBlock(2)),
+    chatText("소수가 맞아요!"), chatText("소수가 아니에요"));
+  const body = chain(setVar(count, numBlock(0)), loop, judge);
   const def = defNoReturn(fn, [n], body, 340);
   const main = startClick(callNoReturn(fn, [n], [prompt("숫자를 입력해주세요: ")]));
-  writeGen("problem-7.gen", "미션5 소수 판별 (답안·지니야 호출어 블록 교체 필요)", [n, i, found], main + def);
+  writeGen("problem-7.gen", "미션5 소수 판별 (답안·지니야 호출어 블록 교체 필요)", [n, i, count], main + def);
 }
 
 console.log("완료:", outDir);
