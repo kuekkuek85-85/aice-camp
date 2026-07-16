@@ -52,11 +52,21 @@ export type Submission = {
   submittedAt: number; // epoch ms
 };
 
+export type GradeVerdict = "통과" | "부분통과" | "미흡";
+
+export type StepGrade = {
+  verdict: GradeVerdict;
+  feedback: string;
+  gradedAt: number;
+  fileName?: string; // 어떤 제출본을 채점했는지
+};
+
 export type StepProgress = {
   status: StepStatus;
   completedAt?: number;
   submission?: Submission;
   hintOpened?: number;
+  grade?: StepGrade; // AI 자동 채점 결과 (서버가 기록)
 };
 
 export type ProgressDoc = {

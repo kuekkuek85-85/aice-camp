@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { StepDef, StepProgress } from "@/lib/types";
+import type { StepDef, StepGrade, StepProgress } from "@/lib/types";
 import { ProblemFileDownload } from "@/components/ProblemFileDownload";
 import { MaterialsList } from "@/components/MaterialsList";
 
@@ -10,6 +10,7 @@ type Props = {
   progress: StepProgress | undefined;
   unlocked: boolean;
   uploading: boolean;
+  grading?: boolean;
   submitError: string | null;
   onDone: () => void;
   onDeferred: () => void;
@@ -23,6 +24,7 @@ export function StepCard({
   progress,
   unlocked,
   uploading,
+  grading = false,
   submitError,
   onDone,
   onDeferred,
@@ -235,10 +237,41 @@ export function StepCard({
                   onCancelEdit={() => setEditing(false)}
                 />
               )}
+
+              {grading && !progress?.grade && (
+                <p className="mt-2 rounded-lg bg-block-lilac px-3 py-2 text-sm font-medium text-ink">
+                  🤖 AI가 채점하고 있어요... 잠시만요!
+                </p>
+              )}
+
+              {progress?.grade && <GradePanel grade={progress.grade} />}
             </div>
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+const GRADE_STYLE: Record<StepGrade["verdict"], { bg: string; badge: string; icon: string }> = {
+  통과: { bg: "bg-block-mint", badge: "bg-ink text-canvas", icon: "🎉" },
+  부분통과: { bg: "bg-block-cream", badge: "bg-ink text-canvas", icon: "🙂" },
+  미흡: { bg: "bg-block-pink", badge: "bg-magenta text-canvas", icon: "💪" },
+};
+
+function GradePanel({ grade }: { grade: StepGrade }) {
+  const s = GRADE_STYLE[grade.verdict] ?? GRADE_STYLE["부분통과"];
+  return (
+    <div className={`mt-2 rounded-lg ${s.bg} p-3`}>
+      <div className="flex items-center gap-2">
+        <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${s.badge}`}>
+          {s.icon} AI 채점: {grade.verdict}
+        </span>
+      </div>
+      <p className="mt-2 text-sm text-ink">{grade.feedback}</p>
+      <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/60">
+        AI 참고용 피드백 · 최종 확인은 선생님이 해요
+      </p>
     </div>
   );
 }

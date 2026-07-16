@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getFirebaseDb, getFirebaseStorage } from "@/lib/firebase/client";
+import { getFirebaseAuth, getFirebaseDb, getFirebaseStorage } from "@/lib/firebase/client";
+import { RUBRICS, rubricKey } from "@/lib/grading/rubrics";
 import { useStudentSession } from "@/lib/hooks/useStudentSession";
 import { useDay } from "@/lib/hooks/useDay";
 import { progressDocId } from "@/lib/firestore-paths";
@@ -32,7 +33,22 @@ export function useDayProgress(dayId: string) {
   const { day, loading: dayLoading, notFound } = useDay(dayId);
   const [progress, setProgress] = useState<ProgressDoc | null>(null);
   const [uploading, setUploading] = useState<string | null>(null);
+  const [grading, setGrading] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const requestGrade = useCallback(
+    async (stepId: string) => {
+      const auth = getFirebaseAuth();
+      const idToken = await auth.currentUser?.getIdToken();
+      if (!idToken) return;
+      await fetch("/api/grade", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
+        body: JSON.stringify({ dayId, stepId }),
+      }).catch(() => {});
+    },
+    [dayId]
+  );
 
   useEffect(() => {
     if (!session) return;
@@ -141,6 +157,11 @@ export function useDayProgress(dayId: string) {
           completedAt: Date.now(),
           submission: { type: "file", url, fileName: file.name, submittedAt: Date.now() },
         });
+        // 채점 대상 단계면 백그라운드로 AI 채점 요청 (결과는 progress 구독으로 자동 반영)
+        if (RUBRICS[rubricKey(dayId, stepId)]) {
+          setGrading(stepId);
+          void requestGrade(stepId).finally(() => setGrading((g) => (g === stepId ? null : g)));
+        }
         return true;
       } catch {
         setSubmitError("업로드에 실패했어요. 네트워크를 확인하고 다시 시도해주세요.");
@@ -149,7 +170,7 @@ export function useDayProgress(dayId: string) {
         setUploading(null);
       }
     },
-    [session, dayId, patchStep]
+    [session, dayId, patchStep, requestGrade]
   );
 
   const openHint = useCallback(
@@ -196,6 +217,7 @@ export function useDayProgress(dayId: string) {
     notFound,
     progress,
     uploading,
+    grading,
     submitError,
     markDone,
     markDeferred,

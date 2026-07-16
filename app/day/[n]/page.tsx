@@ -21,6 +21,7 @@ export default function DayPage({ params }: { params: Promise<{ n: string }> }) 
     notFound,
     progress,
     uploading,
+    grading,
     submitError,
     markDone,
     markDeferred,
@@ -144,6 +145,7 @@ export default function DayPage({ params }: { params: Promise<{ n: string }> }) 
               progress={progress?.steps?.[step.stepId]}
               unlocked={isStepUnlocked(steps, steps.indexOf(step), progress)}
               uploading={uploading === step.stepId}
+              grading={grading === step.stepId}
               submitError={submitError}
               onDone={() => markDone(step.stepId)}
               onDeferred={() => markDeferred(step.stepId)}

@@ -1,0 +1,79 @@
+// 문제별 채점 루브릭. 채점 대상 단계(stepId)만 등록한다.
+// answerFile: Storage answers/{answerFile} 의 모범답안 .gen (의사코드로 변환해 프롬프트에 포함)
+
+export type Rubric = {
+  title: string;
+  requirements: string[];
+  answerFile: string;
+};
+
+// dayId "_" stepId → 루브릭
+export const RUBRICS: Record<string, Rubric> = {
+  "2_square-print": {
+    title: "제곱 출력하기 — 매개변수 x를 받아 x의 제곱을 출력하는 함수를 만들고 여러 수로 호출하기",
+    requirements: [
+      "매개변수 x를 받는 함수를 '정의'했다",
+      "함수 안에서 x의 제곱(x×x)을 계산해 출력(말하기)한다",
+      "정의한 함수를 실제로 '호출'했다 (예: 2, 3, 또는 입력받은 수)",
+    ],
+    answerFile: "problem-1.gen",
+  },
+  "2_square-return": {
+    title: "제곱 구하기 — 매개변수 x를 받아 제곱한 값을 '반환'하는 함수를 만들고 호출해 출력하기",
+    requirements: [
+      "매개변수 x를 받는 함수를 '정의'했다",
+      "그 함수는 x의 제곱을 '반환값'으로 돌려준다 (함수 안에서 직접 출력하는 게 아니라 반환)",
+      "함수를 '호출'해서 반환값을 출력했다",
+    ],
+    answerFile: "problem-2.gen",
+  },
+  "2_power-mission": {
+    title: "거듭제곱 구하기 — 매개변수 x, y를 받아 x의 y거듭제곱을 구하는 함수 (반복문 활용)",
+    requirements: [
+      "매개변수 2개(밑 x, 지수 y)를 받는 함수를 정의했다",
+      "반복문을 사용해 x를 y번 곱한다 (결과 변수를 두고 반복마다 곱하기)",
+      "결과를 반환하거나 출력하고, 함수를 실제로 호출했다",
+    ],
+    answerFile: "problem-3.gen",
+  },
+  "2_gugudan-mission": {
+    title: "구구단 — 매개변수 '단'을 받아 그 단의 1~9 결과를 차례로 출력하는 함수 (반복문 활용)",
+    requirements: [
+      "매개변수 '단'을 받는 함수를 정의했다",
+      "반복문으로 1부터 9까지 돌면서 단 × i 를 계산한다",
+      "각 결과를 출력하고, 함수를 실제로 호출했다",
+    ],
+    answerFile: "problem-4.gen",
+  },
+  "2_gugudan-skip-mission": {
+    title: "단 제외 구구단 — '제외할 단'을 받아 2~9단 중 그 단만 빼고 출력하는 함수 (반복문+조건)",
+    requirements: [
+      "매개변수 '제외할 단'을 받는 함수를 정의했다",
+      "반복문으로 2~9단을 돌면서 각 단의 구구단을 출력한다",
+      "조건문으로 '제외할 단'과 같은 단은 건너뛴다",
+    ],
+    answerFile: "problem-5.gen",
+  },
+  "2_multiple3-mission": {
+    title: "3의 배수 판별 — 숫자를 받아 3의 배수인지 음성(TTS)으로 알려주는 함수 (나머지 연산)",
+    requirements: [
+      "매개변수(숫자)를 받는 함수를 정의했다",
+      "나머지 연산으로 3으로 나눈 나머지가 0인지 판별한다",
+      "판별 결과를 음성(TTS)으로 출력하고, 함수를 호출했다",
+    ],
+    answerFile: "problem-6.gen",
+  },
+  "2_prime-mission": {
+    title: "소수 판별 — '지니야' 호출어로 소수 판별 함수를 실행 (반복문+나머지 연산+호출어)",
+    requirements: [
+      "매개변수(숫자)를 받는 함수를 정의했다",
+      "반복문과 나머지 연산으로 소수 여부를 판별한다 (약수 개수 세기 등 방법은 자유)",
+      "판별 결과를 알려주고, '지니야' 호출어가 인식되면 함수가 실행되도록 연결했다",
+    ],
+    answerFile: "problem-7.gen",
+  },
+};
+
+export function rubricKey(dayId: string, stepId: string) {
+  return `${dayId}_${stepId}`;
+}

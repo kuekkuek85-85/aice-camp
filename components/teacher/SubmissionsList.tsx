@@ -21,6 +21,7 @@ export function SubmissionsList({ roster, progress, masking }: Props) {
           dayId: p.dayId,
           stepId,
           submission: step.submission!,
+          grade: step.grade,
         }))
     )
     .sort((a, b) => b.submission.submittedAt - a.submission.submittedAt);
@@ -31,24 +32,35 @@ export function SubmissionsList({ roster, progress, masking }: Props) {
       <div className="mt-2 max-h-96 space-y-1 overflow-y-auto">
         {items.length === 0 && <p className="text-sm text-ink">아직 제출물이 없어요.</p>}
         {items.map((item, i) => (
-          <div
-            key={i}
-            className="flex items-center justify-between rounded-lg px-3 py-2 text-sm odd:bg-surface-soft"
-          >
-            <span>
-              <span className="font-medium text-ink">{maskName(nameOf(item.studentId), masking)}</span>
-              <span className="ml-2 font-mono text-xs text-ink">
-                {item.dayId}일차 · {item.stepId}
+          <div key={i} className="rounded-lg px-3 py-2 text-sm odd:bg-surface-soft">
+            <div className="flex items-center justify-between">
+              <span>
+                <span className="font-medium text-ink">{maskName(nameOf(item.studentId), masking)}</span>
+                <span className="ml-2 font-mono text-xs text-ink">
+                  {item.dayId}일차 · {item.stepId}
+                </span>
+                {item.grade && (
+                  <span
+                    className={`ml-2 rounded-full px-2 py-0.5 text-[11px] font-bold ${
+                      item.grade.verdict === "미흡" ? "bg-magenta text-canvas" : "bg-ink text-canvas"
+                    }`}
+                  >
+                    {item.grade.verdict}
+                  </span>
+                )}
               </span>
-            </span>
-            <a
-              href={item.submission.url}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full bg-ink px-3 py-1 text-xs font-semibold text-canvas hover:opacity-80"
-            >
-              {item.submission.type === "link" ? "링크 열기" : `${item.submission.fileName ?? "파일"} 열기`}
-            </a>
+              <a
+                href={item.submission.url}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full bg-ink px-3 py-1 text-xs font-semibold text-canvas hover:opacity-80"
+              >
+                {item.submission.type === "link" ? "링크 열기" : `${item.submission.fileName ?? "파일"} 열기`}
+              </a>
+            </div>
+            {item.grade && (
+              <p className="mt-1 text-xs text-ink">🤖 {item.grade.feedback}</p>
+            )}
           </div>
         ))}
       </div>
