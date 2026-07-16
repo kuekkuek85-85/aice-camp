@@ -149,37 +149,78 @@ const DAY1 = {
   ],
 };
 
+const CODEX_URL = "https://aicodiny.com/codex";
+
 const DAY2 = {
   dayId: "2",
   title: "2일차 · 함수와 로직",
-  goal: "함수의 개념을 익히고, 문제 1을 함께 푼 뒤 2~4번 문제에 개인적으로 도전한다.",
+  goal: "매개변수·반환값이 있는 함수를 따라 만들어보고, 반복문과 함수를 함께 쓰는 미션 2개에 도전한다.",
   timeline: [
-    { period: "1교시", time: "45'", activity: "함수 개념 강의", steps: ["concept"] },
-    { period: "2교시", time: "45'", activity: "문제 1 함께 풀기", steps: ["problem-1-together"] },
-    { period: "3교시", time: "50'", activity: "문제 2~4 개인 도전", steps: ["problem-2-challenge", "problem-3-challenge", "problem-4-challenge"] },
+    { period: "1교시", time: "45'", activity: "따라하기 ① 제곱 출력하기 · ② 제곱 구하기", steps: ["square-print", "square-return"] },
+    { period: "2교시", time: "45'", activity: "각자 미션 ① 거듭제곱 구하기", steps: ["power-mission"] },
+    { period: "3교시", time: "50'", activity: "각자 미션 ② 구구단 구하기 → 마무리", steps: ["gugudan-mission"] },
   ],
   steps: [
-    { stepId: "concept", order: 1, title: "함수 개념 익히기", desc: "함수의 정의·호출·매개변수·반환값 개념을 정리합니다. (콘텐츠 준비 중)", submitType: "check" },
-    { stepId: "problem-1-together", order: 2, title: "문제 1 함께 풀기 (숫자확인)", desc: "선생님과 함께 함수 호출 구조를 완성합니다. 아래 실습 링크에서 직접 블록을 조립해보세요.", submitType: "check", resourceUrl: "https://aicodiny.com/edu-basic/blocks?eduId=mti191054pp917", problemFileName: "problem-1.gen", hints: [
-      "함수는 정의만 하면 실행되지 않아요. 무엇이 필요할까요?",
-      "시작 스택의 빈 자리에 들어갈 블록을 '함수' 카테고리에서 찾아보세요.",
-      "'숫자확인' 호출 블록을 연결하고, 인수 자리에 '입력' 변수를 넣으세요.",
-    ] },
-    { stepId: "problem-2-challenge", order: 3, title: "문제 2 개인 도전 (홀수짝수)", desc: "매개변수와 반환값을 사용하는 함수를 완성해 .gen으로 제출하세요. 아래 실습 링크에서 풀어보세요.", submitType: "file", resourceUrl: "https://aicodiny.com/edu-basic/blocks?eduId=xmr191056jrn583", problemFileName: "problem-2.gen", hints: [
-      "이 함수는 값을 '돌려주는' 함수예요. 빈 곳이 세 군데예요.",
-      "if 조건에는 \"x가 짝수인가?\"를 판별하는 블록이, 반환 자리에는 '결과' 변수가 필요해요.",
-      "호출할 때 '입력' 변수를 인수로 전달하세요.",
-    ] },
-    { stepId: "problem-3-challenge", order: 4, title: "문제 3 개인 도전 (평균계산)", desc: "매개변수 3개를 갖는 함수를 완성해 .gen으로 제출하세요. 아래 실습 링크에서 풀어보세요.", submitType: "file", resourceUrl: "https://aicodiny.com/edu-basic/blocks?eduId=dh191058dk37", problemFileName: "problem-3.gen", hints: [
-      "매개변수가 3개인 함수예요. 호출할 때 몇 개를 전달해야 할까요?",
-      "국어·수학·영어 점수를 순서대로 인수에 연결하고, 함수의 반환 자리에 '평균'을 넣으세요.",
-      "말하기 블록에 '평균 점수' 변수를 이어 붙이세요.",
-    ] },
-    { stepId: "problem-4-challenge", order: 5, title: "문제 4 개인 도전 (자판기)", desc: "함수 두 개를 순서대로 호출하는 문제를 완성해 .gen으로 제출하세요. 아래 실습 링크에서 풀어보세요.", submitType: "file", resourceUrl: "https://aicodiny.com/edu-basic/blocks?eduId=obu191060pm03", problemFileName: "problem-4.gen", hints: [
-      "함수 두 개를 '순서대로' 호출해야 해요. 어떤 순서일까요?",
-      "'가격 확인' 다음에 '거스름돈 계산'. 거스름돈은 무엇에서 무엇을 뺀 값일까요?",
-      "빼기 연산 블록에 '지불 금액'과 '가격'을 넣어 거스름돈 말하기에 연결하세요.",
-    ] },
+    {
+      stepId: "square-print",
+      order: 1,
+      title: "따라하기 ① 매개변수 있는 함수 — 제곱 출력하기",
+      desc: "매개변수 x를 받아 x의 제곱을 말하는 '제곱 출력하기' 함수를 선생님과 함께 만들어요. 제곱 출력하기(2), 제곱 출력하기(3)을 호출해보고, 마지막에는 사용자에게 수를 입력받아 그 수로 함수를 호출해보세요. 완성했으면 완료 버튼!",
+      submitType: "check",
+      linksType: "choice",
+      linksLabel: "실습 사이트",
+      links: [{ label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL }],
+      hints: [
+        "'함수' 카테고리에서 매개변수 x가 있는 '제곱 출력하기' 함수를 정의하세요.",
+        "함수 안에서 x × x 를 말하기(출력) 블록에 넣으면 제곱이 출력돼요.",
+        "호출 블록으로 제곱 출력하기(2), 제곱 출력하기(3)을 실행해보고, '묻고 기다리기'로 받은 대답을 인수 자리에 넣어보세요.",
+      ],
+    },
+    {
+      stepId: "square-return",
+      order: 2,
+      title: "따라하기 ② 반환값 있는 함수 — 제곱 구하기",
+      desc: "이번에는 매개변수 x를 받아 제곱한 값을 '돌려주는(반환)' 함수 '제곱 구하기'를 만들어요. 제곱 구하기(2), 제곱 구하기(3)을 호출해서 반환값을 출력해보고, 사용자에게 입력받은 수로도 호출해보세요. 완성했으면 완료 버튼!",
+      submitType: "check",
+      linksType: "choice",
+      linksLabel: "실습 사이트",
+      links: [{ label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL }],
+      hints: [
+        "이번 함수는 값을 '돌려줘요' — 반환값이 있는 함수로 정의하세요.",
+        "함수 안에서는 x × x 를 반환만 하고, 말하기(출력)는 함수 밖(호출한 쪽)에서 해요.",
+        "말하기 블록 안에 '제곱 구하기(입력받은 수)' 호출 블록을 끼워 넣으면 반환값이 그대로 출력돼요.",
+      ],
+    },
+    {
+      stepId: "power-mission",
+      order: 3,
+      title: "각자 미션 ① 거듭제곱 구하기 (반복문 활용)",
+      desc: "문제 상황: 수학 시간에 2의 10제곱을 계산해야 해요. 매개변수 x와 y를 받아 x의 y거듭제곱을 구하는 함수를 스스로 만들어보세요. 함수와 함께 반복문을 사용해야 해요! 완성 후 여러 값으로 호출해 확인하고 완료 버튼을 누르세요.",
+      submitType: "check",
+      linksType: "choice",
+      linksLabel: "실습 사이트",
+      links: [{ label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL }],
+      hints: [
+        "거듭제곱은 같은 수를 여러 번 곱하는 것 — x를 y번 곱하려면 어떤 블록이 필요할까요? (반복!)",
+        "'결과' 변수를 1로 시작하고, y번 반복하면서 결과 × x 를 '결과'에 다시 저장하세요.",
+        "매개변수 x, y를 받는 함수 안에 반복문을 넣고 '결과'를 반환한 뒤, 거듭제곱(2, 10)처럼 호출해 출력해보세요.",
+      ],
+    },
+    {
+      stepId: "gugudan-mission",
+      order: 4,
+      title: "각자 미션 ② 구구단 구하기 (반복문 활용)",
+      desc: "문제 상황: 동생에게 구구단을 알려주는 프로그램을 만들어요. 매개변수 '단'을 받아 그 단(예: 7단)의 1~9까지 결과를 차례로 출력하는 함수를 스스로 만들어보세요. 역시 함수와 반복문을 함께 사용해야 해요! 완성했으면 완료 버튼을 누르세요.",
+      submitType: "check",
+      linksType: "choice",
+      linksLabel: "실습 사이트",
+      links: [{ label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL }],
+      hints: [
+        "7단이라면 7×1부터 7×9까지 — 1부터 9까지 커지는 수가 필요해요. 반복문을 떠올려보세요.",
+        "반복 변수 i가 1~9로 변하는 동안, 단 × i 를 말하기(출력) 블록으로 보여주세요.",
+        "매개변수 '단'을 받는 함수를 정의하고 반복문 안에서 \"단 × i = 결과\" 형태로 출력한 뒤, 원하는 단을 인수로 호출하세요.",
+      ],
+    },
   ],
 };
 
@@ -205,34 +246,36 @@ const DAY3 = placeholderDay("3", "3일차 · 심화 실습", "콘텐츠 준비 �
 const DAY4 = placeholderDay("4", "4일차 · 종합 프로젝트", "콘텐츠 준비 중");
 const DAY5 = placeholderDay("5", "5일차 · 자습 · 모의평가", "자습 및 모의평가를 진행합니다.");
 
+// 교사 대시보드 "정답 .gen 다운로드" 목록.
+// 완성 예시 .gen을 Storage answers/{fileName} 에 올려두면 교사만 내려받을 수 있다.
 const PROBLEMS = [
   {
     problemId: "problem-1",
-    title: "1번 숫자확인",
+    title: "따라하기① 제곱 출력하기",
     order: 1,
     fileName: "problem-1.gen",
-    hints: DAY2.steps[1].hints,
+    hints: DAY2.steps[0].hints,
   },
   {
     problemId: "problem-2",
-    title: "2번 홀수짝수",
+    title: "따라하기② 제곱 구하기",
     order: 2,
     fileName: "problem-2.gen",
-    hints: DAY2.steps[2].hints,
+    hints: DAY2.steps[1].hints,
   },
   {
     problemId: "problem-3",
-    title: "3번 평균계산",
+    title: "미션① 거듭제곱 구하기",
     order: 3,
     fileName: "problem-3.gen",
-    hints: DAY2.steps[3].hints,
+    hints: DAY2.steps[2].hints,
   },
   {
     problemId: "problem-4",
-    title: "4번 자판기",
+    title: "미션② 구구단 구하기",
     order: 4,
     fileName: "problem-4.gen",
-    hints: DAY2.steps[4].hints,
+    hints: DAY2.steps[3].hints,
   },
 ];
 
