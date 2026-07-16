@@ -36,9 +36,13 @@ export function useDayProgress(dayId: string) {
 
   useEffect(() => {
     if (!session) return;
-    return onSnapshot(doc(getFirebaseDb(), "progress", progressDocId(session.studentId, dayId)), (snap) => {
-      setProgress(snap.exists() ? (snap.data() as ProgressDoc) : null);
-    });
+    return onSnapshot(
+      doc(getFirebaseDb(), "progress", progressDocId(session.studentId, dayId)),
+      (snap) => {
+        setProgress(snap.exists() ? (snap.data() as ProgressDoc) : null);
+      },
+      (err) => console.error("progress 구독 오류:", err)
+    );
   }, [session, dayId]);
 
   const writePublicProgress = useCallback(

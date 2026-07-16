@@ -41,10 +41,11 @@ service cloud.firestore {
       allow write: if isSelf(studentId) || isTeacher();
     }
 
-    // 진행 기록 — 본인 또는 교사만 읽기/쓰기. 문서 필드의 studentId가 항상 본인과 일치해야 함
+    // 진행 기록 — 본인 또는 교사만 읽기/쓰기. 문서 ID가 {학번}_{일차} 형식이라
+    // 아직 생성 전인 문서도 ID만으로 본인 여부를 판단해 구독(listen)할 수 있게 한다.
     match /progress/{docId} {
       allow read: if isTeacher() ||
-        (request.auth != null && resource != null && resource.data.studentId == request.auth.uid);
+        (request.auth != null && docId.matches(request.auth.uid + '_.*'));
       allow create: if request.auth != null &&
         request.resource.data.studentId == request.auth.uid;
       allow update: if isTeacher() ||

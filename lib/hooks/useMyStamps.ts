@@ -15,9 +15,13 @@ export function useMyStamps() {
     if (!session) return;
     const db = getFirebaseDb();
     const unsubs = dayIds.map((dayId) =>
-      onSnapshot(doc(db, "progress", progressDocId(session.studentId, dayId)), (snap) => {
-        setStamps((prev) => ({ ...prev, [dayId]: Boolean(snap.data()?.dayStampAt) }));
-      })
+      onSnapshot(
+        doc(db, "progress", progressDocId(session.studentId, dayId)),
+        (snap) => {
+          setStamps((prev) => ({ ...prev, [dayId]: Boolean(snap.data()?.dayStampAt) }));
+        },
+        (err) => console.error("stamps 구독 오류:", err)
+      )
     );
     return () => unsubs.forEach((u) => u());
   }, [session]);
