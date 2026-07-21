@@ -99,6 +99,15 @@ export const RUBRICS: Record<string, Rubric> = {
     ],
     answerFile: "day3-3.gen",
   },
+  "3_heatwave-year": {
+    title: "서울 폭염 최다 연도 — 엑셀 '서울 폭염' 데이터셋에서 2007~2022년 중 폭염일수가 가장 많은 연도를 찾아 음성 안내",
+    requirements: [
+      "엑셀 '서울 폭염' 데이터셋을 사용해, 반복문으로 2007~2022년의 폭염일수를 하나씩 살펴본다",
+      "지금까지의 최댓값(가장 큰 폭염일수)과 비교해 더 크면 최댓값과 '결과 연도'를 갱신하는 최댓값 찾기(선형 탐색)를 한다",
+      "최종적으로 찾은 '가장 폭염이 많았던 연도'를 음성으로 안내한다 (값 비교 방향·초기값 설정 방식은 자유)",
+    ],
+    answerFile: "day3-4.gen",
+  },
 };
 
 export function rubricKey(dayId: string, stepId: string) {

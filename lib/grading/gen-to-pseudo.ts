@@ -126,9 +126,11 @@ function expr(node: XmlNode | undefined): string {
       return `음성으로 듣기(${fieldVal(node, "LANG") || "ko-KR"})`;
     case "dataset_search": {
       const id = fieldVal(node, "_USERDATASET_");
-      const name = datasetNames[id] ?? id;
-      return `데이터셋"${name}"에서 ${expr(slotBlock(node, "QUERY"))} 찾기`;
+      const name = datasetNames[id];
+      return `데이터셋${name ? `"${name}"` : ""}에서 ${expr(slotBlock(node, "QUERY"))} 찾기`;
     }
+    case "math_string_to_number":
+      return `숫자로(${expr(slotBlock(node, "VALUE"))})`;
     case "translate": {
       const src = fieldVal(node, "SRC_LANG");
       const dest = fieldVal(node, "DEST_LANG");
