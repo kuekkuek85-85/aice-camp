@@ -151,6 +151,8 @@ function expr(node: XmlNode | undefined): string {
       }
       return parts.join(" + ");
     }
+    case "text_custom_concat":
+      return `${expr(slotBlock(node, "TEXT1"))} + ${expr(slotBlock(node, "TEXT2"))}`;
     case "misc_prompt":
       return `묻고답기다리기("${fieldVal(slotBlock(node, "TITLE") ?? node, "TEXT")}")`;
     case "procedures_callreturn": {

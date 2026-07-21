@@ -81,6 +81,15 @@ export const RUBRICS: Record<string, Rubric> = {
     ],
     answerFile: "day3-1.gen",
   },
+  "3_word-quiz": {
+    title: "영어 단어 퀴즈 — 엑셀 '문제/정답' 데이터셋으로 전체 문제를 하나씩 내고 채점해 총점을 알려주기",
+    requirements: [
+      "'문제' 데이터셋과 '정답' 데이터셋을 사용하고, 반복문으로 전체 문제를 순서대로 하나씩 낸다",
+      "각 문제마다 사용자 답안을 입력받아 정답과 비교하고, 맞으면 점수를 1 증가시킨다(점수 변수 활용)",
+      "모든 문제를 푼 뒤 최종 점수(총점)를 알려준다",
+    ],
+    answerFile: "day3-2.gen",
+  },
 };
 
 export function rubricKey(dayId: string, stepId: string) {
