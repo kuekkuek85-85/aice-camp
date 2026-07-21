@@ -72,6 +72,15 @@ export const RUBRICS: Record<string, Rubric> = {
     ],
     answerFile: "problem-7.gen",
   },
+  "3_flower-meaning": {
+    title: "꽃말 알려주기 — 엑셀 '꽃말' 데이터셋에서 사용자가 말한(또는 입력한) 꽃의 꽃말을 한국어로 알려주고 영어로도 번역, 없는 꽃은 안내",
+    requirements: [
+      "엑셀 '꽃말' 데이터셋을 사용해, 사용자가 입력(음성 또는 텍스트)한 꽃 이름으로 데이터셋에서 꽃말을 찾는다",
+      "찾은 꽃말을 '○○의 꽃말은 △△입니다' 형태로 한국어로 알려주고, 번역해서 영어로도 알려준다",
+      "데이터셋에 없는 꽃이면 조건(만약)으로 갈라 '해당 꽃의 정보가 없습니다.'라고 안내한다",
+    ],
+    answerFile: "day3-1.gen",
+  },
 };
 
 export function rubricKey(dayId: string, stepId: string) {

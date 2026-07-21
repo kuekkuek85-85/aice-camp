@@ -105,6 +105,9 @@ const OP: Record<string, string> = {
   AND: "그리고", OR: "또는",
 };
 
+// 데이터셋 ID → 이름 (genToPseudo 시작 시 채워진다). 의사코드에 사람이 읽는 이름을 쓰기 위함.
+let datasetNames: Record<string, string> = {};
+
 // 값(식) 블록 → 문자열
 function expr(node: XmlNode | undefined): string {
   if (!node) return "___";
@@ -115,8 +118,22 @@ function expr(node: XmlNode | undefined): string {
       return `"${fieldVal(node, "TEXT")}"`;
     case "logic_boolean":
       return fieldVal(node, "BOOL") === "TRUE" ? "참" : "거짓";
+    case "logic_null":
+      return "없음";
     case "variables_get":
       return fieldVal(node, "VAR");
+    case "stt":
+      return `음성으로 듣기(${fieldVal(node, "LANG") || "ko-KR"})`;
+    case "dataset_search": {
+      const id = fieldVal(node, "_USERDATASET_");
+      const name = datasetNames[id] ?? id;
+      return `데이터셋"${name}"에서 ${expr(slotBlock(node, "QUERY"))} 찾기`;
+    }
+    case "translate": {
+      const src = fieldVal(node, "SRC_LANG");
+      const dest = fieldVal(node, "DEST_LANG");
+      return `번역(${src}→${dest}: ${expr(slotBlock(node, "TEXT"))})`;
+    }
     case "math_arithmetic":
       return `(${expr(slotBlock(node, "A"))} ${OP[fieldVal(node, "OP")] ?? "?"} ${expr(slotBlock(node, "B"))})`;
     case "math_modulo":
@@ -184,6 +201,10 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
         out.push(`${pad}반복: ${expr(slotBlock(cur, "TIMES"))}번`);
         out.push(...statements(slotBlock(cur, "DO"), indent + 1));
         break;
+      case "controls_custom_while_infinity":
+        out.push(`${pad}계속 반복:`);
+        out.push(...statements(slotBlock(cur, "DO"), indent + 1));
+        break;
       case "controls_whileUntil":
         out.push(`${pad}반복(조건): ${expr(slotBlock(cur, "BOOL"))}`);
         out.push(...statements(slotBlock(cur, "DO"), indent + 1));
@@ -223,6 +244,11 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
 /** .gen JSON 문자열 → 의사코드 (실패 시 예외) */
 export function genToPseudo(genJsonText: string): string {
   const data = JSON.parse(genJsonText);
+  // 데이터셋 ID→이름 매핑 준비 (dataset_search 블록을 사람이 읽는 이름으로 표기)
+  datasetNames = {};
+  for (const ds of data.userDatasets ?? []) {
+    if (ds?.datasetId) datasetNames[ds.datasetId] = ds.datasetName ?? ds.datasetId;
+  }
   const scenes: { blockXml?: string }[] = data.scenes ?? [];
   const out: string[] = [];
 

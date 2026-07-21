@@ -289,7 +289,50 @@ function placeholderDay(dayId, title, goal) {
   };
 }
 
-const DAY3 = placeholderDay("3", "3일차 · 심화 실습", "콘텐츠 준비 중");
+const DATA_PORTAL_URL = "https://www.data.go.kr/";
+
+const DAY3 = {
+  dayId: "3",
+  title: "3일차 · 엑셀 데이터 활용",
+  goal: "엑셀(표) 데이터를 AI 코디니 '데이터 세트'로 불러와 활용하는 프로그램을 만든다. 주어진 엑셀로 실습하고, 공공데이터포털에서 직접 찾은 데이터로도 도전한다.",
+  timeline: [
+    { period: "1교시", time: "45'", activity: "엑셀 데이터·데이터 세트 개념 → 미션 ① 꽃말 도우미", steps: ["excel-intro", "flower-meaning"] },
+    { period: "2~3교시", time: "95'", activity: "공공데이터포털에서 직접 데이터를 찾아 나만의 프로그램 만들기", steps: ["flower-meaning"] },
+  ],
+  steps: [
+    {
+      stepId: "excel-intro",
+      order: 1,
+      title: "엑셀 데이터란? · 오늘의 흐름",
+      desc: "오늘은 엑셀(표) 데이터를 AI 코디니의 '데이터 세트'로 불러와 활용해요. 두 갈래로 진행합니다 — ① 선생님이 준 엑셀로 실습하기, ② 공공데이터포털에서 직접 데이터를 찾아 만들기. codex와 공공데이터포털을 한 번씩 열어보고 완료를 눌러주세요.",
+      submitType: "check",
+      linksType: "choice",
+      linksLabel: "오늘 사용할 사이트",
+      links: [
+        { label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL },
+        { label: "공공데이터포털 열기", url: DATA_PORTAL_URL },
+      ],
+    },
+    {
+      stepId: "flower-meaning",
+      order: 2,
+      title: "미션 ① 꽃말 도우미 (엑셀 데이터 + 번역)",
+      desc: "문제 상황: 꽃집을 돕는 '꽃말 도우미'를 만들어요! 아래 '꽃말_엑셀.xlsx'을 내려받아 codex에서 '데이터 세트'로 추가한 뒤, 사용자가 꽃 이름을 말(또는 입력)하면 그 꽃의 꽃말을 한국어로 알려주고(예: \"장미의 꽃말은 사랑입니다.\") 영어로도 번역해서 알려주는 프로그램을 만드세요. 데이터 세트에 없는 꽃을 말하면 \"해당 꽃의 정보가 없습니다.\"라고 안내해야 해요. 완성한 .gen 파일을 업로드하면 AI가 채점해줘요. (마이크/이어폰 필요)",
+      submitType: "fileOrCheck",
+      micRequired: true,
+      downloads: [{ fileName: "꽃말_엑셀.xlsx", label: "꽃말 엑셀 데이터 내려받기(.xlsx)" }],
+      linksType: "choice",
+      linksLabel: "실습 사이트",
+      links: [{ label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL }],
+      hints: [
+        "먼저 '꽃말_엑셀.xlsx'을 내려받아 codex에서 '데이터 세트 추가'로 불러오세요. 그리고 사용자가 꽃 이름을 말(또는 입력)하면 그 이름으로 데이터 세트에서 꽃말을 '찾기' 하세요.",
+        "찾은 꽃말이 '없음(비어 있음)'인지 조건(만약~아니면)으로 확인하세요 — 없으면 \"해당 꽃의 정보가 없습니다.\"라고 안내합니다.",
+        "꽃말이 있으면 \"OO의 꽃말은 △△입니다\" 문장을 만들어 음성으로 말하고, 번역 블록으로 영어로 바꿔 한 번 더 말해주세요. 계속 반복하기로 여러 꽃을 물어볼 수도 있어요.",
+      ],
+    },
+  ],
+};
+
 const DAY4 = placeholderDay("4", "4일차 · 종합 프로젝트", "콘텐츠 준비 중");
 const DAY5 = placeholderDay("5", "5일차 · 자습 · 모의평가", "자습 및 모의평가를 진행합니다.");
 
@@ -344,6 +387,13 @@ const PROBLEMS = [
     order: 7,
     fileName: "problem-7.gen",
     hints: DAY2.steps[6].hints,
+  },
+  {
+    problemId: "day3-1",
+    title: "3일차 미션① 꽃말 도우미 (엑셀+번역)",
+    order: 8,
+    fileName: "day3-1.gen",
+    hints: DAY3.steps[1].hints,
   },
 ];
 

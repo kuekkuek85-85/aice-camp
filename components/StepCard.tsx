@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { StepDef, StepGrade, StepProgress } from "@/lib/types";
 import { RUBRICS, rubricKey } from "@/lib/grading/rubrics";
 import { ProblemFileDownload } from "@/components/ProblemFileDownload";
+import { FileDownloads } from "@/components/FileDownloads";
 import { MaterialsList } from "@/components/MaterialsList";
 
 type Props = {
@@ -151,6 +152,10 @@ export function StepCard({
           )}
 
           {step.materialsPath && unlocked && <MaterialsList path={step.materialsPath} />}
+
+          {step.downloads && step.downloads.length > 0 && unlocked && (
+            <FileDownloads items={step.downloads} />
+          )}
 
           {step.problemFileName && unlocked && (
             <ProblemFileDownload fileName={step.problemFileName} />
