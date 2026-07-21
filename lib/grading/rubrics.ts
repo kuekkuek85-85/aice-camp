@@ -90,6 +90,15 @@ export const RUBRICS: Record<string, Rubric> = {
     ],
     answerFile: "day3-2.gen",
   },
+  "3_pass-check": {
+    title: "AICE 합격 조회 — 엑셀 '성적' 데이터셋에서 휴대폰 뒷 4자리로 성적을 조회하고, 없으면 안내, 60점 이상이면 합격/아니면 불합격",
+    requirements: [
+      "엑셀 '성적' 데이터셋을 사용해, 입력한 휴대폰 번호 4자리로 데이터셋에서 성적을 찾는다",
+      "데이터셋에 없는 번호면 조건(만약)으로 갈라 '조회 결과가 없습니다' 같은 안내를 한다",
+      "조회한 성적이 60점 이상이면 합격, 아니면 불합격을 안내한다(60 기준 비교)",
+    ],
+    answerFile: "day3-3.gen",
+  },
 };
 
 export function rubricKey(dayId: string, stepId: string) {
