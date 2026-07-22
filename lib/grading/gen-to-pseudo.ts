@@ -109,9 +109,10 @@ const OP: Record<string, string> = {
   AND: "그리고", OR: "또는",
 };
 
-// 데이터셋/신호 ID → 이름 (genToPseudo 시작 시 채워진다). 의사코드에 사람이 읽는 이름을 쓰기 위함.
+// 데이터셋/신호/회귀모델 ID → 이름 (genToPseudo 시작 시 채워진다). 의사코드에 사람이 읽는 이름을 쓰기 위함.
 let datasetNames: Record<string, string> = {};
 let signalNames: Record<string, string> = {};
+let modelNames: Record<string, string> = {};
 
 // 값(식) 블록 → 문자열
 function expr(node: XmlNode | undefined): string {
@@ -147,6 +148,10 @@ function expr(node: XmlNode | undefined): string {
       return `무작위(${expr(slotBlock(node, "FROM"))}~${expr(slotBlock(node, "TO"))})`;
     case "teachable_model_get_result":
       return "티처블머신 인식 결과";
+    case "ds_simpleregress_regress_predict": {
+      const name = modelNames[fieldVal(node, "_SIMPLEREGRESSMODEL_")];
+      return `단순회귀예측${name ? `"${name}"` : ""}(${expr(slotBlock(node, "VALUE"))})`;
+    }
     case "facedetect_get_emotion": {
       const at = fieldVal(node, "AT");
       const n = Number(at);
@@ -301,6 +306,9 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
       case "eventloop_object_start_click":
         out.push(`${pad}[시작하기 클릭했을 때]`);
         break;
+      case "controls_flow_statements":
+        out.push(`${pad}${fieldVal(cur, "FLOW") === "CONTINUE" ? "다음 반복으로 건너뛰기" : "반복 멈추기"}`);
+        break;
       default:
         out.push(`${pad}[블록:${type}]`);
     }
@@ -322,6 +330,10 @@ export function genToPseudo(genJsonText: string): string {
   signalNames = {};
   for (const sig of data.signals ?? []) {
     if (sig?.signalId) signalNames[sig.signalId] = sig.signalName ?? sig.signalId;
+  }
+  modelNames = {};
+  for (const m of data.simpleRegressModels ?? []) {
+    if (m?.modelId) modelNames[m.modelId] = m.modelName ?? m.modelId;
   }
   const scenes: { blockXml?: string }[] = data.scenes ?? [];
   const out: string[] = [];

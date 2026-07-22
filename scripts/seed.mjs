@@ -417,7 +417,7 @@ const DAY4 = {
   timeline: [
     { period: "1교시", time: "45'", activity: "OCR(문자 인식) 개념 → 미션 ① OCR 번역기", steps: ["ocr-intro", "ocr-translate"] },
     { period: "2교시", time: "45'", activity: "미션 ② 감정 노래 추천 (얼굴·감정 인식)", steps: ["emotion-song"] },
-    { period: "3교시", time: "50'", activity: "미션 ③ 티처블머신 자세 게임 (직접 학습한 AI 모델)", steps: ["teachable-pose"] },
+    { period: "3교시", time: "50'", activity: "미션 ③ 티처블머신 자세 게임 → 미션 ④ 회귀분석 예측", steps: ["teachable-pose", "regression-predict"] },
   ],
   steps: [
     {
@@ -480,6 +480,25 @@ const DAY4 = {
         "티처블머신에서 'Pose Project'로 '왼손들어', '오른손들어' 두 클래스를 학습시키고, [Export Model → Upload → 공유 링크 복사]로 내 모델 링크를 준비하세요.",
         "codex에서 '비디오 화면 보이기' → '비디오 좌우 반전' → '티처블머신 자세 모델 연결'(복사한 링크 붙여넣기) 순서로 시작하세요. 점수 변수는 0으로 시작!",
         "5번 반복 안에서 무작위(1~2)로 문제(왼손/오른손)를 정해 음성으로 내고, '티처블머신 인식 결과'가 문제와 같으면 점수+1(아니면 오답). 반복이 끝나면 총점을 말해주세요.",
+      ],
+    },
+    {
+      stepId: "regression-predict",
+      order: 5,
+      title: "미션 ④ 학급당 학생 수 예측 (단순 회귀 분석)",
+      desc: "문제 상황: 데이터의 흐름을 읽어 미래를 예측하는 AI를 만들어요! 2024년 이후 전국 초등학교의 학급당 학생 수가 18명 이하로 줄어드는 해를 예측합니다. codex의 [AI 학습 → 데이터 과학 → 단순 회귀 분석]에서 '초등학생 학급당 학생 수' 테이블을 불러와, '전국' 값을 예측하는 단순 회귀 모델을 만들고 이름을 '학급당 학생 수 예측'으로 저장하세요. 그리고 2025년부터 매년 예측값을 채팅으로 출력하다가, 18명 이하가 되는 첫 해가 나오면 그 연도를 알려주고 멈추면 됩니다. 회귀분석이 낯설면 아래 '회귀분석 시뮬레이션'을 꼭 먼저 열어보세요! 완성한 .gen 파일을 업로드하면 AI가 채점해줘요.",
+      submitType: "fileOrCheck",
+      micRequired: true,
+      linksType: "choice",
+      linksLabel: "실습 사이트 & 도움말 — 필요할 때 열어보세요",
+      links: [
+        { label: "📈 회귀분석 시뮬레이션 (단계별 도움말)", url: "/sim/regression" },
+        { label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL },
+      ],
+      hints: [
+        "[AI 학습 → 데이터 과학 → 단순 회귀 분석]에서 '초등학생 학급당 학생 수' 테이블을 불러와, '전국' 값을 예측하는 모델을 만들고 이름을 '학급당 학생 수 예측'으로 저장하세요.",
+        "'연도' 변수를 2025로 시작하고 '계속 반복' 안에서 '단순회귀예측(연도)'로 학생 수를 구해 채팅으로 출력하세요.",
+        "만약 예측한 학생 수가 18 이하이면 그 연도를 안내하고 '반복 멈추기'로 멈추세요. 아니면 연도를 1 늘려 다음 해를 예측합니다.",
       ],
     },
   ],
@@ -586,6 +605,13 @@ const PROBLEMS = [
     order: 14,
     fileName: "day4-3.gen",
     hints: DAY4.steps[3].hints,
+  },
+  {
+    problemId: "day4-4",
+    title: "4일차 미션④ 학급당 학생 수 예측 (단순 회귀 분석)",
+    order: 15,
+    fileName: "day4-4.gen",
+    hints: DAY4.steps[4].hints,
   },
 ];
 
