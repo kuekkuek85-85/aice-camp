@@ -55,13 +55,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "제출한 .gen 파일을 찾을 수 없어요." }, { status: 404 });
     }
 
-    const [answerBuf] = await bucket.file(`answers/${rubric.answerFile}`).download();
+    // 정답 파일이 있으면 내려받아 대조에 쓰고, 없으면(자유 과제) 요건만으로 채점한다.
+    let answerBuf: Buffer | null = null;
+    if (rubric.answerFile) {
+      [answerBuf] = await bucket.file(`answers/${rubric.answerFile}`).download();
+    }
 
     let studentPseudo: string;
-    let answerPseudo: string;
+    let answerPseudo: string | undefined;
     try {
       studentPseudo = genToPseudo(studentBuf.toString("utf8"));
-      answerPseudo = genToPseudo(answerBuf.toString("utf8"));
+      answerPseudo = answerBuf ? genToPseudo(answerBuf.toString("utf8")) : undefined;
     } catch {
       return NextResponse.json(
         { error: ".gen 파일을 해석하지 못했어요. 올바른 코디니 파일인지 확인해주세요." },

@@ -8,7 +8,31 @@ const ENDPOINT = (model: string) =>
 
 export type GradeResult = { verdict: GradeVerdict; feedback: string };
 
-function buildPrompt(rubric: Rubric, answerPseudo: string, studentPseudo: string): string {
+function buildPrompt(rubric: Rubric, answerPseudo: string | undefined, studentPseudo: string): string {
+  // 정답 파일이 없는 자유 창작 과제 — 요건 충족 여부로만, 격려 중심으로 채점
+  if (!answerPseudo) {
+    return `너는 중학생 블록코딩(AI 코디니) 과제를 채점하는 친절한 보조교사야.
+이 과제는 정해진 정답이 없는 '자유 창작 프로젝트'야. 학생이 스스로 주제와 데이터를 골라 만들었어.
+아래 [문제]와 [필수 요건]을 기준으로 [학생답안]을 평가해.
+
+채점 원칙(매우 중요):
+- 주제·데이터·구체적인 동작은 학생 자유야. 무엇을 만들었는지(주제 선택)로는 절대 감점하지 마.
+- [필수 요건]을 충분히 갖추고 하나의 완결된 프로그램으로 동작하면 "통과".
+- 방향은 맞는데 요건 일부가 빠졌으면 "부분통과", 요건 대부분이 빠졌거나 거의 만들다 만 상태면 "미흡".
+- 반복문·조건문은 종류·문법과 상관없이 문제를 해결했으면 인정해.
+- 창작 과제이니 잘한 점을 구체적으로 먼저 칭찬하고, 부족한 부분은 '무엇을 더하면 더 좋아질지' 격려하는 말투로 알려줘.
+- 반드시 아래 JSON 형식으로만 답해. 다른 말 붙이지 마.
+
+[문제] ${rubric.title}
+[필수 요건]
+${rubric.requirements.map((r, i) => `${i + 1}. ${r}`).join("\n")}
+
+[학생답안]
+${studentPseudo}
+
+출력(JSON): {"verdict":"통과|부분통과|미흡","feedback":"학생에게 보여줄 1~2문장 한국어 피드백(칭찬 + 다음 단계 제안)"}`;
+  }
+
   return `너는 중학생 블록코딩(AI 코디니) 과제를 채점하는 친절한 보조교사야.
 아래 [문제]와 [핵심 요건], [모범답안]을 참고해 [학생답안]을 채점해.
 
@@ -36,7 +60,7 @@ ${studentPseudo}
 
 export async function gradeWithGemini(
   rubric: Rubric,
-  answerPseudo: string,
+  answerPseudo: string | undefined,
   studentPseudo: string
 ): Promise<GradeResult> {
   const apiKey = process.env.GEMINI_API_KEY;
