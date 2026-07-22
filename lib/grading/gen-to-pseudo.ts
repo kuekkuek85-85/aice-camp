@@ -99,6 +99,10 @@ function slotBlock(node: XmlNode, slotName: string): XmlNode | undefined {
   return slot.children.find((c) => c.tag === "block") ?? slot.children.find((c) => c.tag === "shadow");
 }
 
+// 티처블머신 모델 종류 라벨
+const tmKind = (k: string) =>
+  k === "POSE" ? "자세(포즈)" : k === "IMAGE" ? "이미지" : k === "AUDIO" ? "소리" : k || "모델";
+
 const OP: Record<string, string> = {
   ADD: "+", MINUS: "−", MULTIPLY: "×", DIVIDE: "÷", POWER: "^",
   EQ: "=", NEQ: "≠", LT: "<", LTE: "≤", GT: ">", GTE: "≥",
@@ -139,6 +143,10 @@ function expr(node: XmlNode | undefined): string {
     }
     case "facedetect_get_result_count":
       return "감지된 얼굴 수";
+    case "math_random_int":
+      return `무작위(${expr(slotBlock(node, "FROM"))}~${expr(slotBlock(node, "TO"))})`;
+    case "teachable_model_get_result":
+      return "티처블머신 인식 결과";
     case "facedetect_get_emotion": {
       const at = fieldVal(node, "AT");
       const n = Number(at);
@@ -264,6 +272,20 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
       case "facedetect_start": {
         const media = fieldVal(cur, "MEDIA");
         out.push(`${pad}얼굴 감지 시작(${media === "CAMERA" ? "카메라" : media || "카메라"})`);
+        break;
+      }
+      case "ai_video_flip":
+        out.push(`${pad}비디오 좌우 반전`);
+        break;
+      case "teachable_model_set_url":
+        out.push(
+          `${pad}티처블머신 ${tmKind(fieldVal(cur, "KIND"))} 모델 연결(${expr(slotBlock(cur, "URL"))})`
+        );
+        break;
+      case "teachable_img_model_start": {
+        const kind = tmKind(fieldVal(cur, "MODEL_KIND_FIELD"));
+        const src = fieldVal(cur, "DATA_SOURCE_FIELD") === "CAMERA" ? "카메라" : fieldVal(cur, "DATA_SOURCE_FIELD");
+        out.push(`${pad}티처블머신 ${kind} 인식 시작(${src})`);
         break;
       }
       case "signal_send_and_wait": {

@@ -417,6 +417,7 @@ const DAY4 = {
   timeline: [
     { period: "1교시", time: "45'", activity: "OCR(문자 인식) 개념 → 미션 ① OCR 번역기", steps: ["ocr-intro", "ocr-translate"] },
     { period: "2교시", time: "45'", activity: "미션 ② 감정 노래 추천 (얼굴·감정 인식)", steps: ["emotion-song"] },
+    { period: "3교시", time: "50'", activity: "미션 ③ 티처블머신 자세 게임 (직접 학습한 AI 모델)", steps: ["teachable-pose"] },
   ],
   steps: [
     {
@@ -460,6 +461,25 @@ const DAY4 = {
         "\"지니야\" 호출어로 시작해서 '비디오 화면 보이기' → '얼굴 감지 시작(카메라)'을 넣으세요. 얼굴이 감지되면 '감정 분석' 신호를 '보내고 기다리기' 하세요.",
         "따로 '감정 분석 신호를 받았을 때' 블록을 만들어, 그 안에서 감지된 얼굴의 '감정'을 가져와 비교합니다.",
         "조건(만약~아니고 만약~아니면)으로 감정을 나누세요 — '기쁨'이면 신나는 노래, '슬픔'이면 위로되는 노래, 그 외에는 랜덤 노래를 재생한다고 음성으로 안내하면 완성이에요.",
+      ],
+    },
+    {
+      stepId: "teachable-pose",
+      order: 4,
+      title: "미션 ③ 티처블머신 자세 게임 (직접 학습한 AI 모델)",
+      desc: "문제 상황: 내가 직접 AI를 학습시켜 '왼손들어/오른손들어' 자세 게임을 만들어요! 먼저 티처블머신(teachablemachine.withgoogle.com)에서 '왼손들어', '오른손들어' 두 자세(포즈)를 학습시키고, [내보내기 → 업로드 → 공유 링크 복사]로 내 모델 링크를 만드세요. codex에서 비디오를 켜고 좌우 반전한 뒤 그 링크로 모델을 연결하고, 5번 반복하며 왼손/오른손을 무작위로 문제로 내(음성), 사용자의 자세가 문제와 맞으면 점수를 올리고, 마지막에 총점을 알려주세요. 완성한 .gen 파일을 업로드하면 AI가 채점해줘요. (마이크·카메라 필요, 링크는 각자 달라요)",
+      submitType: "fileOrCheck",
+      micRequired: true,
+      linksType: "choice",
+      linksLabel: "사용할 사이트",
+      links: [
+        { label: "티처블머신 열기 (모델 학습)", url: "https://teachablemachine.withgoogle.com" },
+        { label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL },
+      ],
+      hints: [
+        "티처블머신에서 'Pose Project'로 '왼손들어', '오른손들어' 두 클래스를 학습시키고, [Export Model → Upload → 공유 링크 복사]로 내 모델 링크를 준비하세요.",
+        "codex에서 '비디오 화면 보이기' → '비디오 좌우 반전' → '티처블머신 자세 모델 연결'(복사한 링크 붙여넣기) 순서로 시작하세요. 점수 변수는 0으로 시작!",
+        "5번 반복 안에서 무작위(1~2)로 문제(왼손/오른손)를 정해 음성으로 내고, '티처블머신 인식 결과'가 문제와 같으면 점수+1(아니면 오답). 반복이 끝나면 총점을 말해주세요.",
       ],
     },
   ],
@@ -559,6 +579,13 @@ const PROBLEMS = [
     order: 13,
     fileName: "day4-2.gen",
     hints: DAY4.steps[2].hints,
+  },
+  {
+    problemId: "day4-3",
+    title: "4일차 미션③ 티처블머신 자세 게임 (직접 학습 모델)",
+    order: 14,
+    fileName: "day4-3.gen",
+    hints: DAY4.steps[3].hints,
   },
 ];
 
