@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { DayDoc, GradeVerdict, ProgressDoc, RosterEntry, StepProgress, StudentDoc } from "@/lib/types";
 import { maskName } from "@/lib/mask";
+import { RUBRICS, rubricKey } from "@/lib/grading/rubrics";
 import { FeedbackAvatar, type AvatarMood } from "@/components/FeedbackAvatar";
 
 type Props = {
@@ -111,8 +112,10 @@ export function StudentGrid({
                       onClick={() =>
                         setSelected({
                           name: r.name,
+                          stepId: s.stepId,
                           stepOrder: s.order,
                           stepTitle: s.title,
+                          submitType: s.submitType,
                           dayId: day?.dayId ?? "",
                           sp: prog?.steps?.[s.stepId],
                         })
@@ -140,8 +143,10 @@ export function StudentGrid({
 
 type CellSelection = {
   name: string;
+  stepId: string;
   stepOrder: number;
   stepTitle: string;
+  submitType: string;
   dayId: string;
   sp: StepProgress | undefined;
 };
@@ -177,9 +182,11 @@ function SubmissionModal({
   masking: boolean;
   onClose: () => void;
 }) {
-  const { name, stepOrder, stepTitle, dayId, sp } = selection;
+  const { name, stepId, stepOrder, stepTitle, submitType, dayId, sp } = selection;
   const submission = sp?.submission;
   const grade = sp?.grade;
+  const noSubmitStep = submitType === "check" || submitType === "none"; // 산출물을 안 내는 단계
+  const isGradeable = Boolean(RUBRICS[rubricKey(dayId, stepId)]);
 
   return (
     <div
@@ -234,7 +241,9 @@ function SubmissionModal({
             </div>
           ) : (
             <p className="mt-1 rounded-lg bg-surface-soft px-3 py-2 text-sm text-ink/60">
-              아직 제출한 산출물이 없어요.
+              {noSubmitStep
+                ? "이 단계는 산출물을 제출하지 않는 '완료 확인' 단계예요."
+                : "아직 제출한 산출물이 없어요. (파일 없이 완료했거나 미제출)"}
             </p>
           )}
         </div>
@@ -262,9 +271,11 @@ function SubmissionModal({
             </div>
           ) : (
             <p className="mt-1 rounded-lg bg-surface-soft px-3 py-2 text-sm text-ink/60">
-              {submission
-                ? "아직 채점 결과가 없어요. (채점 대상이 아니거나 채점 전)"
-                : "산출물이 없어 채점 결과도 없어요."}
+              {!isGradeable
+                ? "이 단계는 AI 자동 채점 대상이 아니에요."
+                : submission
+                  ? "아직 채점 결과가 없어요. (채점 전이거나 실패 — 학생 화면에서 다시 채점할 수 있어요)"
+                  : "산출물이 없어 채점 결과도 없어요."}
             </p>
           )}
         </div>
