@@ -6,6 +6,7 @@ import { RUBRICS, rubricKey } from "@/lib/grading/rubrics";
 import { ProblemFileDownload } from "@/components/ProblemFileDownload";
 import { FileDownloads } from "@/components/FileDownloads";
 import { MaterialsList } from "@/components/MaterialsList";
+import { FeedbackAvatar, type AvatarMood } from "@/components/FeedbackAvatar";
 
 type Props = {
   step: StepDef;
@@ -280,25 +281,39 @@ export function StepCard({
   );
 }
 
-const GRADE_STYLE: Record<StepGrade["verdict"], { bg: string; badge: string; icon: string }> = {
-  통과: { bg: "bg-block-mint", badge: "bg-ink text-canvas", icon: "🎉" },
-  부분통과: { bg: "bg-block-cream", badge: "bg-ink text-canvas", icon: "🙂" },
-  미흡: { bg: "bg-block-pink", badge: "bg-magenta text-canvas", icon: "💪" },
+const GRADE_STYLE: Record<
+  StepGrade["verdict"],
+  { bg: string; disc: string; badge: string; icon: string; mood: AvatarMood }
+> = {
+  통과: { bg: "bg-block-mint", disc: "bg-block-mint", badge: "bg-ink text-canvas", icon: "🎉", mood: "celebrate" },
+  부분통과: { bg: "bg-block-cream", disc: "bg-block-cream", badge: "bg-ink text-canvas", icon: "🙂", mood: "happy" },
+  미흡: { bg: "bg-block-pink", disc: "bg-block-pink", badge: "bg-magenta text-canvas", icon: "💪", mood: "cheer" },
 };
 
 function GradePanel({ grade }: { grade: StepGrade }) {
   const s = GRADE_STYLE[grade.verdict] ?? GRADE_STYLE["부분통과"];
   return (
-    <div className={`mt-2 rounded-lg ${s.bg} p-3`}>
-      <div className="flex items-center gap-2">
-        <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${s.badge}`}>
-          {s.icon} AI 채점: {grade.verdict}
-        </span>
+    <div className="mt-2 flex items-start gap-2">
+      {/* 캐릭터 아바타 */}
+      <div className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full ${s.disc}`}>
+        <FeedbackAvatar mood={s.mood} className="h-[58px] w-[58px]" />
       </div>
-      <p className="mt-2 text-sm text-ink">{grade.feedback}</p>
-      <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/60">
-        AI 참고용 피드백 · 최종 확인은 선생님이 해요
-      </p>
+      {/* 말풍선 */}
+      <div className={`relative flex-1 rounded-2xl ${s.bg} p-3`}>
+        <div
+          className={`absolute -left-1.5 top-6 h-3 w-3 rotate-45 ${s.bg}`}
+          aria-hidden
+        />
+        <div className="flex items-center gap-2">
+          <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${s.badge}`}>
+            {s.icon} AI 코치 · {grade.verdict}
+          </span>
+        </div>
+        <p className="mt-2 text-sm leading-relaxed text-ink">{grade.feedback}</p>
+        <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/60">
+          AI 참고용 피드백 · 최종 확인은 선생님이 해요
+        </p>
+      </div>
     </div>
   );
 }
