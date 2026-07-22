@@ -10,6 +10,7 @@ type Props = {
   day: DayDoc | null;
   masking: boolean;
   onlyAiceIncomplete: boolean;
+  hideNotLoggedIn: boolean;
 };
 
 const AICE_SIGNUP_STEP_ID = "aice-signup";
@@ -25,7 +26,15 @@ function sortRoster(roster: RosterEntry[]) {
   return [...roster].sort((a, b) => a.grade - b.grade || a.name.localeCompare(b.name, "ko"));
 }
 
-export function StudentGrid({ roster, students, progress, day, masking, onlyAiceIncomplete }: Props) {
+export function StudentGrid({
+  roster,
+  students,
+  progress,
+  day,
+  masking,
+  onlyAiceIncomplete,
+  hideNotLoggedIn,
+}: Props) {
   const steps = day ? [...day.steps].sort((a, b) => a.order - b.order) : [];
 
   const progressByStudent = new Map<string, ProgressDoc>();
@@ -39,14 +48,26 @@ export function StudentGrid({ roster, students, progress, day, masking, onlyAice
   }
 
   const rows = sortRoster(roster).filter((r) => {
+    const loggedIn = Boolean(r.studentId && students[r.studentId]);
+    if (hideNotLoggedIn && !loggedIn) return false; // 미입장 학생 숨기기
     if (!onlyAiceIncomplete) return true;
     if (!r.studentId) return true; // 미입장 학생은 가입도 미완료
     const status = aiceProgressByStudent.get(r.studentId)?.steps?.[AICE_SIGNUP_STEP_ID]?.status;
     return status !== "done";
   });
 
+  const hiddenCount = hideNotLoggedIn
+    ? roster.filter((r) => !(r.studentId && students[r.studentId])).length
+    : 0;
+
   return (
-    <div className="overflow-x-auto rounded-3xl border border-hairline bg-canvas">
+    <div className="space-y-2">
+      {hiddenCount > 0 && (
+        <p className="px-1 text-xs text-ink/60">
+          미입장 학생 {hiddenCount}명이 숨겨져 있어요. (접속한 학생 {rows.length}명 표시)
+        </p>
+      )}
+      <div className="overflow-x-auto rounded-3xl border border-hairline bg-canvas">
       <table className="w-full min-w-[600px] text-sm">
         <thead className="bg-surface-soft text-left font-mono text-[11px] uppercase tracking-widest text-ink">
           <tr>
@@ -91,11 +112,16 @@ export function StudentGrid({ roster, students, progress, day, masking, onlyAice
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
 
-export function CompletionBars({ roster, progress, day }: Omit<Props, "students" | "masking" | "onlyAiceIncomplete">) {
+export function CompletionBars({
+  roster,
+  progress,
+  day,
+}: Omit<Props, "students" | "masking" | "onlyAiceIncomplete" | "hideNotLoggedIn">) {
   if (!day) return null;
   const steps = [...day.steps].sort((a, b) => a.order - b.order);
   const total = roster.length || 1;

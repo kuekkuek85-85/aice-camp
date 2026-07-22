@@ -41,6 +41,7 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
   const [dayId, setDayId] = useState("1");
   const [masking, setMasking] = useState(false);
   const [onlyAiceIncomplete, setOnlyAiceIncomplete] = useState(false);
+  const [hideNotLoggedIn, setHideNotLoggedIn] = useState(false);
   const { roster, students, progress, problems } = useTeacherData();
   const { day } = useDay(dayId);
 
@@ -87,6 +88,14 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
             />
             AICE 가입 미완료만
           </label>
+          <label className="flex items-center gap-2 text-sm text-ink">
+            <input
+              type="checkbox"
+              checked={hideNotLoggedIn}
+              onChange={(e) => setHideNotLoggedIn(e.target.checked)}
+            />
+            미입장 학생 숨기기
+          </label>
         </div>
 
         <HelpQueue students={students} masking={masking} />
@@ -98,6 +107,7 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
           day={day}
           masking={masking}
           onlyAiceIncomplete={onlyAiceIncomplete}
+          hideNotLoggedIn={hideNotLoggedIn}
         />
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
