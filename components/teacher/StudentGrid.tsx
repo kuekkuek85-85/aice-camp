@@ -1,7 +1,9 @@
 "use client";
 
-import type { DayDoc, ProgressDoc, RosterEntry, StudentDoc } from "@/lib/types";
+import { useState } from "react";
+import type { DayDoc, GradeVerdict, ProgressDoc, RosterEntry, StepProgress, StudentDoc } from "@/lib/types";
 import { maskName } from "@/lib/mask";
+import { FeedbackAvatar, type AvatarMood } from "@/components/FeedbackAvatar";
 
 type Props = {
   roster: RosterEntry[];
@@ -36,6 +38,7 @@ export function StudentGrid({
   hideNotLoggedIn,
 }: Props) {
   const steps = day ? [...day.steps].sort((a, b) => a.order - b.order) : [];
+  const [selected, setSelected] = useState<CellSelection | null>(null);
 
   const progressByStudent = new Map<string, ProgressDoc>();
   for (const p of progress) {
@@ -103,8 +106,22 @@ export function StudentGrid({
                   )}
                 </td>
                 {steps.map((s) => (
-                  <td key={s.stepId} className="px-3 py-2 text-center" title={s.title}>
-                    {statusIcon(prog?.steps?.[s.stepId]?.status)}
+                  <td key={s.stepId} className="px-1 py-1 text-center">
+                    <button
+                      onClick={() =>
+                        setSelected({
+                          name: r.name,
+                          stepOrder: s.order,
+                          stepTitle: s.title,
+                          dayId: day?.dayId ?? "",
+                          sp: prog?.steps?.[s.stepId],
+                        })
+                      }
+                      title={`${s.order}. ${s.title} — 클릭해서 산출물·피드백 보기`}
+                      className="rounded-md px-2 py-1 transition hover:bg-surface-soft"
+                    >
+                      {statusIcon(prog?.steps?.[s.stepId]?.status)}
+                    </button>
                   </td>
                 ))}
               </tr>
@@ -112,6 +129,145 @@ export function StudentGrid({
           })}
         </tbody>
       </table>
+      </div>
+
+      {selected && (
+        <SubmissionModal selection={selected} masking={masking} onClose={() => setSelected(null)} />
+      )}
+    </div>
+  );
+}
+
+type CellSelection = {
+  name: string;
+  stepOrder: number;
+  stepTitle: string;
+  dayId: string;
+  sp: StepProgress | undefined;
+};
+
+const VERDICT_MOOD: Record<GradeVerdict, AvatarMood> = {
+  통과: "celebrate",
+  부분통과: "happy",
+  미흡: "cheer",
+};
+const VERDICT_BG: Record<GradeVerdict, string> = {
+  통과: "bg-block-mint",
+  부분통과: "bg-block-cream",
+  미흡: "bg-block-pink",
+};
+const VERDICT_BADGE: Record<GradeVerdict, string> = {
+  통과: "bg-ink text-canvas",
+  부분통과: "bg-ink text-canvas",
+  미흡: "bg-magenta text-canvas",
+};
+
+function statusLabel(status: string | undefined) {
+  if (status === "done") return "완료";
+  if (status === "deferred") return "나중에 완료 예정";
+  return "아직 안 함";
+}
+
+function SubmissionModal({
+  selection,
+  masking,
+  onClose,
+}: {
+  selection: CellSelection;
+  masking: boolean;
+  onClose: () => void;
+}) {
+  const { name, stepOrder, stepTitle, dayId, sp } = selection;
+  const submission = sp?.submission;
+  const grade = sp?.grade;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-3xl bg-canvas p-5 shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-widest text-ink/60">
+              {dayId}일차 · {stepOrder}단계
+            </p>
+            <h3 className="mt-0.5 font-semibold tracking-tight text-ink">
+              {maskName(name, masking)}
+            </h3>
+            <p className="text-sm text-ink">{stepTitle}</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="shrink-0 rounded-full border border-hairline bg-canvas px-2.5 py-1 text-sm text-ink hover:bg-surface-soft"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="mt-3 rounded-lg bg-surface-soft px-3 py-2 text-sm text-ink">
+          상태: <span className="font-semibold">{statusLabel(sp?.status)}</span>
+        </div>
+
+        {/* 산출물 */}
+        <div className="mt-3">
+          <p className="font-mono text-[11px] uppercase tracking-widest text-ink/60">산출물</p>
+          {submission ? (
+            <div className="mt-1 flex flex-wrap items-center gap-2 rounded-lg border border-hairline px-3 py-2 text-sm text-ink">
+              <span>
+                {submission.type === "link" ? "🔗 링크 제출" : `📎 ${submission.fileName ?? "파일"}`}
+                <span className="ml-2 text-xs text-ink/60">
+                  {new Date(submission.submittedAt).toLocaleString("ko-KR")}
+                </span>
+              </span>
+              <a
+                href={submission.url}
+                target="_blank"
+                rel="noreferrer"
+                className="ml-auto rounded-full bg-ink px-3 py-1 text-xs font-semibold text-canvas hover:opacity-80"
+              >
+                {submission.type === "link" ? "링크 열기" : "파일 열기"}
+              </a>
+            </div>
+          ) : (
+            <p className="mt-1 rounded-lg bg-surface-soft px-3 py-2 text-sm text-ink/60">
+              아직 제출한 산출물이 없어요.
+            </p>
+          )}
+        </div>
+
+        {/* AI 피드백 */}
+        <div className="mt-3">
+          <p className="font-mono text-[11px] uppercase tracking-widest text-ink/60">AI 코치 피드백</p>
+          {grade ? (
+            <div className="mt-1 flex items-start gap-2">
+              <div
+                className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-full ${VERDICT_BG[grade.verdict]}`}
+              >
+                <FeedbackAvatar mood={VERDICT_MOOD[grade.verdict]} className="h-[52px] w-[52px]" />
+              </div>
+              <div className={`relative flex-1 rounded-2xl ${VERDICT_BG[grade.verdict]} p-3`}>
+                <div className={`absolute -left-1.5 top-5 h-3 w-3 rotate-45 ${VERDICT_BG[grade.verdict]}`} aria-hidden />
+                <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${VERDICT_BADGE[grade.verdict]}`}>
+                  AI 코치 · {grade.verdict}
+                </span>
+                <p className="mt-2 text-sm leading-relaxed text-ink">{grade.feedback}</p>
+                <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-ink/50">
+                  {new Date(grade.gradedAt).toLocaleString("ko-KR")}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <p className="mt-1 rounded-lg bg-surface-soft px-3 py-2 text-sm text-ink/60">
+              {submission
+                ? "아직 채점 결과가 없어요. (채점 대상이 아니거나 채점 전)"
+                : "산출물이 없어 채점 결과도 없어요."}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
