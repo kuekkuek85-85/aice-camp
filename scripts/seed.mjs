@@ -410,7 +410,43 @@ const DAY3 = {
   ],
 };
 
-const DAY4 = placeholderDay("4", "4일차 · 종합 프로젝트", "콘텐츠 준비 중");
+const DAY4 = {
+  dayId: "4",
+  title: "4일차 · AI 비전·응용",
+  goal: "카메라로 글자를 읽는 OCR(문자 인식)을 비롯해 다양한 AI 기능으로 나만의 프로그램을 만든다.",
+  timeline: [
+    { period: "1교시", time: "45'", activity: "OCR(문자 인식) 개념 → 미션 ① OCR 번역기", steps: ["ocr-intro", "ocr-translate"] },
+  ],
+  steps: [
+    {
+      stepId: "ocr-intro",
+      order: 1,
+      title: "오늘의 흐름 · 준비하기",
+      desc: "오늘은 카메라로 글자를 읽는 OCR(문자 인식)을 비롯해 다양한 AI 기능으로 프로그램을 만들어요. 실습 사이트(codex)를 열고, 마이크·카메라 권한을 허용한 뒤 시작하세요.",
+      submitType: "check",
+      micRequired: true,
+      linksType: "choice",
+      linksLabel: "오늘 사용할 사이트",
+      links: [{ label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL }],
+    },
+    {
+      stepId: "ocr-translate",
+      order: 2,
+      title: "미션 ① OCR 번역기 (문자 인식 + 번역)",
+      desc: "문제 상황: 카메라로 비춘 한국어 글자를 읽어 영어로 번역해주는 통역기를 만들어요! \"지니야\"라고 부르면 시작해서, 비디오(카메라) 화면을 켜고 글자를 감지한 뒤, 감지된 첫 번째 텍스트를 한국어→영어로 번역해서 음성으로 알려주세요. 완성한 .gen 파일을 업로드하면 AI가 채점해줘요. (마이크·카메라 필요)",
+      submitType: "fileOrCheck",
+      micRequired: true,
+      linksType: "choice",
+      linksLabel: "실습 사이트",
+      links: [{ label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL }],
+      hints: [
+        "\"지니야\" 호출어 블록으로 시작하게 만드세요. 호출어가 인식되면 그 안에서 카메라를 켜고 글자를 감지합니다.",
+        "'비디오 화면 보이기' → '텍스트 감지 시작(카메라)' 순서로 넣으세요. 감지가 끝나면 '감지된 텍스트'를 가져올 수 있어요.",
+        "감지된 첫 번째(1번째) 텍스트를 번역 블록(한국어→영어)에 넣고, 그 결과를 음성으로 말해주면 완성이에요.",
+      ],
+    },
+  ],
+};
 const DAY5 = placeholderDay("5", "5일차 · 자습 · 모의평가", "자습 및 모의평가를 진행합니다.");
 
 // 교사 대시보드 "정답 .gen 다운로드" 목록.
@@ -492,6 +528,13 @@ const PROBLEMS = [
     order: 11,
     fileName: "day3-4.gen",
     hints: DAY3.steps[4].hints,
+  },
+  {
+    problemId: "day4-1",
+    title: "4일차 OCR① OCR 번역기 (문자 인식+번역)",
+    order: 12,
+    fileName: "day4-1.gen",
+    hints: DAY4.steps[1].hints,
   },
 ];
 

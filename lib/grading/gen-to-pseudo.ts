@@ -131,6 +131,11 @@ function expr(node: XmlNode | undefined): string {
     }
     case "math_string_to_number":
       return `숫자로(${expr(slotBlock(node, "VALUE"))})`;
+    case "textdetect_get_result": {
+      const at = fieldVal(node, "AT");
+      const n = Number(at);
+      return Number.isFinite(n) ? `${n + 1}번째 감지된 텍스트` : `감지된 텍스트[${at}]`;
+    }
     case "translate": {
       const src = fieldVal(node, "SRC_LANG");
       const dest = fieldVal(node, "DEST_LANG");
@@ -232,6 +237,16 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
         out.push(`${pad}호출어 "${fieldVal(cur, "KEYWORD")}" 인식되면:`);
         out.push(...statements(slotBlock(cur, "DO0"), indent + 1));
         break;
+      case "ai_video_control": {
+        const a = fieldVal(cur, "ACTION");
+        out.push(`${pad}비디오 화면 ${a === "SHOW" ? "보이기" : a === "HIDE" ? "숨기기" : `(${a})`}`);
+        break;
+      }
+      case "textdetect_start": {
+        const media = fieldVal(cur, "MEDIA");
+        out.push(`${pad}텍스트 감지 시작(${media === "CAMERA" ? "카메라" : media || "카메라"})`);
+        break;
+      }
       case "eventloop_object_start_click":
         out.push(`${pad}[시작하기 클릭했을 때]`);
         break;
