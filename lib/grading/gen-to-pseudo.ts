@@ -105,8 +105,9 @@ const OP: Record<string, string> = {
   AND: "그리고", OR: "또는",
 };
 
-// 데이터셋 ID → 이름 (genToPseudo 시작 시 채워진다). 의사코드에 사람이 읽는 이름을 쓰기 위함.
+// 데이터셋/신호 ID → 이름 (genToPseudo 시작 시 채워진다). 의사코드에 사람이 읽는 이름을 쓰기 위함.
 let datasetNames: Record<string, string> = {};
+let signalNames: Record<string, string> = {};
 
 // 값(식) 블록 → 문자열
 function expr(node: XmlNode | undefined): string {
@@ -135,6 +136,13 @@ function expr(node: XmlNode | undefined): string {
       const at = fieldVal(node, "AT");
       const n = Number(at);
       return Number.isFinite(n) ? `${n + 1}번째 감지된 텍스트` : `감지된 텍스트[${at}]`;
+    }
+    case "facedetect_get_result_count":
+      return "감지된 얼굴 수";
+    case "facedetect_get_emotion": {
+      const at = fieldVal(node, "AT");
+      const n = Number(at);
+      return Number.isFinite(n) ? `${n + 1}번째 얼굴의 감정` : "감지된 얼굴의 감정";
     }
     case "translate": {
       const src = fieldVal(node, "SRC_LANG");
@@ -219,9 +227,15 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
         out.push(...statements(slotBlock(cur, "DO"), indent + 1));
         break;
       case "controls_if": {
-        const hasElse = kids(cur, "mutation")[0]?.attrs.else === "1";
+        const mut = kids(cur, "mutation")[0];
+        const elseifCount = Number(mut?.attrs.elseif ?? 0);
+        const hasElse = mut?.attrs.else === "1";
         out.push(`${pad}만약 ${expr(slotBlock(cur, "IF0"))} 이면:`);
         out.push(...statements(slotBlock(cur, "DO0"), indent + 1));
+        for (let k = 1; k <= elseifCount; k++) {
+          out.push(`${pad}아니고 만약 ${expr(slotBlock(cur, `IF${k}`))} 이면:`);
+          out.push(...statements(slotBlock(cur, `DO${k}`), indent + 1));
+        }
         if (hasElse) {
           out.push(`${pad}아니면:`);
           out.push(...statements(slotBlock(cur, "ELSE"), indent + 1));
@@ -247,6 +261,21 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
         out.push(`${pad}텍스트 감지 시작(${media === "CAMERA" ? "카메라" : media || "카메라"})`);
         break;
       }
+      case "facedetect_start": {
+        const media = fieldVal(cur, "MEDIA");
+        out.push(`${pad}얼굴 감지 시작(${media === "CAMERA" ? "카메라" : media || "카메라"})`);
+        break;
+      }
+      case "signal_send_and_wait": {
+        const sig = signalNames[fieldVal(cur, "_SIGNAL_")] ?? "신호";
+        out.push(`${pad}신호 "${sig}" 보내고 기다리기`);
+        break;
+      }
+      case "eventloop_signal_detect": {
+        const sig = signalNames[fieldVal(cur, "_SIGNAL_")] ?? "신호";
+        out.push(`${pad}[신호 "${sig}" 받았을 때]`);
+        break;
+      }
       case "eventloop_object_start_click":
         out.push(`${pad}[시작하기 클릭했을 때]`);
         break;
@@ -267,6 +296,10 @@ export function genToPseudo(genJsonText: string): string {
   datasetNames = {};
   for (const ds of data.userDatasets ?? []) {
     if (ds?.datasetId) datasetNames[ds.datasetId] = ds.datasetName ?? ds.datasetId;
+  }
+  signalNames = {};
+  for (const sig of data.signals ?? []) {
+    if (sig?.signalId) signalNames[sig.signalId] = sig.signalName ?? sig.signalId;
   }
   const scenes: { blockXml?: string }[] = data.scenes ?? [];
   const out: string[] = [];
