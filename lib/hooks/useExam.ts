@@ -88,5 +88,31 @@ export function useExam(roundId: string) {
     [roundId, session]
   );
 
-  return { session, exam, results, busyNo, error, submitMcq, uploadAndGrade };
+  // 안 풀고 넘어가기 — 0점 처리(서버 기록). 나중에 실제 제출하면 갱신된다.
+  const skipQuestion = useCallback(
+    async (no: number) => {
+      setError(null);
+      setBusyNo(no);
+      try {
+        const idToken = await getFirebaseAuth().currentUser?.getIdToken();
+        if (!idToken) throw new Error("로그인이 필요해요.");
+        const res = await fetch("/api/exam-grade", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
+          body: JSON.stringify({ roundId, no, skip: true }),
+        });
+        if (!res.ok) {
+          const d = await res.json().catch(() => ({}));
+          throw new Error(d.error ?? "처리에 실패했어요.");
+        }
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "처리에 실패했어요.");
+      } finally {
+        setBusyNo(null);
+      }
+    },
+    [roundId]
+  );
+
+  return { session, exam, results, busyNo, error, submitMcq, uploadAndGrade, skipQuestion };
 }

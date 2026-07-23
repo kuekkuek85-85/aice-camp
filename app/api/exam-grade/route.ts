@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   const caller = await getUid(req);
   if (!caller) return NextResponse.json({ error: "인증이 필요합니다." }, { status: 401 });
 
-  let body: { roundId?: string; no?: number; choiceIndex?: number; studentId?: string };
+  let body: { roundId?: string; no?: number; choiceIndex?: number; studentId?: string; skip?: boolean };
   try {
     body = await req.json();
   } catch {
@@ -45,6 +45,15 @@ export async function POST(req: NextRequest) {
   const now = Date.now();
 
   try {
+    // 안 풀고 넘어가기 — 0점(오답) 처리. 나중에 실제 제출하면 덮어써진다.
+    if (body.skip === true) {
+      await docRef.set(
+        { studentId, roundId, results: { [no]: { type: question.type, correct: false, skipped: true, gradedAt: now } } },
+        { merge: true }
+      );
+      return NextResponse.json({ ok: true, correct: false, skipped: true });
+    }
+
     if (question.type === "mcq") {
       const answer = key.mcq?.[no];
       if (answer === undefined) {

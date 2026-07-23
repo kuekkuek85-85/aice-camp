@@ -160,6 +160,7 @@ export type ExamQuestionResult = {
   correct: boolean;
   choiceIndex?: number; // mcq에서 고른 보기
   feedback?: string; // gen 채점 코멘트
+  skipped?: boolean; // 안 풀고 넘어감(0점)
   gradedAt: number;
 };
 

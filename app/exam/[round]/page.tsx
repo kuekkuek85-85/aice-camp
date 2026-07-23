@@ -14,7 +14,7 @@ export default function ExamRoundPage({ params }: { params: Promise<{ round: str
   const { round } = use(params);
   const router = useRouter();
   const { status } = useStudentSession();
-  const { exam, results, busyNo, error, submitMcq, uploadAndGrade } = useExam(round);
+  const { exam, results, busyNo, error, submitMcq, uploadAndGrade, skipQuestion } = useExam(round);
 
   useEffect(() => {
     if (status === "guest") router.replace("/");
@@ -62,6 +62,7 @@ export default function ExamRoundPage({ params }: { params: Promise<{ round: str
             busy={busyNo === q.no}
             onSubmitMcq={(idx) => submitMcq(q.no, idx)}
             onUploadGen={(file) => uploadAndGrade(q.no, file)}
+            onSkip={() => skipQuestion(q.no)}
           />
         ))}
 
@@ -79,12 +80,14 @@ function QuestionCard({
   busy,
   onSubmitMcq,
   onUploadGen,
+  onSkip,
 }: {
   q: ExamQuestion;
   result: ExamQuestionResult | undefined;
   busy: boolean;
   onSubmitMcq: (choiceIndex: number) => void;
   onUploadGen: (file: File) => void;
+  onSkip: () => void;
 }) {
   const [selected, setSelected] = useState<number | null>(result?.choiceIndex ?? null);
   const [hintOpen, setHintOpen] = useState(false);
@@ -102,14 +105,26 @@ function QuestionCard({
   }
 
   const graded = Boolean(result);
+  const isSkipped = graded && result!.skipped === true;
+  const cardClass = graded
+    ? result!.correct
+      ? "border-success/40 bg-block-mint"
+      : isSkipped
+        ? "border-hairline bg-surface-soft"
+        : "border-magenta/40 bg-block-pink"
+    : "border-hairline bg-canvas";
   return (
-    <div className={`rounded-3xl border p-5 ${graded ? (result!.correct ? "border-success/40 bg-block-mint" : "border-magenta/40 bg-block-pink") : "border-hairline bg-canvas"}`}>
+    <div className={`rounded-3xl border p-5 ${cardClass}`}>
       <div className="flex items-center justify-between">
         <span className="font-semibold text-ink">문제 {q.no}{q.type === "mcq" ? " · 이론(객관식)" : ""}</span>
         <div className="flex items-center gap-2">
           {graded && (
-            <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${result!.correct ? "bg-ink text-canvas" : "bg-magenta text-canvas"}`}>
-              {result!.correct ? "정답 ✓" : "오답 ✗"}
+            <span
+              className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+                result!.correct ? "bg-ink text-canvas" : isSkipped ? "bg-ink/40 text-canvas" : "bg-magenta text-canvas"
+              }`}
+            >
+              {result!.correct ? "정답 ✓" : isSkipped ? "건너뜀 · 0점" : "오답 ✗"}
             </span>
           )}
           <span className="rounded-full bg-surface-soft px-2 py-0.5 text-xs font-bold text-ink">{q.points}점</span>
@@ -196,6 +211,16 @@ function QuestionCard({
             </button>
           )}
         </div>
+      )}
+
+      {!graded && (
+        <button
+          onClick={onSkip}
+          disabled={busy}
+          className="mt-3 text-xs font-medium text-ink/50 underline underline-offset-2 hover:text-ink disabled:opacity-40"
+        >
+          안 풀고 넘어가기 (0점)
+        </button>
       )}
     </div>
   );
