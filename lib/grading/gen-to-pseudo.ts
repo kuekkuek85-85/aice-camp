@@ -201,6 +201,7 @@ function expr(node: XmlNode | undefined): string {
     case "aice_dummy_num2":
     case "aice_dummy_bool":
     case "aice_dummy_string":
+    case "aice_dummy_string2":
       return "[빈칸]";
     case "facedetect_get_emotion": {
       const at = fieldVal(node, "AT");
