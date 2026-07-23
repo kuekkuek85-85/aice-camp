@@ -297,6 +297,11 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
         out.push(`${pad}반복: ${expr(slotBlock(cur, "BOOL"))} 인 동안`);
         out.push(...statements(slotBlock(cur, "DO"), indent + 1));
         break;
+      case "misc_sleep_input": {
+        const unit = fieldVal(cur, "TIMEUNIT") === "SECOND" ? "초" : fieldVal(cur, "TIMEUNIT") || "초";
+        out.push(`${pad}${expr(slotBlock(cur, "AMOUNT"))}${unit} 기다리기`);
+        break;
+      }
       case "controls_if": {
         const mut = kids(cur, "mutation")[0];
         const elseifCount = Number(mut?.attrs.elseif ?? 0);

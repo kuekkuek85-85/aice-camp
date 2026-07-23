@@ -356,7 +356,23 @@ export const EXAMS: Record<string, ExamDef> = {
           "시작하기에서는 구매물건을 입력받은 뒤 '가격 확인' 함수 → '금액 계산' 함수를 순서대로 호출하세요. " +
           "'금액 계산' 함수의 '만약 (?) = 0'과 '합계 = 개수 × (?)'의 빈칸에는 '가격'을, 총 금액 안내 문구의 빈칸에는 '합계'를 넣으면 됩니다.",
       },
-      { no: 3, type: "gen", points: 10, prompt: "", ready: false },
+      {
+        no: 3,
+        type: "gen",
+        points: 10,
+        ready: true,
+        problemFile: "exam3-q3.gen",
+        prompt:
+          "for 반복문을 이용하여 입력한 단을 제외하고 구구단을 출력하는 프로그램을 코딩하시오.\n\n" +
+          "[조건]\n" +
+          "1. for 반복 블록을 사용한다.\n" +
+          "2. 입력창에 입력한 단을 제외한 나머지 단만 출력한다. ('2'를 입력할 경우, 3~9단만 출력)\n" +
+          "3. 계산 결과를 채팅창에 표시한다.\n\n" +
+          "※ 코드의 갈색 '-- 이 블록을 바꾸세요 --'(?) 자리를, 아래 '활용할 블록'(변수)만 사용해 채워 완성하세요.",
+        hint:
+          "바깥 for는 i를 2부터 9까지 돌고, 안쪽 for는 j를 1부터 9까지 돕니다. " +
+          "'만약 i ≠ (?)' 조건의 빈칸에 '입력' 변수를 넣어, 입력한 단을 제외하고 출력하세요.",
+      },
       { no: 4, type: "gen", points: 10, prompt: "", ready: false },
       { no: 5, type: "gen", points: 15, prompt: "", ready: false },
       { no: 6, type: "gen", points: 15, prompt: "", ready: false },
