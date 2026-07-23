@@ -164,4 +164,29 @@ export const EXAMS: Record<string, ExamDef> = {
       },
     ],
   },
+  "2": {
+    roundId: "2",
+    title: "제2차 모의평가",
+    questions: [
+      {
+        no: 1,
+        type: "mcq",
+        points: 10,
+        prompt: "딥러닝에 관한 설명 중 적절하지 않은 것은 무엇인가요?",
+        options: [
+          "퍼셉트론은 1957년 프랑크 로젠블라트에 의해 개발된 인공 신경망입니다.",
+          "딥러닝에서 인공 신경망은 입력층, 은닉층, 출력층으로 이루어져 있습니다.",
+          "딥러닝은 복잡한 문제를 해결하기 위해 여러 층으로 이루어진 신경망을 사용합니다.",
+          "일반적으로 입력층을 여러 개 쌓아 신경망을 깊게 구성할수록 더 복잡한 문제를 해결할 수 있습니다.",
+        ],
+      },
+      { no: 2, type: "gen", points: 10, prompt: "", ready: false },
+      { no: 3, type: "gen", points: 10, prompt: "", ready: false },
+      { no: 4, type: "gen", points: 10, prompt: "", ready: false },
+      { no: 5, type: "gen", points: 15, prompt: "", ready: false },
+      { no: 6, type: "gen", points: 15, prompt: "", ready: false },
+      { no: 7, type: "gen", points: 15, prompt: "", ready: false },
+      { no: 8, type: "gen", points: 15, prompt: "", ready: false },
+    ],
+  },
 };
