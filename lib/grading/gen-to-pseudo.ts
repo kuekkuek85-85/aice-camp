@@ -169,7 +169,14 @@ function expr(node: XmlNode | undefined): string {
       const name = listNames[fieldVal(node, "_USERDEFINEDLIST_")] ?? "목록";
       return `${name}의 개수`;
     }
+    case "lists_custom_contains": {
+      const name = listNames[fieldVal(node, "_USERDEFINEDLIST_")] ?? "목록";
+      return `${name}에 ${expr(slotBlock(node, "NEEDLE"))} 있음`;
+    }
+    case "text_length":
+      return `${expr(slotBlock(node, "VALUE"))}의 글자 수`;
     case "aice_dummy_num":
+    case "aice_dummy_bool":
       return "[빈칸]";
     case "facedetect_get_emotion": {
       const at = fieldVal(node, "AT");
@@ -291,9 +298,15 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
         out.push(`${pad}비디오 화면 ${a === "SHOW" ? "보이기" : a === "HIDE" ? "숨기기" : `(${a})`}`);
         break;
       }
+      case "ai_image_control": {
+        const a = fieldVal(cur, "ACTION");
+        out.push(`${pad}${a === "ADD" ? "이미지 추가" : a === "REMOVE" ? "이미지 제거" : `이미지 제어(${a})`}`);
+        break;
+      }
       case "textdetect_start": {
         const media = fieldVal(cur, "MEDIA");
-        out.push(`${pad}텍스트 감지 시작(${media === "CAMERA" ? "카메라" : media || "카메라"})`);
+        const label = media === "CAMERA" ? "카메라" : media === "IMAGE" ? "이미지" : media || "카메라";
+        out.push(`${pad}텍스트 감지 시작(${label})`);
         break;
       }
       case "facedetect_start": {
