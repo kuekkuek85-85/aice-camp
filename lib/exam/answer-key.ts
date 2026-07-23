@@ -18,6 +18,8 @@ export const EXAM_ANSWER_KEY: Record<
   },
   "2": {
     mcq: { 1: 3 }, // 1번 정답 ④ (0-based index 3)
-    gen: {},
+    gen: {
+      2: "exam2-q2-answer.gen",
+    },
   },
 };

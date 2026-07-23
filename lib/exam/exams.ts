@@ -180,7 +180,23 @@ export const EXAMS: Record<string, ExamDef> = {
           "일반적으로 입력층을 여러 개 쌓아 신경망을 깊게 구성할수록 더 복잡한 문제를 해결할 수 있습니다.",
         ],
       },
-      { no: 2, type: "gen", points: 10, prompt: "", ready: false },
+      {
+        no: 2,
+        type: "gen",
+        points: 10,
+        ready: true,
+        problemFile: "exam2-q2.gen",
+        prompt:
+          "함수를 사용하여 두 학생의 평균 몸무게를 구하는 프로그램을 작성하시오.\n\n" +
+          "[조건]\n" +
+          "1. '평균 계산'이라는 함수는 두 개의 매개 변수를 받아 평균을 계산하고, 해당 평균 값을 반환한다.\n" +
+          "2. 두 학생의 몸무게 평균은 이 함수를 활용하여 계산한다.\n\n" +
+          "※ 코드의 갈색 '-- 이 블록을 바꾸세요 --'(?) 자리를, 아래 '활용할 블록'(변수)만 사용해 채워 완성하세요.",
+        hint:
+          "빈칸은 3곳이에요. ① '평균 계산' 함수를 호출할 때 y 자리에 '학생2 몸무게'를 넣고, " +
+          "② 함수 안 '평균 = (x + ?) ÷ 2'의 ? 에 'y'를 넣고, " +
+          "③ '다음을 돌려줌' 자리에 '평균'을 넣으세요.",
+      },
       { no: 3, type: "gen", points: 10, prompt: "", ready: false },
       { no: 4, type: "gen", points: 10, prompt: "", ready: false },
       { no: 5, type: "gen", points: 15, prompt: "", ready: false },

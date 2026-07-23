@@ -182,6 +182,7 @@ function expr(node: XmlNode | undefined): string {
     case "text_length":
       return `${expr(slotBlock(node, "VALUE"))}의 글자 수`;
     case "aice_dummy_num":
+    case "aice_dummy_num2":
     case "aice_dummy_bool":
     case "aice_dummy_string":
       return "[빈칸]";
