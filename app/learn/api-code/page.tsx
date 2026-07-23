@@ -21,7 +21,7 @@ export default function ApiCodeExplainer() {
 
   // 현재 단계에서 하이라이트할 영역이면 배경을 준다
   const R = ({ id, children }: { id: string; children: ReactNode }) => (
-    <span className={region === id ? "rounded bg-magenta/40 text-canvas" : ""}>{children}</span>
+    <span className={region === id ? "rounded bg-[#ffe14d] font-semibold text-ink" : ""}>{children}</span>
   );
 
   return (
@@ -52,7 +52,7 @@ export default function ApiCodeExplainer() {
                 <div
                   key={i}
                   className={`rounded px-2 py-1 transition ${
-                    i === step ? "bg-magenta/40 font-bold" : i < step ? "text-canvas/45" : "text-canvas/80"
+                    i === step ? "bg-[#ffe14d] font-bold text-ink" : i < step ? "text-canvas/45" : "text-canvas/80"
                   }`}
                 >
                   <span className="mr-2 select-none text-canvas/40">{i + 1}</span>
