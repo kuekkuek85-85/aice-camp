@@ -454,7 +454,33 @@ export const EXAMS: Record<string, ExamDef> = {
           "지니 호출 안에서 '티처블 이미지 모델의 주소를 (내 모델 주소)로 설정하기' → '티처블 이미지 모델로 분류하기'를 넣고, " +
           "'분류결과'를 '티처블 이미지 모델 분류결과'로 저장하세요. 그 값이 \"치타\"이면 치타 특징을, 아니면 하이에나 특징을 안내합니다.",
       },
-      { no: 8, type: "gen", points: 15, prompt: "", ready: false },
+      {
+        no: 8,
+        type: "gen",
+        points: 15,
+        ready: true,
+        problemFile: "exam3-q8.gen",
+        dataFiles: [
+          { fileName: "API_데이터_입출국승객수.txt", label: "활용데이터 · API_데이터_입출국승객수.txt" },
+        ],
+        prompt:
+          "API를 활용하여 인천공항 제1여객터미널(T1)의 입국장 승객 수가 가장 많은 시간대를 실시간으로 알려주는 프로그램을 코딩하시오.\n\n" +
+          "[조건]\n" +
+          "1. API로 시간대별(0시~24시) 입국장 승객 수 데이터를 요청하여 사용한다.\n" +
+          "2. 각 시간대의 '시간'과 '입국장 승객 수 합계'를 순서대로 확인하며 말한다.\n" +
+          "3. 승객 수가 가장 많은 시간대를 찾아, 그 시간대를 음성으로 안내한다.\n" +
+          "   • API 이름: 입출국 승객 수\n" +
+          "   • Endpoint URL: https://apis.data.go.kr/B551177/PassengerNoticeKR/getfPassengerNoticeIKR\n" +
+          "   • 서비스키 이름: serviceKey (값은 활용데이터 API_데이터_입출국승객수.txt 참고)\n" +
+          "   • type: json\n\n" +
+          "[데이터 구조] response → body → items → item[i] : { atime(시간), t1sumset1(T1 입국장 승객 수 합계) }\n\n" +
+          "※ 활용데이터(API_데이터_입출국승객수.txt)의 Endpoint URL·serviceKey로 API를 등록해 사용하세요.\n" +
+          "※ 코드의 갈색 '-- 이 블록을 바꾸세요 --' 자리를, 아래 '활용할 블록'(결과 값에 키값 조회 / 변수)만 사용해 채워 완성하세요.",
+        hint:
+          "빈칸은 3곳이에요. ① '시간'은 '시간대별 정보'에서 'atime'을 키 값으로 조회, " +
+          "② '입국장 승객 수'는 '시간대별 정보'에서 't1sumset1'을 키 값으로 조회하세요. " +
+          "③ 더 큰 승객 수를 만나면 '최대 승객수'를 '입국장 승객 수'(변수) 값으로 바꿔 저장하면 됩니다.",
+      },
     ],
   },
 };
