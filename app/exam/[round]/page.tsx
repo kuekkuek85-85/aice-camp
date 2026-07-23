@@ -4,6 +4,7 @@ import { use, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
+import { FileDownloads } from "@/components/FileDownloads";
 import { useStudentSession } from "@/lib/hooks/useStudentSession";
 import { useExam } from "@/lib/hooks/useExam";
 import { PASS_SCORE, EXAM_TOTAL } from "@/lib/exam/exams";
@@ -13,7 +14,7 @@ export default function ExamRoundPage({ params }: { params: Promise<{ round: str
   const { round } = use(params);
   const router = useRouter();
   const { status } = useStudentSession();
-  const { exam, results, busyNo, error, submitMcq } = useExam(round);
+  const { exam, results, busyNo, error, submitMcq, uploadAndGrade } = useExam(round);
 
   useEffect(() => {
     if (status === "guest") router.replace("/");
@@ -60,6 +61,7 @@ export default function ExamRoundPage({ params }: { params: Promise<{ round: str
             result={results[q.no]}
             busy={busyNo === q.no}
             onSubmitMcq={(idx) => submitMcq(q.no, idx)}
+            onUploadGen={(file) => uploadAndGrade(q.no, file)}
           />
         ))}
 
@@ -76,11 +78,13 @@ function QuestionCard({
   result,
   busy,
   onSubmitMcq,
+  onUploadGen,
 }: {
   q: ExamQuestion;
   result: ExamQuestionResult | undefined;
   busy: boolean;
   onSubmitMcq: (choiceIndex: number) => void;
+  onUploadGen: (file: File) => void;
 }) {
   const [selected, setSelected] = useState<number | null>(result?.choiceIndex ?? null);
   const [hintOpen, setHintOpen] = useState(false);
@@ -112,7 +116,38 @@ function QuestionCard({
         </div>
       </div>
 
-      <p className="mt-2 text-sm font-medium text-ink">{q.prompt}</p>
+      <p className="mt-2 whitespace-pre-line text-sm font-medium text-ink">{q.prompt}</p>
+
+      {q.type === "gen" && (
+        <div className="mt-3 space-y-3">
+          {q.problemFile && (
+            <FileDownloads
+              items={[
+                { fileName: q.problemFile, label: "문제 파일(.gen) 내려받기" },
+                ...(q.dataFiles ?? []),
+              ]}
+            />
+          )}
+          <div className="rounded-lg border border-hairline bg-canvas p-3">
+            <p className="text-xs font-semibold text-ink">✅ 다 풀었으면 내 답안(.gen)을 제출하세요</p>
+            <input
+              type="file"
+              accept=".gen"
+              disabled={busy}
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (file) onUploadGen(file);
+                e.target.value = "";
+              }}
+              className="mt-2 block w-full text-sm text-ink file:mr-3 file:rounded-full file:border-0 file:bg-ink file:px-4 file:py-2 file:text-sm file:font-semibold file:text-canvas hover:file:opacity-80"
+            />
+            {busy && <p className="mt-1 font-mono text-xs uppercase tracking-widest text-ink">채점 중...</p>}
+            {graded && (
+              <p className="mt-2 text-sm text-ink">🤖 {result!.feedback}</p>
+            )}
+          </div>
+        </div>
+      )}
 
       {q.type === "mcq" && q.options && (
         <>

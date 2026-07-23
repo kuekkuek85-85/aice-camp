@@ -23,8 +23,20 @@ export const EXAMS: Record<string, ExamDef> = {
           "데이터의 품질이 낮아도 모델의 정확도는 영향을 받지 않습니다.",
         ],
       },
-      // 2~8번은 문제·정답 .gen 파일과 함께 곧 공개됩니다.
-      { no: 2, type: "gen", points: 10, prompt: "", ready: false },
+      {
+        no: 2,
+        type: "gen",
+        points: 10,
+        ready: true,
+        problemFile: "exam1-q2.gen",
+        prompt:
+          "주어진 숫자가 5의 배수인지 판별하여 결과를 알려주는 함수를 작성하시오.\n\n" +
+          "[조건]\n" +
+          "1. '숫자 확인' 함수는 전달받은 숫자가 5의 배수인지 아닌지 판별하여 알려준다.\n" +
+          "2. 사용자가 입력한 값이 5의 배수인지 출력하여 알려준다.\n\n" +
+          "※ 코드의 갈색 '-- 이 블록을 바꾸세요 --' 자리를, 아래 '활용할 블록'(숫자 확인 함수 호출 / 변수)만 사용해 채워 완성하세요.",
+        hint: "'입력' 변수에 담긴 값을 '숫자 확인' 함수에 전달해 호출하면 돼요. 갈색 빈칸 자리에 '숫자 확인(입력)' 호출 블록을 넣으세요.",
+      },
       { no: 3, type: "gen", points: 10, prompt: "", ready: false },
       { no: 4, type: "gen", points: 10, prompt: "", ready: false },
       { no: 5, type: "gen", points: 15, prompt: "", ready: false },

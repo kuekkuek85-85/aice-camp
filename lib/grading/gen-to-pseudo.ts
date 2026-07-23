@@ -317,6 +317,9 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
       case "object_select":
         out.push(`${pad}오브젝트 선택`);
         break;
+      case "aice_dummy_statement":
+        out.push(`${pad}[빈칸 — 여기에 블록을 넣어 완성하세요]`);
+        break;
       case "controls_flow_statements":
         out.push(`${pad}${fieldVal(cur, "FLOW") === "CONTINUE" ? "다음 반복으로 건너뛰기" : "반복 멈추기"}`);
         break;

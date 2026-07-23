@@ -7,7 +7,7 @@ export const EXAM_ANSWER_KEY: Record<
   "1": {
     mcq: { 1: 2 }, // 1번 정답 ③ (0-based index 2)
     gen: {
-      // 2~8번 정답 .gen이 오면 여기에 채운다. 예: 2: "exam1-q2-answer.gen"
+      2: "exam1-q2-answer.gen",
     },
   },
 };
