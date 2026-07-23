@@ -122,6 +122,7 @@ export const EXAMS: Record<string, ExamDef> = {
         points: 15,
         ready: true,
         problemFile: "exam1-q7.gen",
+        dataFiles: [{ fileName: "가위바위보_이미지.zip", label: "활용데이터 · 가위바위보_이미지.zip" }],
         prompt:
           "카메라를 활용하여 컴퓨터와 가위바위보 게임을 하는 프로그램을 코딩하시오.\n\n" +
           "[조건]\n" +
