@@ -25,6 +25,7 @@ export const EXAM_ANSWER_KEY: Record<
       5: "exam2-q5-answer.gen",
       6: "exam2-q6-answer.gen",
       7: "exam2-q7-answer.gen",
+      8: "exam2-q8-answer.gen",
     },
   },
 };
