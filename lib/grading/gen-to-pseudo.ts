@@ -150,6 +150,10 @@ function expr(node: XmlNode | undefined): string {
       return `무작위(${expr(slotBlock(node, "FROM"))}~${expr(slotBlock(node, "TO"))})`;
     case "teachable_model_get_result":
       return "티처블머신 인식 결과";
+    case "ds_knnimage_get_result": {
+      const name = modelNames[fieldVal(node, "_KNNIMAGEMODEL_")];
+      return `${name ?? "이미지 분류"} 모델의 분류 결과`;
+    }
     case "ds_simpleregress_regress_predict": {
       const name = modelNames[fieldVal(node, "_SIMPLEREGRESSMODEL_")];
       return `단순회귀예측${name ? `"${name}"` : ""}(${expr(slotBlock(node, "VALUE"))})`;
@@ -304,6 +308,11 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
         out.push(`${pad}${a === "ADD" ? "이미지 추가" : a === "REMOVE" ? "이미지 제거" : `이미지 제어(${a})`}`);
         break;
       }
+      case "ds_knnimage_classify_image": {
+        const name = modelNames[fieldVal(cur, "_KNNIMAGEMODEL_")];
+        out.push(`${pad}${name ?? "이미지 분류"} 모델로 이미지 분류하기`);
+        break;
+      }
       case "textdetect_start": {
         const media = fieldVal(cur, "MEDIA");
         const label = media === "CAMERA" ? "카메라" : media === "IMAGE" ? "이미지" : media || "카메라";
@@ -374,7 +383,12 @@ export function genToPseudo(genJsonText: string): string {
     if (sig?.signalId) signalNames[sig.signalId] = sig.signalName ?? sig.signalId;
   }
   modelNames = {};
-  for (const m of data.simpleRegressModels ?? []) {
+  for (const m of [
+    ...(data.simpleRegressModels ?? []),
+    ...(data.knnImageModels ?? []),
+    ...(data.knnTextModels ?? []),
+    ...(data.kmeansModels ?? []),
+  ]) {
     if (m?.modelId) modelNames[m.modelId] = m.modelName ?? m.modelId;
   }
   apiNames = {};
