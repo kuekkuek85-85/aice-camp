@@ -55,6 +55,14 @@ service cloud.firestore {
           request.resource.data.dayId == resource.data.dayId);
     }
 
+    // 모의평가 채점 결과 — 서버(관리자 SDK)만 기록, 본인 또는 교사만 열람.
+    // 문서 ID가 {학번}_{회차} 형식이라 생성 전에도 ID로 본인 여부를 판단해 구독 가능.
+    match /examResults/{docId} {
+      allow read: if isTeacher() ||
+        (request.auth != null && docId.matches(request.auth.uid + '_.*'));
+      allow write: if false;
+    }
+
     // 동료 현황판용 공개 진행 정보 — 이름/현재 단계/막혔어요만. 본인만 쓰기, 전체 공개 읽기
     match /publicProgress/{studentId} {
       allow read: if request.auth != null;

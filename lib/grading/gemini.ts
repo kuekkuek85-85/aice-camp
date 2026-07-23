@@ -89,6 +89,51 @@ export async function gradeWithGemini(
   return { verdict, feedback };
 }
 
+// 모의평가(시험) 전용 — 엄격 채점. 정답과 기능적으로 완전히 같아야 정답(부분 점수 없음).
+export async function gradeExamGen(
+  prompt: string,
+  answerPseudo: string,
+  studentPseudo: string
+): Promise<{ correct: boolean; feedback: string }> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("GEMINI_API_KEY 환경변수가 없습니다.");
+
+  const text = `너는 중학생 블록코딩(AI 코디니) 모의평가를 채점하는 채점관이야.
+이건 시험이라서 부분 점수가 없어. [학생답안]이 [정답]과 '기능적으로 완전히 동일'하면 correct=true, 하나라도 다르면 correct=false 야.
+
+채점 기준:
+- 학생은 문제의 빈칸(갈색 블록)을 정해진 후보 블록으로 채워 완성해. 블록 안의 숫자·문자·기호는 문제에 맞게 바뀔 수 있어.
+- 변수명, 블록 순서 같은 표현 차이는 결과가 같으면 정답으로 봐도 돼. 하지만 로직·값·출력이 조금이라도 다르면 오답이야.
+- 핵심 동작(입력, 계산/조건/반복, 출력 문구와 값)이 정답과 전부 일치해야 correct=true.
+- 반드시 아래 JSON 형식으로만 답해.
+
+[문제] ${prompt || "(설명 생략)"}
+
+[정답]
+${answerPseudo}
+
+[학생답안]
+${studentPseudo}
+
+출력(JSON): {"correct": true 또는 false, "feedback": "학생에게 보여줄 1문장 한국어 피드백(왜 맞았는지/무엇이 틀렸는지)"}`;
+
+  const res = await fetch(ENDPOINT(MODEL), {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-goog-api-key": apiKey },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text }] }],
+      generationConfig: { responseMimeType: "application/json", temperature: 0 },
+    }),
+  });
+  if (!res.ok) throw new Error(`Gemini 오류 ${res.status}: ${(await res.text()).slice(0, 200)}`);
+  const data = await res.json();
+  const out: string = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+  const parsed = safeParse(out) as { correct?: unknown; feedback?: unknown } | null;
+  const correct = parsed?.correct === true;
+  const feedback = typeof parsed?.feedback === "string" ? parsed.feedback.trim() : correct ? "정답이에요!" : "다시 확인해봐요.";
+  return { correct, feedback };
+}
+
 function safeParse(text: string): { verdict?: string; feedback?: string } | null {
   try {
     return JSON.parse(text);

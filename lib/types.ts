@@ -134,6 +134,41 @@ export type ProblemDoc = {
   hints: [string, string, string];
 };
 
+// ── 모의평가(시험) ──────────────────────────────────────────────
+export type ExamQuestionType = "mcq" | "gen";
+
+export type ExamQuestion = {
+  no: number;
+  type: ExamQuestionType;
+  points: number;
+  prompt: string;
+  hint?: string;
+  options?: string[]; // mcq 보기(①②③④)
+  problemFile?: string; // gen: problems/{problemFile} 공개 다운로드(문제 .gen)
+  dataFiles?: { fileName: string; label: string }[]; // gen: 활용 데이터(이미지/엑셀 등)
+  ready?: boolean; // false면 아직 준비 중(곧 공개)
+};
+
+export type ExamDef = {
+  roundId: string; // "1"
+  title: string; // 제1차 모의평가
+  questions: ExamQuestion[];
+};
+
+export type ExamQuestionResult = {
+  type: ExamQuestionType;
+  correct: boolean;
+  choiceIndex?: number; // mcq에서 고른 보기
+  feedback?: string; // gen 채점 코멘트
+  gradedAt: number;
+};
+
+export type ExamResultDoc = {
+  studentId: string;
+  roundId: string;
+  results: Record<string, ExamQuestionResult>; // key = 문제 번호
+};
+
 export const LOCAL_STORAGE_KEY = "aice-camp-student";
 
 export type LocalSession = {

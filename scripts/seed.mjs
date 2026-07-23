@@ -509,7 +509,7 @@ const DAY5 = {
   goal: "외부 API로 실시간 정보를 불러오는 법을 정답 코드 해설로 익히고, 모의고사로 5일간 배운 내용을 점검한다.",
   timeline: [
     { period: "1교시", time: "45'", activity: "API·JSON 개념 → API 문제 ① 정답 코드 한 줄씩 해설", steps: ["api-subway"] },
-    { period: "2~4교시", time: "150'", activity: "모의고사 3회 (곧 공개)", steps: ["api-subway"] },
+    { period: "2~4교시", time: "150'", activity: "모의평가 1~3회", steps: ["mock-exam"] },
   ],
   steps: [
     {
@@ -536,6 +536,19 @@ const DAY5 = {
         "외부 API는 '종업원'이에요 — 내가 못 들어가는 서버(주방)에 대신 다녀와 데이터(음식)를 가져다줘요. 먼저 '🔌 API가 뭐예요?'를 열어보세요.",
         "API가 돌려주는 답은 JSON이에요. 이름표(key)를 순서대로 타고 들어가면 값이 나와요: SearchInfoBySubwayNameService → row → 0 → LINE_NUM. '📦 JSON이 뭐예요?'에서 직접 따라가 보세요.",
         "코드는 이 경로를 그대로 한 줄씩 꺼내는 것뿐이에요. '🧑‍💻 코드 한 줄씩 해설'에서 각 줄이 JSON의 어디를 꺼내는지 맞춰보면 완전히 이해돼요!",
+      ],
+    },
+    {
+      stepId: "mock-exam",
+      order: 2,
+      title: "모의평가 (1~3회)",
+      desc: "5일간 배운 내용을 모의평가로 점검해요! 아래 '시험 안내(공통 규칙)'를 먼저 읽고 시작하세요. 1회를 마치면 2·3회도 이어서 풀 수 있어요.",
+      submitType: "check",
+      linksType: "choice",
+      linksLabel: "모의평가",
+      links: [
+        { label: "📋 시험 안내(공통 규칙) 보기", url: "/exam/guide" },
+        { label: "🚀 모의평가 시작하기", url: "/exam" },
       ],
     },
   ],
