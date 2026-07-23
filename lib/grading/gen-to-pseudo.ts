@@ -344,7 +344,8 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
       }
       case "facedetect_start": {
         const media = fieldVal(cur, "MEDIA");
-        out.push(`${pad}얼굴 감지 시작(${media === "CAMERA" ? "카메라" : media || "카메라"})`);
+        const label = media === "CAMERA" ? "카메라" : media === "IMAGE" ? "이미지" : media || "카메라";
+        out.push(`${pad}얼굴 감지 시작(${label})`);
         break;
       }
       case "ai_video_flip":
