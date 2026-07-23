@@ -177,6 +177,7 @@ function expr(node: XmlNode | undefined): string {
       return `${expr(slotBlock(node, "VALUE"))}의 글자 수`;
     case "aice_dummy_num":
     case "aice_dummy_bool":
+    case "aice_dummy_string":
       return "[빈칸]";
     case "facedetect_get_emotion": {
       const at = fieldVal(node, "AT");
