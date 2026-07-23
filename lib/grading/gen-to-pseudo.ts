@@ -334,7 +334,8 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
         break;
       case "teachable_img_model_start": {
         const kind = tmKind(fieldVal(cur, "MODEL_KIND_FIELD"));
-        const src = fieldVal(cur, "DATA_SOURCE_FIELD") === "CAMERA" ? "카메라" : fieldVal(cur, "DATA_SOURCE_FIELD");
+        const rawSrc = fieldVal(cur, "DATA_SOURCE_FIELD");
+        const src = rawSrc === "CAMERA" ? "카메라" : rawSrc === "IMAGE" ? "이미지" : rawSrc;
         out.push(`${pad}티처블머신 ${kind} 인식 시작(${src})`);
         break;
       }
