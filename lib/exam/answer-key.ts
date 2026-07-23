@@ -20,6 +20,7 @@ export const EXAM_ANSWER_KEY: Record<
     mcq: { 1: 3 }, // 1번 정답 ④ (0-based index 3)
     gen: {
       2: "exam2-q2-answer.gen",
+      3: "exam2-q3-answer.gen",
     },
   },
 };

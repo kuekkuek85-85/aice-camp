@@ -197,7 +197,23 @@ export const EXAMS: Record<string, ExamDef> = {
           "② 함수 안 '평균 = (x + ?) ÷ 2'의 ? 에 'y'를 넣고, " +
           "③ '다음을 돌려줌' 자리에 '평균'을 넣으세요.",
       },
-      { no: 3, type: "gen", points: 10, prompt: "", ready: false },
+      {
+        no: 3,
+        type: "gen",
+        points: 10,
+        ready: true,
+        problemFile: "exam2-q3.gen",
+        prompt:
+          "while문을 사용하여 구구단 중 짝수단만 출력하는 프로그램을 코딩하시오.\n\n" +
+          "[조건]\n" +
+          "1. while 반복 블록을 사용한다.\n" +
+          "2. 구구단 중 짝수단만 출력한다. (2, 4, 6, 8단)\n" +
+          "3. 계산 결과를 채팅창에 표시한다.\n\n" +
+          "※ 코드의 갈색 '-- 이 블록을 바꾸세요 --'(?) 자리를, 아래 '활용할 블록'(숫자)만 사용해 채워 완성하세요.",
+        hint:
+          "빈칸(숫자)은 4곳이에요. 바깥 반복은 i를 2부터 시작(i = 2)해 i ≤ 9 인 동안 돌고, " +
+          "안쪽 반복은 j를 1부터 시작(j = 1)해 j ≤ 9 인 동안 돕니다. 'i가 짝수' 조건일 때만 i단을 출력하세요.",
+      },
       { no: 4, type: "gen", points: 10, prompt: "", ready: false },
       { no: 5, type: "gen", points: 15, prompt: "", ready: false },
       { no: 6, type: "gen", points: 15, prompt: "", ready: false },

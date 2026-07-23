@@ -163,6 +163,22 @@ function expr(node: XmlNode | undefined): string {
       const type = fieldVal(node, "RESULT_TYPE") || "json";
       return `외부API 호출${name ? `"${name}"` : ""}(${type})`;
     }
+    case "math_number_property": {
+      const prop = fieldVal(node, "PROPERTY");
+      const n = expr(slotBlock(node, "NUMBER_TO_CHECK"));
+      const label: Record<string, string> = {
+        EVEN: "짝수",
+        ODD: "홀수",
+        PRIME: "소수",
+        WHOLE: "정수",
+        POSITIVE: "양수",
+        NEGATIVE: "음수",
+      };
+      if (prop === "DIVISIBLE_BY") {
+        return `${n}이(가) ${expr(slotBlock(node, "DIVISOR"))}로 나누어떨어짐`;
+      }
+      return `${n}이(가) ${label[prop] ?? prop}`;
+    }
     case "externapi_get_result":
       return `${expr(slotBlock(node, "API_RESULT"))}[${expr(slotBlock(node, "KEY"))}]`;
     case "externapi_get_result_at":
@@ -274,6 +290,10 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
         break;
       case "controls_whileUntil":
         out.push(`${pad}반복(조건): ${expr(slotBlock(cur, "BOOL"))}`);
+        out.push(...statements(slotBlock(cur, "DO"), indent + 1));
+        break;
+      case "controls_custom_while_until":
+        out.push(`${pad}반복: ${expr(slotBlock(cur, "BOOL"))} 인 동안`);
         out.push(...statements(slotBlock(cur, "DO"), indent + 1));
         break;
       case "controls_if": {
