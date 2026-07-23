@@ -137,7 +137,31 @@ export const EXAMS: Record<string, ExamDef> = {
           "게임 시작 안내 뒤에 '티처블 이미지 모델의 주소를 (내 모델 주소)로 설정하기' → '티처블 이미지 모델로 분류하기'를 넣고, '인식결과'를 '티처블 이미지 모델 분류결과'로 저장하세요. " +
           "'가위바위보' 함수 안에서는 '랜덤숫자'를 '랜덤정수(1~3)'로 정한 뒤 1·2·3에 따라 컴퓨터를 가위/바위/보로 설정합니다.",
       },
-      { no: 8, type: "gen", points: 15, prompt: "", ready: false },
+      {
+        no: 8,
+        type: "gen",
+        points: 15,
+        ready: true,
+        problemFile: "exam1-q8.gen",
+        dataFiles: [{ fileName: "API_데이터.txt", label: "활용데이터 · API_데이터.txt" }],
+        prompt:
+          "API를 활용하여 인천공항 1터미널 단기 주차장의 주차 여유 공간을 실시간으로 알려주는 프로그램을 코딩하시오.\n\n" +
+          "[조건]\n" +
+          "1. 인천공항 단기 주차장은 지상층·지하 1층·지하 2층 세 곳이 있으며, 각 주차장의 총 주차 면수 대비 현재 주차 대수와 여유 공간을 알려준다.\n" +
+          "2. 지니를 호출하면 총 주차 대수, 현재 주차 대수, 여유 공간을 음성으로 알려준다.\n" +
+          "3. 알려주는 순서는 지상층 → 지하 1층 → 지하 2층 순이다.\n" +
+          "4. API로 '주차장' 데이터를 요청하고, 해당 값을 변수에 저장하여 코딩한다.\n" +
+          "   • API 이름: 인천공항 주차 정보\n" +
+          "   • Endpoint URL: http://apis.data.go.kr/B551177/StatusOfParking/getTrackingParking\n" +
+          "   • 서비스키 이름: serviceKey (값은 활용데이터 API_데이터.txt 참고)\n\n" +
+          "[데이터 구조] response → body → items → item[i] : { floor(주차장 위치), parking(현재 주차 대수), parkingarea(총 주차 대수) }\n\n" +
+          "※ 활용데이터(API_데이터.txt)의 Endpoint URL·serviceKey로 API를 등록해 사용하세요.\n" +
+          "※ 코드의 갈색 '-- 이 블록을 바꾸세요 --' 자리를, 아래 '활용할 블록'(API 조회 / 사칙연산 / 변수)만 사용해 채워 완성하세요.",
+        hint:
+          "빈칸은 3곳이에요. ① 'items 조회 값'은 'body 조회 값'에서 'items'를 조회하고, " +
+          "② '주차장 위치'는 '주차 현황'에서 'floor'를 조회하고, " +
+          "③ '여유 공간'은 '총 주차 대수 − 현재 주차 대수'(사칙연산 빼기)로 계산하세요.",
+      },
     ],
   },
 };

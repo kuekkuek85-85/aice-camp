@@ -165,6 +165,8 @@ function expr(node: XmlNode | undefined): string {
     }
     case "externapi_get_result":
       return `${expr(slotBlock(node, "API_RESULT"))}[${expr(slotBlock(node, "KEY"))}]`;
+    case "externapi_get_result_at":
+      return `${expr(slotBlock(node, "API_RESULT"))}[${expr(slotBlock(node, "KEY"))}][${expr(slotBlock(node, "AT"))}]`;
     case "lists_custom_itemat": {
       const name = listNames[fieldVal(node, "_USERDEFINEDLIST_")] ?? "목록";
       return `${name}[${expr(slotBlock(node, "AT"))}]`;
