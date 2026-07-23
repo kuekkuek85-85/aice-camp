@@ -322,4 +322,29 @@ export const EXAMS: Record<string, ExamDef> = {
       },
     ],
   },
+  "3": {
+    roundId: "3",
+    title: "제3차 모의평가",
+    questions: [
+      {
+        no: 1,
+        type: "mcq",
+        points: 10,
+        prompt: "다음 중 인공지능을 사용하여 문제를 해결하는 과정으로 옳은 것은 무엇인가요?",
+        options: [
+          "문제 정의 - 데이터 수집 - 데이터 탐색 - AI 활용 - AI 모델 학습",
+          "문제 정의 - 데이터 수집 - 데이터 탐색 - AI 모델 학습 - AI 활용",
+          "문제 정의 - 데이터 탐색 - 데이터 수집 - AI 모델 학습 - AI 활용",
+          "문제 정의 - 데이터 탐색 - 데이터 수집 - AI 활용 - AI 모델 학습",
+        ],
+      },
+      { no: 2, type: "gen", points: 10, prompt: "", ready: false },
+      { no: 3, type: "gen", points: 10, prompt: "", ready: false },
+      { no: 4, type: "gen", points: 10, prompt: "", ready: false },
+      { no: 5, type: "gen", points: 15, prompt: "", ready: false },
+      { no: 6, type: "gen", points: 15, prompt: "", ready: false },
+      { no: 7, type: "gen", points: 15, prompt: "", ready: false },
+      { no: 8, type: "gen", points: 15, prompt: "", ready: false },
+    ],
+  },
 };
