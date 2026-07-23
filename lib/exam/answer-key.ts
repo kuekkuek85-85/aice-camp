@@ -23,6 +23,7 @@ export const EXAM_ANSWER_KEY: Record<
       3: "exam3-q3-answer.gen",
       4: "exam3-q4-answer.gen",
       5: "exam3-q5-answer.gen",
+      6: "exam3-q6-answer.gen",
     },
   },
   "2": {

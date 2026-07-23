@@ -154,6 +154,10 @@ function expr(node: XmlNode | undefined): string {
       const name = modelNames[fieldVal(node, "_KNNIMAGEMODEL_")];
       return `${name ?? "이미지 분류"} 모델의 분류 결과`;
     }
+    case "ds_knntext_get_result": {
+      const name = modelNames[fieldVal(node, "_KNNTEXTMODEL_")];
+      return `${name ?? "텍스트 분류"} 모델의 텍스트 분류 결과`;
+    }
     case "ds_simpleregress_regress_predict": {
       const name = modelNames[fieldVal(node, "_SIMPLEREGRESSMODEL_")];
       return `단순회귀예측${name ? `"${name}"` : ""}(${expr(slotBlock(node, "VALUE"))})`;
@@ -340,6 +344,11 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
       case "ds_knnimage_classify_image": {
         const name = modelNames[fieldVal(cur, "_KNNIMAGEMODEL_")];
         out.push(`${pad}${name ?? "이미지 분류"} 모델로 이미지 분류하기`);
+        break;
+      }
+      case "ds_knntext_classify": {
+        const name = modelNames[fieldVal(cur, "_KNNTEXTMODEL_")];
+        out.push(`${pad}${name ?? "텍스트 분류"} 모델로 ${expr(slotBlock(cur, "TEXT"))} 텍스트 분류하기`);
         break;
       }
       case "textdetect_start": {
