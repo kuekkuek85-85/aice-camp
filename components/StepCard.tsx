@@ -86,7 +86,7 @@ export function StepCard({
         >
           {isDone ? "✓" : unlocked ? step.order : "🔒"}
         </div>
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="font-semibold tracking-tight text-ink">{step.title}</h3>
             {step.micRequired && (
@@ -105,7 +105,7 @@ export function StepCard({
               </span>
             )}
           </div>
-          <p className="mt-1 whitespace-pre-line text-sm text-ink">
+          <p className="mt-1 whitespace-pre-line break-words text-sm text-ink">
             <Linkify text={step.desc} />
           </p>
 
@@ -285,7 +285,7 @@ export function StepCard({
 
 // 설명글 안의 URL(https://… 또는 맨 도메인 data.go.kr 등)을 클릭 가능한 링크로 바꾼다.
 const URL_RE =
-  /(https?:\/\/[^\s)]+|(?:[a-z0-9-]+\.)+(?:com|kr|org|net|io|co|gov|edu|ai|dev)(?:\/[^\s)]*)?)/gi;
+  /(https?:\/\/[^\s)'"]+|(?:[a-z0-9-]+\.)+(?:com|kr|org|net|io|co|gov|edu|ai|dev)(?:\/[^\s)'"]*)?)/gi;
 
 function Linkify({ text }: { text: string }) {
   const parts: ReactNode[] = [];
@@ -302,7 +302,7 @@ function Linkify({ text }: { text: string }) {
         href={href}
         target="_blank"
         rel="noreferrer"
-        className="font-medium text-ink underline underline-offset-2 hover:opacity-70"
+        className="break-all font-medium text-ink underline underline-offset-2 hover:opacity-70"
       >
         {raw}
       </a>

@@ -519,7 +519,8 @@ const DAY5 = {
       desc:
         "문제 상황: 장한평역이 몇 호선인지 실시간으로 조회하는 프로그램을 만들어요! 이번 문제는 조금 어려워서, 완성된 정답 코드를 함께 한 줄씩 이해하는 방식으로 진행해요.\n\n" +
         "① 아래에서 문제·정답 .gen을 내려받아 codex에 업로드하세요.\n" +
-        "② [속성 → 외부 API 추가]에서 'API 이름: 전철역 호선 조회', 'END POINT: http://openapi.seoul.go.kr:8088/53736b544f6b756537366352686b68/json/SearchInfoBySubwayNameService/1/5/장한평' 을 저장하고 '호출 테스트'를 눌러보세요.\n" +
+        "② [속성 → 외부 API 추가]에서 API 이름을 '전철역 호선 조회'로, END POINT를 아래 주소로 저장하고 '호출 테스트'를 눌러보세요.\n" +
+        "http://openapi.seoul.go.kr:8088/53736b544f6b756537366352686b68/json/SearchInfoBySubwayNameService/1/5/장한평\n" +
         "③ 아래 '🔌 API가 뭐예요?', '📦 JSON이 뭐예요?', '🧑‍💻 코드 한 줄씩 해설'을 열어 개념과 코드를 이해하세요.\n" +
         "이해했으면 완료를 누르세요. (원하면 내 파일을 업로드해도 돼요)",
       submitType: "fileOrCheck",
