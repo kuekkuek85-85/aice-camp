@@ -113,6 +113,7 @@ const OP: Record<string, string> = {
 let datasetNames: Record<string, string> = {};
 let signalNames: Record<string, string> = {};
 let modelNames: Record<string, string> = {};
+let apiNames: Record<string, string> = {};
 
 // 값(식) 블록 → 문자열
 function expr(node: XmlNode | undefined): string {
@@ -152,6 +153,13 @@ function expr(node: XmlNode | undefined): string {
       const name = modelNames[fieldVal(node, "_SIMPLEREGRESSMODEL_")];
       return `단순회귀예측${name ? `"${name}"` : ""}(${expr(slotBlock(node, "VALUE"))})`;
     }
+    case "externapi_call": {
+      const name = apiNames[fieldVal(node, "_EXAPI_")];
+      const type = fieldVal(node, "RESULT_TYPE") || "json";
+      return `외부API 호출${name ? `"${name}"` : ""}(${type})`;
+    }
+    case "externapi_get_result":
+      return `${expr(slotBlock(node, "API_RESULT"))}[${expr(slotBlock(node, "KEY"))}]`;
     case "facedetect_get_emotion": {
       const at = fieldVal(node, "AT");
       const n = Number(at);
@@ -306,6 +314,9 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
       case "eventloop_object_start_click":
         out.push(`${pad}[시작하기 클릭했을 때]`);
         break;
+      case "object_select":
+        out.push(`${pad}오브젝트 선택`);
+        break;
       case "controls_flow_statements":
         out.push(`${pad}${fieldVal(cur, "FLOW") === "CONTINUE" ? "다음 반복으로 건너뛰기" : "반복 멈추기"}`);
         break;
@@ -334,6 +345,10 @@ export function genToPseudo(genJsonText: string): string {
   modelNames = {};
   for (const m of data.simpleRegressModels ?? []) {
     if (m?.modelId) modelNames[m.modelId] = m.modelName ?? m.modelId;
+  }
+  apiNames = {};
+  for (const a of data.userExApis ?? []) {
+    if (a?.apiId) apiNames[a.apiId] = a.apiName ?? a.apiId;
   }
   const scenes: { blockXml?: string }[] = data.scenes ?? [];
   const out: string[] = [];

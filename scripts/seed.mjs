@@ -503,7 +503,43 @@ const DAY4 = {
     },
   ],
 };
-const DAY5 = placeholderDay("5", "5일차 · 자습 · 모의평가", "자습 및 모의평가를 진행합니다.");
+const DAY5 = {
+  dayId: "5",
+  title: "5일차 · API & 모의고사",
+  goal: "외부 API로 실시간 정보를 불러오는 법을 정답 코드 해설로 익히고, 모의고사로 5일간 배운 내용을 점검한다.",
+  timeline: [
+    { period: "1교시", time: "45'", activity: "API·JSON 개념 → API 문제 ① 정답 코드 한 줄씩 해설", steps: ["api-subway"] },
+    { period: "2~4교시", time: "150'", activity: "모의고사 3회 (곧 공개)", steps: ["api-subway"] },
+  ],
+  steps: [
+    {
+      stepId: "api-subway",
+      order: 1,
+      title: "API 문제 ① 장한평역 호선 조회 (정답 코드 해설)",
+      desc:
+        "문제 상황: 장한평역이 몇 호선인지 실시간으로 조회하는 프로그램을 만들어요! 이번 문제는 조금 어려워서, 완성된 정답 코드를 함께 한 줄씩 이해하는 방식으로 진행해요.\n\n" +
+        "① 아래에서 문제·정답 .gen을 내려받아 codex에 업로드하세요.\n" +
+        "② [속성 → 외부 API 추가]에서 'API 이름: 전철역 호선 조회', 'END POINT: http://openapi.seoul.go.kr:8088/53736b544f6b756537366352686b68/json/SearchInfoBySubwayNameService/1/5/장한평' 을 저장하고 '호출 테스트'를 눌러보세요.\n" +
+        "③ 아래 '🔌 API가 뭐예요?', '📦 JSON이 뭐예요?', '🧑‍💻 코드 한 줄씩 해설'을 열어 개념과 코드를 이해하세요.\n" +
+        "이해했으면 완료를 누르세요. (원하면 내 파일을 업로드해도 돼요)",
+      submitType: "fileOrCheck",
+      downloads: [{ fileName: "day5-api-1.gen", label: "API 문제·정답 코드 내려받기(.gen)" }],
+      linksType: "choice",
+      linksLabel: "설명 자료 & 실습 — 순서대로 열어보세요",
+      links: [
+        { label: "🔌 API가 뭐예요? (그림 설명)", url: "/learn/api" },
+        { label: "📦 JSON이 뭐예요? (그림 설명)", url: "/learn/json" },
+        { label: "🧑‍💻 코드 한 줄씩 해설", url: "/learn/api-code" },
+        { label: "AI 코디니 실습 사이트(codex) 열기", url: CODEX_URL },
+      ],
+      hints: [
+        "외부 API는 '종업원'이에요 — 내가 못 들어가는 서버(주방)에 대신 다녀와 데이터(음식)를 가져다줘요. 먼저 '🔌 API가 뭐예요?'를 열어보세요.",
+        "API가 돌려주는 답은 JSON이에요. 이름표(key)를 순서대로 타고 들어가면 값이 나와요: SearchInfoBySubwayNameService → row → 0 → LINE_NUM. '📦 JSON이 뭐예요?'에서 직접 따라가 보세요.",
+        "코드는 이 경로를 그대로 한 줄씩 꺼내는 것뿐이에요. '🧑‍💻 코드 한 줄씩 해설'에서 각 줄이 JSON의 어디를 꺼내는지 맞춰보면 완전히 이해돼요!",
+      ],
+    },
+  ],
+};
 
 // 교사 대시보드 "정답 .gen 다운로드" 목록.
 // 완성 예시 .gen을 Storage answers/{fileName} 에 올려두면 교사만 내려받을 수 있다.
