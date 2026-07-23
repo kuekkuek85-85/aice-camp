@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import type { StepDef, StepGrade, StepProgress } from "@/lib/types";
 import { RUBRICS, rubricKey } from "@/lib/grading/rubrics";
 import { ProblemFileDownload } from "@/components/ProblemFileDownload";
 import { FileDownloads } from "@/components/FileDownloads";
 import { MaterialsList } from "@/components/MaterialsList";
 import { FeedbackAvatar, type AvatarMood } from "@/components/FeedbackAvatar";
+import { Linkify } from "@/components/Linkify";
 
 type Props = {
   step: StepDef;
@@ -281,36 +282,6 @@ export function StepCard({
       </div>
     </div>
   );
-}
-
-// 설명글 안의 URL(https://… 또는 맨 도메인 data.go.kr 등)을 클릭 가능한 링크로 바꾼다.
-const URL_RE =
-  /(https?:\/\/[^\s)'"]+|(?:[a-z0-9-]+\.)+(?:com|kr|org|net|io|co|gov|edu|ai|dev)(?:\/[^\s)'"]*)?)/gi;
-
-function Linkify({ text }: { text: string }) {
-  const parts: ReactNode[] = [];
-  let last = 0;
-  let key = 0;
-  for (const m of text.matchAll(URL_RE)) {
-    const raw = m[0];
-    const idx = m.index ?? 0;
-    if (idx > last) parts.push(text.slice(last, idx));
-    const href = raw.startsWith("http") ? raw : `https://${raw}`;
-    parts.push(
-      <a
-        key={key++}
-        href={href}
-        target="_blank"
-        rel="noreferrer"
-        className="break-all font-medium text-ink underline underline-offset-2 hover:opacity-70"
-      >
-        {raw}
-      </a>
-    );
-    last = idx + raw.length;
-  }
-  if (last < text.length) parts.push(text.slice(last));
-  return <>{parts}</>;
 }
 
 const GRADE_STYLE: Record<

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { FileDownloads } from "@/components/FileDownloads";
+import { Linkify } from "@/components/Linkify";
 import { useStudentSession } from "@/lib/hooks/useStudentSession";
 import { useExam } from "@/lib/hooks/useExam";
 import { PASS_SCORE, EXAM_TOTAL } from "@/lib/exam/exams";
@@ -131,7 +132,9 @@ function QuestionCard({
         </div>
       </div>
 
-      <p className="mt-2 whitespace-pre-line text-sm font-medium text-ink">{q.prompt}</p>
+      <p className="mt-2 whitespace-pre-line break-words text-sm font-medium text-ink">
+        <Linkify text={q.prompt} />
+      </p>
 
       {q.type === "gen" && (
         <div className="mt-3 space-y-3">
