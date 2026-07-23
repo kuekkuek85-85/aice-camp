@@ -97,7 +97,14 @@ export async function POST(req: NextRequest) {
         { status: 422 }
       );
     }
-    const result = await gradeExamGen(question.prompt, answerPseudo, studentPseudo);
+    // 갈색 '이 블록을 바꾸세요' 자리(aice_dummy_*)를 채우지 않으면 [빈칸] 표식이 남는다.
+    // 이 경우 미완성이 확실하므로 AI 호출 없이 즉시 오답 처리한다(관대 채점으로 통과되는 것 방지).
+    const result = studentPseudo.includes("[빈칸]")
+      ? {
+          correct: false,
+          feedback: "아직 채우지 않은 갈색 빈칸이 남아 있어요. '이 블록을 바꾸세요' 자리를 모두 채운 뒤 다시 제출해주세요.",
+        }
+      : await gradeExamGen(question.prompt, answerPseudo, studentPseudo);
     await docRef.set(
       {
         studentId,
