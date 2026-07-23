@@ -114,6 +114,7 @@ let datasetNames: Record<string, string> = {};
 let signalNames: Record<string, string> = {};
 let modelNames: Record<string, string> = {};
 let apiNames: Record<string, string> = {};
+let listNames: Record<string, string> = {};
 
 // 값(식) 블록 → 문자열
 function expr(node: XmlNode | undefined): string {
@@ -160,6 +161,16 @@ function expr(node: XmlNode | undefined): string {
     }
     case "externapi_get_result":
       return `${expr(slotBlock(node, "API_RESULT"))}[${expr(slotBlock(node, "KEY"))}]`;
+    case "lists_custom_itemat": {
+      const name = listNames[fieldVal(node, "_USERDEFINEDLIST_")] ?? "목록";
+      return `${name}[${expr(slotBlock(node, "AT"))}]`;
+    }
+    case "lists_custom_count": {
+      const name = listNames[fieldVal(node, "_USERDEFINEDLIST_")] ?? "목록";
+      return `${name}의 개수`;
+    }
+    case "aice_dummy_num":
+      return "[빈칸]";
     case "facedetect_get_emotion": {
       const at = fieldVal(node, "AT");
       const n = Number(at);
@@ -221,6 +232,9 @@ function statements(first: XmlNode | undefined, indent: number): string[] {
     switch (type) {
       case "misc_chat":
         out.push(`${pad}말하기(${expr(slotBlock(cur, "MSG"))})`);
+        break;
+      case "misc_alert":
+        out.push(`${pad}알림창(${expr(slotBlock(cur, "MSG"))})`);
         break;
       case "tts_play_text":
         out.push(`${pad}음성으로 말하기(${expr(slotBlock(cur, "TEXT"))})`);
@@ -352,6 +366,10 @@ export function genToPseudo(genJsonText: string): string {
   apiNames = {};
   for (const a of data.userExApis ?? []) {
     if (a?.apiId) apiNames[a.apiId] = a.apiName ?? a.apiId;
+  }
+  listNames = {};
+  for (const l of data.userdefinedlists ?? []) {
+    if (l?.listId) listNames[l.listId] = l.listName ?? l.listId;
   }
   const scenes: { blockXml?: string }[] = data.scenes ?? [];
   const out: string[] = [];
