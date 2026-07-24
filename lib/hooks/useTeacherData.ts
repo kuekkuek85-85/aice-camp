@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { getFirebaseDb } from "@/lib/firebase/client";
-import type { ProgressDoc, RosterEntry, StudentDoc, ProblemDoc } from "@/lib/types";
+import type { ProgressDoc, RosterEntry, StudentDoc, ProblemDoc, ExamResultDoc } from "@/lib/types";
 
 export function useTeacherData() {
   const [roster, setRoster] = useState<RosterEntry[]>([]);
   const [students, setStudents] = useState<Record<string, StudentDoc>>({});
   const [progress, setProgress] = useState<ProgressDoc[]>([]);
   const [problems, setProblems] = useState<ProblemDoc[]>([]);
+  const [examResults, setExamResults] = useState<ExamResultDoc[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,9 +33,12 @@ export function useTeacherData() {
       onSnapshot(collection(db, "problems"), (snap) => {
         setProblems(snap.docs.map((d) => d.data() as ProblemDoc).sort((a, b) => a.order - b.order));
       }),
+      onSnapshot(collection(db, "examResults"), (snap) => {
+        setExamResults(snap.docs.map((d) => d.data() as ExamResultDoc));
+      }),
     ];
     return () => unsubs.forEach((u) => u());
   }, []);
 
-  return { roster, students, progress, problems, loading };
+  return { roster, students, progress, problems, examResults, loading };
 }

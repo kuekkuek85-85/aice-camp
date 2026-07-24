@@ -6,6 +6,7 @@ import { TeacherLoginForm } from "@/components/teacher/TeacherLoginForm";
 import { HelpQueue } from "@/components/teacher/HelpQueue";
 import { StudentGrid, CompletionBars } from "@/components/teacher/StudentGrid";
 import { SubmissionsList } from "@/components/teacher/SubmissionsList";
+import { ExamResults } from "@/components/teacher/ExamResults";
 import { AnswerDownloads } from "@/components/teacher/AnswerDownloads";
 import { DangerZone } from "@/components/teacher/DangerZone";
 import { CurrentDayControl } from "@/components/teacher/CurrentDayControl";
@@ -42,7 +43,7 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
   const [masking, setMasking] = useState(false);
   const [onlyAiceIncomplete, setOnlyAiceIncomplete] = useState(false);
   const [hideNotLoggedIn, setHideNotLoggedIn] = useState(false);
-  const { roster, students, progress, problems } = useTeacherData();
+  const { roster, students, progress, problems, examResults } = useTeacherData();
   const { day } = useDay(dayId);
 
   return (
@@ -116,6 +117,8 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
         </div>
 
         <SubmissionsList roster={roster} progress={progress} masking={masking} day={day} dayId={dayId} />
+
+        <ExamResults roster={roster} examResults={examResults} masking={masking} />
 
         <DangerZone />
       </main>
