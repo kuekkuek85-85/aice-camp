@@ -40,6 +40,7 @@ function TeacherGate() {
 }
 
 function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
+  const [view, setView] = useState<"class" | "demo">("class");
   const [dayId, setDayId] = useState("1");
   const [masking, setMasking] = useState(false);
   const [onlyAiceIncomplete, setOnlyAiceIncomplete] = useState(false);
@@ -69,6 +70,30 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
       </header>
 
       <main className="mx-auto w-full max-w-6xl flex-1 space-y-6 px-4 py-6">
+        {/* 보기 모드 — 학생 수업 / 교사 시연 */}
+        <div className="flex w-full max-w-md gap-2 rounded-full bg-surface-soft p-1">
+          <button
+            onClick={() => setView("class")}
+            className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold transition ${
+              view === "class" ? "bg-ink text-canvas" : "text-ink hover:bg-canvas"
+            }`}
+          >
+            🎓 학생 수업
+          </button>
+          <button
+            onClick={() => setView("demo")}
+            className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold transition ${
+              view === "demo" ? "bg-ink text-canvas" : "text-ink hover:bg-canvas"
+            }`}
+          >
+            🧑‍🏫 교사 시연만 보기
+          </button>
+        </div>
+
+        {view === "demo" ? (
+          <DemoParticipants participants={demoParticipants} now={now} />
+        ) : (
+          <>
         <CurrentDayControl />
 
         <DemoParticipants participants={demoParticipants} now={now} />
@@ -131,6 +156,8 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
         <ExamResults roster={roster} examResults={examResults} masking={masking} />
 
         <DangerZone />
+          </>
+        )}
       </main>
     </div>
   );
