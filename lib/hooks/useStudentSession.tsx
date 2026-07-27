@@ -71,10 +71,13 @@ export function StudentSessionProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const local = readLocalSession();
     const auth = getFirebaseAuth();
 
     const unsub = onAuthStateChanged(auth, async (user) => {
+      // localStorage 는 콜백마다 새로 읽는다. (마운트 시점 값을 캡처해두면
+      // 방금 login/loginDemo 로 저장한 세션을 놓쳐 guest 로 튕기는 경쟁 조건이 생긴다.)
+      const local = readLocalSession();
+
       // 교사로 로그인된 상태면 학생 세션 복구가 끼어들지 않는다
       // (같은 브라우저에 학생 localStorage가 남아 있어도 교사 인증을 덮어쓰지 않도록)
       if (user) {
@@ -135,18 +138,20 @@ export function StudentSessionProvider({ children }: { children: ReactNode }) {
     setError(null);
     try {
       const data = await callLogin(studentId, name);
-      await signInWithCustomToken(getFirebaseAuth(), data.token);
       const newSession: LocalSession = {
         studentId: data.studentId ?? studentId,
         name: data.name,
         grade: data.grade,
         role: "student",
       };
+      // 저장을 sign-in 이전에 해둔다 → onAuthStateChanged 콜백이 새 세션을 보고 ready 로 확정한다.
       window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newSession));
+      await signInWithCustomToken(getFirebaseAuth(), data.token);
       setSession(newSession);
       setStatus("ready");
       return true;
     } catch (e) {
+      window.localStorage.removeItem(LOCAL_STORAGE_KEY);
       setError(e instanceof Error ? e.message : "로그인에 실패했습니다.");
       return false;
     }
@@ -156,7 +161,6 @@ export function StudentSessionProvider({ children }: { children: ReactNode }) {
     setError(null);
     try {
       const data = await callDemoLogin(school, name);
-      await signInWithCustomToken(getFirebaseAuth(), data.token);
       const newSession: LocalSession = {
         studentId: data.studentId,
         name: data.name,
@@ -164,11 +168,14 @@ export function StudentSessionProvider({ children }: { children: ReactNode }) {
         role: "demo",
         school: data.school,
       };
+      // 저장을 sign-in 이전에 해둔다 → onAuthStateChanged 콜백이 새 세션을 보고 ready 로 확정한다.
       window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newSession));
+      await signInWithCustomToken(getFirebaseAuth(), data.token);
       setSession(newSession);
       setStatus("ready");
       return true;
     } catch (e) {
+      window.localStorage.removeItem(LOCAL_STORAGE_KEY);
       setError(e instanceof Error ? e.message : "입장에 실패했습니다.");
       return false;
     }
