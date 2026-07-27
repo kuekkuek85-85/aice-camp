@@ -19,7 +19,7 @@ type Props = {
 const AICE_SIGNUP_STEP_ID = "aice-signup";
 const AICE_SIGNUP_DAY_ID = "1";
 
-function statusIcon(status: string | undefined) {
+export function statusIcon(status: string | undefined) {
   if (status === "done") return "✅";
   if (status === "deferred") return "🕓";
   return "⬜";
@@ -141,7 +141,7 @@ export function StudentGrid({
   );
 }
 
-type CellSelection = {
+export type CellSelection = {
   name: string;
   stepId: string;
   stepOrder: number;
@@ -173,7 +173,7 @@ function statusLabel(status: string | undefined) {
   return "아직 안 함";
 }
 
-function SubmissionModal({
+export function SubmissionModal({
   selection,
   masking,
   onClose,

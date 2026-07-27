@@ -8,6 +8,7 @@ import { StudentGrid, CompletionBars } from "@/components/teacher/StudentGrid";
 import { SubmissionsList } from "@/components/teacher/SubmissionsList";
 import { ExamResults } from "@/components/teacher/ExamResults";
 import { DemoParticipants } from "@/components/teacher/DemoParticipants";
+import { DemoActivity } from "@/components/teacher/DemoActivity";
 import { AnswerDownloads } from "@/components/teacher/AnswerDownloads";
 import { DangerZone } from "@/components/teacher/DangerZone";
 import { CurrentDayControl } from "@/components/teacher/CurrentDayControl";
@@ -55,6 +56,16 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
     return () => clearInterval(t);
   }, []);
 
+  // 교사 시연 참가자만 스코프한 데이터 (단계별 완료율 계산이 학생과 섞이지 않도록)
+  const demoUids = new Set(demoParticipants.map((p) => p.uid));
+  const demoProgress = progress.filter((p) => demoUids.has(p.studentId));
+  const demoRoster = demoParticipants.map((p) => ({
+    rosterId: p.uid,
+    studentId: p.uid,
+    name: p.name,
+    grade: 0,
+  }));
+
   return (
     <div className="flex flex-1 flex-col">
       <header className="border-b border-hairline bg-canvas">
@@ -91,7 +102,34 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
         </div>
 
         {view === "demo" ? (
-          <DemoParticipants participants={demoParticipants} now={now} />
+          <>
+            <DemoParticipants participants={demoParticipants} now={now} />
+
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="font-mono text-xs uppercase tracking-widest text-ink">활동 일차</span>
+              {dayIds.map((d) => (
+                <button
+                  key={d}
+                  onClick={() => setDayId(d)}
+                  className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+                    dayId === d ? "bg-ink text-canvas" : "border border-hairline bg-canvas text-ink hover:bg-surface-soft"
+                  }`}
+                >
+                  {d}일차
+                </button>
+              ))}
+            </div>
+
+            <DemoActivity
+              participants={demoParticipants}
+              progress={progress}
+              day={day}
+              masking={masking}
+              now={now}
+            />
+
+            <CompletionBars roster={demoRoster} progress={demoProgress} day={day} />
+          </>
         ) : (
           <>
         <CurrentDayControl />
