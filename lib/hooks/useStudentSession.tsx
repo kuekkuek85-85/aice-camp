@@ -20,6 +20,7 @@ type StudentSessionValue = {
   session: LocalSession | null;
   error: string | null;
   login: (studentId: string, name: string) => Promise<boolean>;
+  loginDemo: (school: string, name: string) => Promise<boolean>;
   logout: () => void;
 };
 
@@ -51,6 +52,19 @@ async function callLogin(studentId: string, name: string) {
   return data as { token: string; studentId: string; name: string; grade: number; hasLevel2: boolean };
 }
 
+async function callDemoLogin(school: string, name: string) {
+  const res = await fetch("/api/demo-login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ school, name }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error ?? "입장에 실패했습니다.");
+  }
+  return data as { token: string; studentId: string; name: string; school: string };
+}
+
 export function StudentSessionProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<Status>("loading");
   const [session, setSession] = useState<LocalSession | null>(null);
@@ -80,13 +94,27 @@ export function StudentSessionProvider({ children }: { children: ReactNode }) {
 
       if (local) {
         try {
-          const data = await callLogin(local.studentId, local.name);
-          await signInWithCustomToken(auth, data.token);
-          const restored: LocalSession = {
-            studentId: data.studentId ?? local.studentId,
-            name: data.name,
-            grade: data.grade,
-          };
+          let restored: LocalSession;
+          if (local.role === "demo" && local.school) {
+            const data = await callDemoLogin(local.school, local.name);
+            await signInWithCustomToken(auth, data.token);
+            restored = {
+              studentId: data.studentId ?? local.studentId,
+              name: data.name,
+              grade: 0,
+              role: "demo",
+              school: data.school ?? local.school,
+            };
+          } else {
+            const data = await callLogin(local.studentId, local.name);
+            await signInWithCustomToken(auth, data.token);
+            restored = {
+              studentId: data.studentId ?? local.studentId,
+              name: data.name,
+              grade: data.grade,
+              role: "student",
+            };
+          }
           window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(restored));
           setSession(restored);
           setStatus("ready");
@@ -112,6 +140,7 @@ export function StudentSessionProvider({ children }: { children: ReactNode }) {
         studentId: data.studentId ?? studentId,
         name: data.name,
         grade: data.grade,
+        role: "student",
       };
       window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newSession));
       setSession(newSession);
@@ -119,6 +148,28 @@ export function StudentSessionProvider({ children }: { children: ReactNode }) {
       return true;
     } catch (e) {
       setError(e instanceof Error ? e.message : "로그인에 실패했습니다.");
+      return false;
+    }
+  }, []);
+
+  const loginDemo = useCallback(async (school: string, name: string) => {
+    setError(null);
+    try {
+      const data = await callDemoLogin(school, name);
+      await signInWithCustomToken(getFirebaseAuth(), data.token);
+      const newSession: LocalSession = {
+        studentId: data.studentId,
+        name: data.name,
+        grade: 0,
+        role: "demo",
+        school: data.school,
+      };
+      window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newSession));
+      setSession(newSession);
+      setStatus("ready");
+      return true;
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "입장에 실패했습니다.");
       return false;
     }
   }, []);
@@ -131,8 +182,8 @@ export function StudentSessionProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ status, session, error, login, logout }),
-    [status, session, error, login, logout]
+    () => ({ status, session, error, login, loginDemo, logout }),
+    [status, session, error, login, loginDemo, logout]
   );
 
   return (

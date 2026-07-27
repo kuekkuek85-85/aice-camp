@@ -84,6 +84,8 @@ export function useDayProgress(dayId: string) {
   const writePublicProgress = useCallback(
     async (nextProgress: Record<string, StepProgress>) => {
       if (!session || !day) return;
+      // 교사 시연 참가자는 학생 현황판(/board)에 섞이지 않도록 기록하지 않는다.
+      if (session.role === "demo") return;
       const steps = [...day.steps].sort((a, b) => a.order - b.order);
       let current = steps[0];
       for (const step of steps) {

@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TeacherSessionProvider, useTeacherSession } from "@/lib/hooks/useTeacherSession";
 import { TeacherLoginForm } from "@/components/teacher/TeacherLoginForm";
 import { HelpQueue } from "@/components/teacher/HelpQueue";
 import { StudentGrid, CompletionBars } from "@/components/teacher/StudentGrid";
 import { SubmissionsList } from "@/components/teacher/SubmissionsList";
 import { ExamResults } from "@/components/teacher/ExamResults";
+import { DemoParticipants } from "@/components/teacher/DemoParticipants";
 import { AnswerDownloads } from "@/components/teacher/AnswerDownloads";
 import { DangerZone } from "@/components/teacher/DangerZone";
 import { CurrentDayControl } from "@/components/teacher/CurrentDayControl";
@@ -43,8 +44,15 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
   const [masking, setMasking] = useState(false);
   const [onlyAiceIncomplete, setOnlyAiceIncomplete] = useState(false);
   const [hideNotLoggedIn, setHideNotLoggedIn] = useState(false);
-  const { roster, students, progress, problems, examResults } = useTeacherData();
+  const { roster, students, progress, problems, examResults, demoParticipants } = useTeacherData();
   const { day } = useDay(dayId);
+
+  // '접속 중' 표시를 위해 1분마다 현재 시각 갱신
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(t);
+  }, []);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -62,6 +70,8 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
 
       <main className="mx-auto w-full max-w-6xl flex-1 space-y-6 px-4 py-6">
         <CurrentDayControl />
+
+        <DemoParticipants participants={demoParticipants} now={now} />
 
         <div className="flex flex-wrap items-center gap-3">
           <span className="font-mono text-xs uppercase tracking-widest text-ink">대시보드 보기</span>

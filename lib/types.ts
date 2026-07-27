@@ -170,10 +170,21 @@ export type ExamResultDoc = {
   results: Record<string, ExamQuestionResult>; // key = 문제 번호
 };
 
+// 교사 시연 트랙 참가자 (서버가 기록, 교사 대시보드에서 실시간 열람)
+export type DemoParticipant = {
+  uid: string;
+  school: string;
+  name: string;
+  joinedAt: number;
+  lastSeenAt: number;
+};
+
 export const LOCAL_STORAGE_KEY = "aice-camp-student";
 
 export type LocalSession = {
   studentId: string;
   name: string;
   grade: number;
+  role?: "student" | "demo"; // 기본(미지정)은 학생. "demo"는 교사 시연 트랙.
+  school?: string; // 시연 트랙: 소속 학교
 };
