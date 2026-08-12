@@ -18,7 +18,8 @@ export function useHelpFlag(dayId: string, stepId: string) {
   }, [session]);
 
   async function raiseHelp() {
-    if (!session) return;
+    // 시연 교사(demo)는 students 문서가 없고 학생 현황판에도 섞이지 않으므로 건너뛴다.
+    if (!session || session.role === "demo") return;
     const db = getFirebaseDb();
     const flag = { active: true, at: Date.now(), dayId, stepId };
     await Promise.all([
@@ -28,7 +29,7 @@ export function useHelpFlag(dayId: string, stepId: string) {
   }
 
   async function clearHelp() {
-    if (!session) return;
+    if (!session || session.role === "demo") return;
     const db = getFirebaseDb();
     const flag = { active: false };
     await Promise.all([

@@ -18,13 +18,20 @@ export default function BoardPage() {
     if (status === "guest") router.replace("/");
   }, [status, router]);
 
+  // 활동을 시작한(학번·일차가 있는) 문서만 표시한다.
+  // '막혔어요'만 눌러 생긴 불완전 문서(helpFlag만 있음)는 걸러 렌더 오류를 막는다.
+  const valid = useMemo(
+    () => list.filter((p) => p.studentId && p.currentDayId),
+    [list]
+  );
+
   const filtered = useMemo(
-    () => (dayFilter === "all" ? list : list.filter((p) => p.currentDayId === dayFilter)),
-    [list, dayFilter]
+    () => (dayFilter === "all" ? valid : valid.filter((p) => p.currentDayId === dayFilter)),
+    [valid, dayFilter]
   );
 
   const sorted = useMemo(
-    () => [...filtered].sort((a, b) => a.studentId.localeCompare(b.studentId)),
+    () => [...filtered].sort((a, b) => (a.studentId ?? "").localeCompare(b.studentId ?? "")),
     [filtered]
   );
 
