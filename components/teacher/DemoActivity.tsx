@@ -52,8 +52,7 @@ export function DemoActivity({ participants, progress, day, masking, now }: Prop
         <table className="w-full min-w-[600px] text-sm">
           <thead className="bg-surface-soft text-left font-mono text-[11px] uppercase tracking-widest text-ink">
             <tr>
-              <th className="px-3 py-2">성함</th>
-              <th className="px-3 py-2">소속 학교</th>
+              <th className="px-3 py-2">닉네임</th>
               <th className="px-3 py-2">접속</th>
               {steps.map((s) => (
                 <th key={s.stepId} className="px-3 py-2 text-center" title={s.title}>
@@ -68,8 +67,10 @@ export function DemoActivity({ participants, progress, day, masking, now }: Prop
               const online = now - (p.lastSeenAt ?? 0) < ONLINE_WINDOW_MS;
               return (
                 <tr key={p.uid} className="border-t border-hairline-soft">
-                  <td className="px-3 py-2 font-medium text-ink">{p.name}</td>
-                  <td className="px-3 py-2 text-ink/70">{p.school}</td>
+                  <td className="px-3 py-2 font-medium text-ink">
+                    {p.name}
+                    {p.school && <span className="ml-1 text-xs font-normal text-ink/50">{p.school}</span>}
+                  </td>
                   <td className="px-3 py-2 text-xs">
                     {online ? (
                       <span className="font-medium text-success">접속 중</span>

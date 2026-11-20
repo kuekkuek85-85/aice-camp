@@ -37,6 +37,14 @@ export default function DayPage({ params }: { params: Promise<{ n: string }> }) 
 
   const steps = useMemo(() => (day ? [...day.steps].sort((a, b) => a.order - b.order) : []), [day]);
 
+  // #stepId 로 들어오면(예: 연수 체험 과제 바로 가기) 단계 카드가 그려진 뒤 그 위치로 스크롤
+  const stepCount = steps.length;
+  useEffect(() => {
+    if (!stepCount || typeof window === "undefined" || !window.location.hash) return;
+    const el = document.getElementById(decodeURIComponent(window.location.hash.slice(1)));
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [stepCount]);
+
   const currentStepId = useMemo(() => {
     for (const step of steps) {
       const st = progress?.steps?.[step.stepId]?.status;
@@ -54,7 +62,9 @@ export default function DayPage({ params }: { params: Promise<{ n: string }> }) 
   }
 
   const dayNum = Number(n);
-  if (Number.isInteger(dayNum) && dayNum > config.currentDay) {
+  // 교사 연수 참가자는 일차 잠금·단계 순서 없이 체험 과제로 바로 들어갈 수 있다.
+  const isDemo = session.role === "demo";
+  if (!isDemo && Number.isInteger(dayNum) && dayNum > config.currentDay) {
     return (
       <div className="flex flex-1 flex-col">
         <SiteHeader />
@@ -145,7 +155,7 @@ export default function DayPage({ params }: { params: Promise<{ n: string }> }) 
               step={step}
               dayId={n}
               progress={progress?.steps?.[step.stepId]}
-              unlocked={isStepUnlocked(steps, steps.indexOf(step), progress)}
+              unlocked={isDemo || isStepUnlocked(steps, steps.indexOf(step), progress)}
               uploading={uploading === step.stepId}
               grading={grading === step.stepId}
               submitError={submitError}

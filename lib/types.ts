@@ -173,8 +173,8 @@ export type ExamResultDoc = {
 // 교사 시연 트랙 참가자 (서버가 기록, 교사 대시보드에서 실시간 열람)
 export type DemoParticipant = {
   uid: string;
-  school: string;
-  name: string;
+  school?: string; // 예전 시연 트랙(학교+성함) 기록에만 있음. 연수 트랙은 닉네임만 받는다.
+  name: string; // 연수 트랙: 닉네임
   joinedAt: number;
   lastSeenAt: number;
 };
@@ -185,6 +185,7 @@ export type LocalSession = {
   studentId: string;
   name: string;
   grade: number;
-  role?: "student" | "demo"; // 기본(미지정)은 학생. "demo"는 교사 시연 트랙.
-  school?: string; // 시연 트랙: 소속 학교
+  role?: "student" | "demo"; // 기본(미지정)은 학생. "demo"는 교사 연수(시연) 트랙.
+  school?: string; // (구) 시연 트랙 호환용
+  workshopCode?: string; // 연수 트랙: 재접속 시 다시 확인할 연수 코드
 };

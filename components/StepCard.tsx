@@ -67,7 +67,8 @@ export function StepCard({
 
   return (
     <div
-      className={`rounded-3xl p-5 transition ${
+      id={step.stepId}
+      className={`scroll-mt-20 rounded-3xl p-5 transition ${
         !unlocked
           ? "bg-surface-soft opacity-50"
           : isDone

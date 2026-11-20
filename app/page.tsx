@@ -11,6 +11,11 @@ import { QuickLinks } from "@/components/QuickLinks";
 import { MakingTeaser } from "@/components/MakingTeaser";
 import { useConfig } from "@/lib/hooks/useConfig";
 import type { LocalSession } from "@/lib/types";
+import Link from "next/link";
+
+// 교사 연수 체험 과제 (2일차 · 제곱 구하기)
+const WORKSHOP_DAY = "2";
+const WORKSHOP_STEP = "square-return";
 
 export default function Home() {
   const { status, session } = useStudentSession();
@@ -41,26 +46,39 @@ function CampHome({ session }: { session: LocalSession }) {
         <div>
           {isDemo && (
             <span className="inline-flex items-center gap-1 rounded-full bg-block-lilac px-3 py-1 text-xs font-bold text-ink">
-              🧑‍🏫 교사 시연 모드
+              🧑‍🏫 교사 연수 모드
             </span>
           )}
           <h1 className="mt-2 text-3xl font-medium tracking-tight text-ink">
-            환영해요, {isDemo && session.school ? `${session.school} ` : ""}
-            {session.name}
-            {isDemo ? " 선생님" : ""}님 👋
+            환영해요, {session.name}
+            {isDemo ? " 선생님" : "님"} 👋
           </h1>
           <p className="mt-2 text-base text-ink">
             {isDemo ? (
-              <>둘러보기 모드예요. 아래 로드맵에서 <span className="font-semibold">1일차 · AI와 첫 만남</span>부터 자유롭게 체험해보세요.</>
+              <>학생 화면 그대로 체험하실 수 있어요. 아래 <span className="font-semibold">체험 과제</span>부터 시작해주세요.</>
             ) : (
               <>오늘은 캠프 <span className="font-semibold">{config.currentDay}일차</span>예요. 아래에서 오늘의 학습을 시작해보세요.</>
             )}
           </p>
         </div>
 
-        <StampBoard />
+        {isDemo && (
+          <Link
+            href={`/day/${WORKSHOP_DAY}#${WORKSHOP_STEP}`}
+            className="flex items-center justify-between gap-4 rounded-3xl bg-block-lilac p-6 transition hover:opacity-90"
+          >
+            <div>
+              <p className="font-mono text-xs uppercase tracking-widest text-ink">체험 과제</p>
+              <p className="mt-1 text-xl font-semibold tracking-tight text-ink">2일차 · 제곱 구하기 (반환값 있는 함수)</p>
+              <p className="mt-1 text-sm text-ink">힌트 → 오답 제출 → AI 코치 피드백 → 정답 제출 순서로 체험해보세요.</p>
+            </div>
+            <span className="shrink-0 rounded-full bg-ink px-4 py-2 text-sm font-semibold text-canvas">바로 가기 →</span>
+          </Link>
+        )}
+
+        {!isDemo && <StampBoard />}
         <ExamInfo />
-        <DayRoadmap currentDay={config.currentDay} />
+        <DayRoadmap currentDay={config.currentDay} unlockAll={isDemo} />
         <MakingTeaser />
         <ToolMenu />
         <QuickLinks />

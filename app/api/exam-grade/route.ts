@@ -5,6 +5,7 @@ import { EXAM_ANSWER_KEY } from "@/lib/exam/answer-key";
 import { EXAMS } from "@/lib/exam/exams";
 import { genToPseudo } from "@/lib/grading/gen-to-pseudo";
 import { gradeExamGen } from "@/lib/grading/gemini";
+import { demoAllowed } from "@/lib/workshop";
 
 export const maxDuration = 60;
 
@@ -23,6 +24,9 @@ async function getUid(req: NextRequest): Promise<{ uid: string; teacher: boolean
 export async function POST(req: NextRequest) {
   const caller = await getUid(req);
   if (!caller) return NextResponse.json({ error: "인증이 필요합니다." }, { status: 401 });
+  if (!(await demoAllowed(caller.uid))) {
+    return NextResponse.json({ error: "연수 체험이 종료되었어요." }, { status: 403 });
+  }
 
   let body: { roundId?: string; no?: number; choiceIndex?: number; studentId?: string; skip?: boolean };
   try {

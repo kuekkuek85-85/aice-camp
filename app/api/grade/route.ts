@@ -5,6 +5,7 @@ import { genToPseudo } from "@/lib/grading/gen-to-pseudo";
 import { RUBRICS, rubricKey } from "@/lib/grading/rubrics";
 import { gradeWithGemini } from "@/lib/grading/gemini";
 import { progressDocId } from "@/lib/firestore-paths";
+import { demoAllowed } from "@/lib/workshop";
 
 export const maxDuration = 60;
 
@@ -23,6 +24,10 @@ async function getUid(req: NextRequest): Promise<{ uid: string; teacher: boolean
 export async function POST(req: NextRequest) {
   const caller = await getUid(req);
   if (!caller) return NextResponse.json({ error: "인증이 필요합니다." }, { status: 401 });
+  // 연수가 닫히면 이미 로그인해 있던 연수 참가자도 AI 채점을 쓸 수 없다(비용·남용 방지).
+  if (!(await demoAllowed(caller.uid))) {
+    return NextResponse.json({ error: "연수 체험이 종료되었어요." }, { status: 403 });
+  }
 
   let body: { dayId?: string; stepId?: string; studentId?: string };
   try {

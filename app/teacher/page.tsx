@@ -9,6 +9,7 @@ import { SubmissionsList } from "@/components/teacher/SubmissionsList";
 import { ExamResults } from "@/components/teacher/ExamResults";
 import { DemoParticipants } from "@/components/teacher/DemoParticipants";
 import { DemoActivity } from "@/components/teacher/DemoActivity";
+import { WorkshopControl } from "@/components/teacher/WorkshopControl";
 import { AnswerDownloads } from "@/components/teacher/AnswerDownloads";
 import { DangerZone } from "@/components/teacher/DangerZone";
 import { CurrentDayControl } from "@/components/teacher/CurrentDayControl";
@@ -97,12 +98,14 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
               view === "demo" ? "bg-ink text-canvas" : "text-ink hover:bg-canvas"
             }`}
           >
-            🧑‍🏫 교사 시연만 보기
+            🧑‍🏫 교사 연수만 보기
           </button>
         </div>
 
         {view === "demo" ? (
           <>
+            <WorkshopControl />
+
             <DemoParticipants participants={demoParticipants} now={now} />
 
             <div className="flex flex-wrap items-center gap-3">

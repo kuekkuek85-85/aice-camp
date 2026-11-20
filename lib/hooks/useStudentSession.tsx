@@ -20,7 +20,7 @@ type StudentSessionValue = {
   session: LocalSession | null;
   error: string | null;
   login: (studentId: string, name: string) => Promise<boolean>;
-  loginDemo: (school: string, name: string) => Promise<boolean>;
+  loginDemo: (code: string, nickname: string) => Promise<boolean>;
   logout: () => void;
 };
 
@@ -52,17 +52,17 @@ async function callLogin(studentId: string, name: string) {
   return data as { token: string; studentId: string; name: string; grade: number; hasLevel2: boolean };
 }
 
-async function callDemoLogin(school: string, name: string) {
+async function callDemoLogin(code: string, nickname: string, uid?: string) {
   const res = await fetch("/api/demo-login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ school, name }),
+    body: JSON.stringify({ code, nickname, uid }),
   });
   const data = await res.json();
   if (!res.ok) {
     throw new Error(data.error ?? "입장에 실패했습니다.");
   }
-  return data as { token: string; studentId: string; name: string; school: string };
+  return data as { token: string; studentId: string; name: string };
 }
 
 export function StudentSessionProvider({ children }: { children: ReactNode }) {
@@ -98,15 +98,16 @@ export function StudentSessionProvider({ children }: { children: ReactNode }) {
       if (local) {
         try {
           let restored: LocalSession;
-          if (local.role === "demo" && local.school) {
-            const data = await callDemoLogin(local.school, local.name);
+          if (local.role === "demo") {
+            // 연수 코드가 바뀌었거나 연수가 닫혔으면 여기서 실패 → 로그인 화면으로
+            const data = await callDemoLogin(local.workshopCode ?? "", local.name, local.studentId);
             await signInWithCustomToken(auth, data.token);
             restored = {
-              studentId: data.studentId ?? local.studentId,
+              studentId: data.studentId,
               name: data.name,
               grade: 0,
               role: "demo",
-              school: data.school ?? local.school,
+              workshopCode: local.workshopCode,
             };
           } else {
             const data = await callLogin(local.studentId, local.name);
@@ -157,16 +158,16 @@ export function StudentSessionProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const loginDemo = useCallback(async (school: string, name: string) => {
+  const loginDemo = useCallback(async (code: string, nickname: string) => {
     setError(null);
     try {
-      const data = await callDemoLogin(school, name);
+      const data = await callDemoLogin(code, nickname);
       const newSession: LocalSession = {
         studentId: data.studentId,
         name: data.name,
         grade: 0,
         role: "demo",
-        school: data.school,
+        workshopCode: code,
       };
       // 저장을 sign-in 이전에 해둔다 → onAuthStateChanged 콜백이 새 세션을 보고 ready 로 확정한다.
       window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newSession));

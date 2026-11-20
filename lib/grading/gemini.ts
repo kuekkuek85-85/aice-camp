@@ -8,6 +8,49 @@ const ENDPOINT = (model: string) =>
 
 export type GradeResult = { verdict: GradeVerdict; feedback: string };
 
+// 여러 명이 동시에 제출하면 분당 한도(429)나 일시적 과부하(5xx)가 날 수 있다.
+// 짧게 기다렸다가 최대 2번 더 시도한다. (Vercel 함수 제한 60초 안에서 끝나도록 대기는 짧게)
+const RETRYABLE = new Set([429, 500, 502, 503, 504]);
+const MAX_ATTEMPTS = 3;
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+async function callGemini(text: string): Promise<string> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("GEMINI_API_KEY 환경변수가 없습니다.");
+
+  let lastError = "";
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    let res: Response | null = null;
+    try {
+      res = await fetch(ENDPOINT(MODEL), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-goog-api-key": apiKey },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text }] }],
+          generationConfig: { responseMimeType: "application/json", temperature: 0 },
+        }),
+      });
+    } catch (e) {
+      lastError = `네트워크 오류: ${e instanceof Error ? e.message : String(e)}`;
+    }
+
+    if (res?.ok) {
+      const data = await res.json();
+      return data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+    }
+    if (res) {
+      lastError = `Gemini 오류 ${res.status}: ${(await res.text()).slice(0, 200)}`;
+      if (!RETRYABLE.has(res.status)) break; // 400·403 등은 다시 시도해도 같다
+    }
+    if (attempt < MAX_ATTEMPTS) {
+      const retryAfter = Number(res?.headers.get("retry-after"));
+      const base = Number.isFinite(retryAfter) && retryAfter > 0 && retryAfter <= 8 ? retryAfter * 1000 : 1500 * attempt;
+      await sleep(base + Math.floor(Math.random() * 500));
+    }
+  }
+  throw new Error(lastError || "Gemini 호출 실패");
+}
+
 function buildPrompt(rubric: Rubric, answerPseudo: string | undefined, studentPseudo: string): string {
   // 정답 파일이 없는 자유 창작 과제 — 요건 충족 여부로만, 격려 중심으로 채점
   if (!answerPseudo) {
@@ -21,6 +64,7 @@ function buildPrompt(rubric: Rubric, answerPseudo: string | undefined, studentPs
 - 방향은 맞는데 요건 일부가 빠졌으면 "부분통과", 요건 대부분이 빠졌거나 거의 만들다 만 상태면 "미흡".
 - 반복문·조건문은 종류·문법과 상관없이 문제를 해결했으면 인정해.
 - 창작 과제이니 잘한 점을 구체적으로 먼저 칭찬하고, 부족한 부분은 '무엇을 더하면 더 좋아질지' 격려하는 말투로 알려줘.
+- 완성된 코드나 블록 조립 순서를 그대로 알려주지 마. 방향만 짚어서 학생이 스스로 생각해 고치게 해.
 - 반드시 아래 JSON 형식으로만 답해. 다른 말 붙이지 마.
 
 [문제] ${rubric.title}
@@ -43,6 +87,7 @@ ${studentPseudo}
 - 핵심 요건 중 빠진 게 있으면 "미흡"이고, 무엇이 빠졌는지 격려하는 말투로 알려줘.
 - 거의 다 했는데 사소한 실수(예: 경계값)만 있으면 "부분통과".
 - 학생을 존중하는 따뜻한 반말/존댓말 섞인 말투로, 잘한 점을 먼저 칭찬해.
+- [모범답안]의 블록 구성이나 정답 코드를 그대로 알려주지 마. 무엇이 빠졌는지·어디를 다시 살펴볼지만 짚어서 학생이 스스로 고칠 수 있게 해.
 - 반드시 아래 JSON 형식으로만 답해. 다른 말 붙이지 마.
 
 [문제] ${rubric.title}
@@ -63,25 +108,7 @@ export async function gradeWithGemini(
   answerPseudo: string | undefined,
   studentPseudo: string
 ): Promise<GradeResult> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) throw new Error("GEMINI_API_KEY 환경변수가 없습니다.");
-
-  const res = await fetch(ENDPOINT(MODEL), {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "X-goog-api-key": apiKey },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: buildPrompt(rubric, answerPseudo, studentPseudo) }] }],
-      generationConfig: { responseMimeType: "application/json", temperature: 0 },
-    }),
-  });
-
-  if (!res.ok) {
-    const t = await res.text();
-    throw new Error(`Gemini 오류 ${res.status}: ${t.slice(0, 200)}`);
-  }
-
-  const data = await res.json();
-  const text: string = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+  const text = await callGemini(buildPrompt(rubric, answerPseudo, studentPseudo));
   const parsed = safeParse(text);
   const verdict = normalizeVerdict(parsed?.verdict);
   const feedback = typeof parsed?.feedback === "string" ? parsed.feedback.trim() : "";
@@ -95,9 +122,6 @@ export async function gradeExamGen(
   answerPseudo: string,
   studentPseudo: string
 ): Promise<{ correct: boolean; feedback: string }> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) throw new Error("GEMINI_API_KEY 환경변수가 없습니다.");
-
   const text = `너는 중학생 블록코딩(AI 코디니) 모의평가를 채점하는 채점관이야.
 이건 시험이라서 부분 점수가 없어. [학생답안]이 [정답]과 '기능적으로 완전히 동일'하면 correct=true, 하나라도 다르면 correct=false 야.
 
@@ -105,6 +129,7 @@ export async function gradeExamGen(
 - 학생은 문제의 빈칸(갈색 블록)을 정해진 후보 블록으로 채워 완성해. 블록 안의 숫자·문자·기호는 문제에 맞게 바뀔 수 있어.
 - 변수명, 블록 순서 같은 표현 차이는 결과가 같으면 정답으로 봐도 돼. 하지만 로직·값·출력이 조금이라도 다르면 오답이야.
 - 핵심 동작(입력, 계산/조건/반복, 출력 문구와 값)이 정답과 전부 일치해야 correct=true.
+- 피드백에 [정답]의 블록이나 값을 그대로 알려주지는 마. 어느 부분이 다른지만 짚어줘.
 - 반드시 아래 JSON 형식으로만 답해.
 
 [문제] ${prompt || "(설명 생략)"}
@@ -117,17 +142,7 @@ ${studentPseudo}
 
 출력(JSON): {"correct": true 또는 false, "feedback": "학생에게 보여줄 1문장 한국어 피드백(왜 맞았는지/무엇이 틀렸는지)"}`;
 
-  const res = await fetch(ENDPOINT(MODEL), {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "X-goog-api-key": apiKey },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text }] }],
-      generationConfig: { responseMimeType: "application/json", temperature: 0 },
-    }),
-  });
-  if (!res.ok) throw new Error(`Gemini 오류 ${res.status}: ${(await res.text()).slice(0, 200)}`);
-  const data = await res.json();
-  const out: string = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+  const out = await callGemini(text);
   const parsed = safeParse(out) as { correct?: unknown; feedback?: unknown } | null;
   const correct = parsed?.correct === true;
   const feedback = typeof parsed?.feedback === "string" ? parsed.feedback.trim() : correct ? "정답이에요!" : "다시 확인해봐요.";

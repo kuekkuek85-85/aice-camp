@@ -12,7 +12,7 @@ const DAY_TITLES: Record<string, string> = {
   "5": "5일차 · 자습 · 모의평가",
 };
 
-export function DayRoadmap({ currentDay }: { currentDay: number }) {
+export function DayRoadmap({ currentDay, unlockAll = false }: { currentDay: number; unlockAll?: boolean }) {
   const stamps = useMyStamps();
 
   return (
@@ -24,7 +24,7 @@ export function DayRoadmap({ currentDay }: { currentDay: number }) {
           const n = Number(dayId);
           const isToday = n === currentDay;
           const isPast = n < currentDay;
-          const isLocked = n > currentDay;
+          const isLocked = !unlockAll && n > currentDay;
           const stamped = stamps[dayId];
 
           const card = (

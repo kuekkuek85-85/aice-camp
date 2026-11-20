@@ -13,9 +13,9 @@ export function LoginForm() {
   const [studentId, setStudentId] = useState("");
   const [name, setName] = useState("");
 
-  // 교사 시연 트랙
-  const [school, setSchool] = useState("");
-  const [teacherName, setTeacherName] = useState("");
+  // 교사 연수 트랙 — 실명·소속 대신 연수 코드 + 닉네임
+  const [workshopCode, setWorkshopCode] = useState("");
+  const [nickname, setNickname] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
@@ -44,16 +44,16 @@ export function LoginForm() {
   async function handleDemoSubmit(e: FormEvent) {
     e.preventDefault();
     setLocalError(null);
-    if (!school.trim()) {
-      setLocalError("소속 학교를 입력해주세요.");
+    if (!workshopCode.trim()) {
+      setLocalError("연수 코드를 입력해주세요.");
       return;
     }
-    if (!teacherName.trim()) {
-      setLocalError("성함을 입력해주세요.");
+    if (!nickname.trim()) {
+      setLocalError("닉네임을 입력해주세요.");
       return;
     }
     setSubmitting(true);
-    await loginDemo(school.trim(), teacherName.trim());
+    await loginDemo(workshopCode.trim(), nickname.trim());
     setSubmitting(false);
   }
 
@@ -84,7 +84,7 @@ export function LoginForm() {
             !isStudent ? "bg-ink text-canvas" : "text-ink hover:bg-canvas"
           }`}
         >
-          🧑‍🏫 교사 시연
+          🧑‍🏫 교사 연수
         </button>
       </div>
 
@@ -138,33 +138,37 @@ export function LoginForm() {
       ) : (
         <div className="mt-4 w-full rounded-3xl bg-block-lilac p-8">
           <p className="text-sm font-medium text-ink">
-            선생님 체험용 입장이에요. 명단 확인 없이 바로 둘러보실 수 있어요.
+            선생님 연수·체험용 입장이에요. 실명이나 소속은 받지 않아요.
           </p>
           <form onSubmit={handleDemoSubmit} className="mt-4 space-y-4">
             <div>
-              <label htmlFor="school" className="block text-sm font-semibold text-ink">
-                소속 학교
+              <label htmlFor="workshopCode" className="block text-sm font-semibold text-ink">
+                연수 코드
               </label>
               <input
-                id="school"
-                placeholder="예: 장평중학교"
-                value={school}
-                onChange={(e) => setSchool(e.target.value)}
-                className="mt-1 w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-lg text-ink focus:outline-none focus:ring-2 focus:ring-ink"
+                id="workshopCode"
+                placeholder="강사님이 알려준 코드"
+                autoCapitalize="characters"
+                autoComplete="off"
+                value={workshopCode}
+                onChange={(e) => setWorkshopCode(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-lg tracking-widest text-ink focus:outline-none focus:ring-2 focus:ring-ink"
               />
             </div>
 
             <div>
-              <label htmlFor="teacherName" className="block text-sm font-semibold text-ink">
-                성함
+              <label htmlFor="nickname" className="block text-sm font-semibold text-ink">
+                닉네임
               </label>
               <input
-                id="teacherName"
-                placeholder="예: 김선생"
-                value={teacherName}
-                onChange={(e) => setTeacherName(e.target.value)}
+                id="nickname"
+                placeholder="예: 코딩하는곰"
+                maxLength={20}
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
                 className="mt-1 w-full rounded-lg border border-hairline bg-canvas px-4 py-3 text-lg text-ink focus:outline-none focus:ring-2 focus:ring-ink"
               />
+              <p className="mt-1 text-xs text-ink">강사 화면에 이 닉네임으로 표시돼요.</p>
             </div>
 
             {(localError || error) && (
@@ -178,7 +182,7 @@ export function LoginForm() {
               disabled={submitting}
               className="w-full rounded-full bg-ink px-5 py-3 font-semibold text-canvas transition hover:opacity-80 disabled:opacity-50"
             >
-              {submitting ? "입장 중..." : "시연 입장하기"}
+              {submitting ? "입장 중..." : "연수 입장하기"}
             </button>
           </form>
         </div>
@@ -187,7 +191,7 @@ export function LoginForm() {
       <p className="mt-6 text-center text-xs text-ink">
         {isStudent
           ? "비밀번호는 없어요. 학번과 이름만 정확히 입력하면 돼요."
-          : "비밀번호는 없어요. 학교와 성함만 입력하면 바로 입장돼요."}
+          : "연수 코드와 닉네임만 입력하면 바로 입장돼요."}
       </p>
     </div>
   );

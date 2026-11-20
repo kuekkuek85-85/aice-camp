@@ -18,7 +18,7 @@ export function DemoParticipants({
   return (
     <section className="rounded-3xl border border-hairline bg-block-lilac/40 p-4">
       <div className="flex flex-wrap items-center gap-3">
-        <h2 className="font-mono text-[11px] uppercase tracking-widest text-ink">🧑‍🏫 교사 시연 참가자</h2>
+        <h2 className="font-mono text-[11px] uppercase tracking-widest text-ink">🧑‍🏫 교사 연수 참가자</h2>
         <span className="rounded-full bg-ink px-2 py-0.5 text-[11px] font-bold text-canvas">
           총 {rows.length}
         </span>
@@ -31,7 +31,7 @@ export function DemoParticipants({
 
       {rows.length === 0 ? (
         <p className="mt-2 text-sm text-ink">
-          아직 입장한 선생님이 없어요. 로그인 화면의 <b>🧑‍🏫 교사 시연</b> 탭에서 학교·성함으로 입장하면 여기에 실시간으로 표시돼요.
+          아직 입장한 선생님이 없어요. 로그인 화면의 <b>🧑‍🏫 교사 연수</b> 탭에서 연수 코드·닉네임으로 입장하면 여기에 실시간으로 표시돼요.
         </p>
       ) : (
         <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -48,7 +48,7 @@ export function DemoParticipants({
                 />
                 <span className="min-w-0">
                   <span className="block truncate text-sm font-semibold text-ink">{p.name}</span>
-                  <span className="block truncate text-xs text-ink/60">{p.school}</span>
+                  {p.school && <span className="block truncate text-xs text-ink/60">{p.school}</span>}
                 </span>
               </div>
             );
