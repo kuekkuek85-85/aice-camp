@@ -7,7 +7,7 @@ type Track = "student" | "demo";
 
 export function LoginForm() {
   const { login, loginDemo, error } = useStudentSession();
-  const [track, setTrack] = useState<Track>("student");
+  const [track, setTrack] = useState<Track>("demo");
 
   // 학생 트랙
   const [studentId, setStudentId] = useState("");
