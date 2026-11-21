@@ -13,9 +13,9 @@ import { useConfig } from "@/lib/hooks/useConfig";
 import type { LocalSession } from "@/lib/types";
 import Link from "next/link";
 
-// 교사 연수 체험 과제 (2일차 · 제곱 구하기)
-const WORKSHOP_DAY = "2";
-const WORKSHOP_STEP = "square-return";
+// 교사 연수 체험 과제 (5일차 · 모의평가)
+const WORKSHOP_DAY = "5";
+const WORKSHOP_STEP = "mock-exam";
 
 export default function Home() {
   const { status, session } = useStudentSession();
@@ -69,8 +69,8 @@ function CampHome({ session }: { session: LocalSession }) {
           >
             <div>
               <p className="font-mono text-xs uppercase tracking-widest text-ink">체험 과제</p>
-              <p className="mt-1 text-xl font-semibold tracking-tight text-ink">2일차 · 제곱 구하기 (반환값 있는 함수)</p>
-              <p className="mt-1 text-sm text-ink">힌트 → 오답 제출 → AI 코치 피드백 → 정답 제출 순서로 체험해보세요.</p>
+              <p className="mt-1 text-xl font-semibold tracking-tight text-ink">5일차 · 모의평가 (AI 엄격 채점)</p>
+              <p className="mt-1 text-sm text-ink">문제 파일 받기 → 빈칸 채워 제출 → 즉시 채점·피드백 순서로 체험해보세요.</p>
             </div>
             <span className="shrink-0 rounded-full bg-ink px-4 py-2 text-sm font-semibold text-canvas">바로 가기 →</span>
           </Link>

@@ -93,7 +93,7 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
             🎓 학생 수업
           </button>
           <button
-            onClick={() => setView("demo")}
+            onClick={() => { setView("demo"); setDayId("5"); }}
             className={`flex-1 rounded-full px-4 py-2 text-sm font-semibold transition ${
               view === "demo" ? "bg-ink text-canvas" : "text-ink hover:bg-canvas"
             }`}
@@ -132,6 +132,9 @@ function TeacherDashboard({ onLogout }: { onLogout: () => void }) {
             />
 
             <CompletionBars roster={demoRoster} progress={demoProgress} day={day} />
+
+            {/* 연수 참가자의 모의평가 결과(회차별) — 학생 명단과 분리 */}
+            <ExamResults roster={demoRoster} examResults={examResults} masking={masking} />
           </>
         ) : (
           <>
