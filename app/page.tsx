@@ -16,6 +16,12 @@ import Link from "next/link";
 // 교사 연수 체험 과제 (5일차 · 모의평가)
 const WORKSHOP_DAY = "5";
 const WORKSHOP_STEP = "mock-exam";
+// 1회 2번(5의 배수 판별) 체험용 파일 — public/workshop/ 에서 바로 내려받는다.
+const WORKSHOP_FILES = [
+  { label: "① 오답: 빈칸 그대로", href: "/workshop/workshop-wrong-blank.gen" },
+  { label: "② 오답: 변수 잘못 선택", href: "/workshop/workshop-wrong-variable.gen" },
+  { label: "③ 정답", href: "/workshop/workshop-correct.gen" },
+];
 
 export default function Home() {
   const { status, session } = useStudentSession();
@@ -70,10 +76,31 @@ function CampHome({ session }: { session: LocalSession }) {
             <div>
               <p className="font-mono text-xs uppercase tracking-widest text-ink">체험 과제</p>
               <p className="mt-1 text-xl font-semibold tracking-tight text-ink">5일차 · 모의평가 (AI 엄격 채점)</p>
-              <p className="mt-1 text-sm text-ink">문제 파일 받기 → 빈칸 채워 제출 → 즉시 채점·피드백 순서로 체험해보세요.</p>
+              <p className="mt-1 text-sm text-ink">
+                1회 1번(객관식)을 풀고, 2번(5의 배수 판별)에 아래 체험 파일을 <b>오답 → 정답</b> 순서로 올려보세요.
+              </p>
             </div>
             <span className="shrink-0 rounded-full bg-ink px-4 py-2 text-sm font-semibold text-canvas">바로 가기 →</span>
           </Link>
+        )}
+
+        {isDemo && (
+          <section className="rounded-3xl border border-hairline bg-canvas p-5">
+            <p className="font-mono text-xs uppercase tracking-widest text-ink">체험 파일 (1회 2번용)</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {WORKSHOP_FILES.map((f) => (
+                <a
+                  key={f.href}
+                  href={f.href}
+                  download
+                  className="rounded-full border border-hairline bg-canvas px-4 py-2 text-sm font-semibold text-ink hover:bg-surface-soft"
+                >
+                  ⬇ {f.label}
+                </a>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-ink/60">코디니를 열 필요 없이, 받은 파일을 1회 2번 제출란에 그대로 올리면 돼요.</p>
+          </section>
         )}
 
         {!isDemo && <StampBoard />}

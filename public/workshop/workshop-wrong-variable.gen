@@ -1,0 +1,49 @@
+{
+    "_version": 3,
+    "_fourcc": "aimk",
+    "thumbnailUrl": "data:image/jpeg;base64,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",
+    "projectName": "[모의고사] 1_1 문제",
+    "createTimestamp": 1719967403.198,
+    "scenes": [
+        {
+            "sceneId": "scene_9au7n4q4",
+            "sceneName": "장면 1",
+            "blockXml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><variables><variable id=\"Su(-in`7zYq;dr@!]NgV\">x</variable><variable id=\"w0fuNekT.xPcNV9}i.M]\">변수</variable><variable id=\"AqG3W4mMz|1++U7Rjl1I\">입력</variable></variables><block type=\"eventloop_object_start_click\" id=\"gS#nyn]%]!q3+YWJxf/:\" x=\"52\" y=\"34\"><next><block type=\"variables_set\" id=\"ih.2$(0ut1k-f~Vt%#u;\"><field name=\"VAR\" id=\"AqG3W4mMz|1++U7Rjl1I\">입력</field><value name=\"VALUE\"><block type=\"misc_prompt\" id=\"gR4H[Qf1(2?j[`a0CC5v\"><value name=\"TITLE\"><shadow type=\"text\" id=\"-KG:?[7yaWNA$.=1$1Pv\"><field name=\"TEXT\">숫자를 입력하세요.</field></shadow></value></block></value><next><block type=\"procedures_callnoreturn\" id=\"ws-call-bad\"><mutation name=\"숫자 확인\"><arg name=\"x\"></arg></mutation><value name=\"ARG0\"><block type=\"variables_get\" id=\"ws-var-bad\"><field name=\"VAR\" id=\"w0fuNekT.xPcNV9}i.M]\">변수</field></block></value></block></next></block></next></block><block type=\"procedures_defnoreturn\" id=\"1eY.VoWQd_6=MnLYZgHV\" x=\"49\" y=\"177\"><mutation><arg name=\"x\" varid=\"Su(-in`7zYq;dr@!]NgV\"></arg></mutation><field name=\"NAME\">숫자 확인</field><comment pinned=\"false\" h=\"80\" w=\"160\">이 함수를 설명하세요...</comment><statement name=\"STACK\"><block type=\"controls_if\" id=\"79gyJGH8ii;fL5?ZfXgx\"><mutation else=\"1\"></mutation><value name=\"IF0\"><block type=\"logic_compare\" id=\"Ej|-b$I82Fc[^UvW]@@N\"><field name=\"OP\">EQ</field><value name=\"A\"><block type=\"math_modulo\" id=\"0Pef+E-RHT#gvin2yzHZ\"><value name=\"DIVIDEND\"><shadow type=\"math_number\" id=\"kIOdpMxWEcU|PHS.s}}_\"><field name=\"NUM\">0</field></shadow><block type=\"variables_get\" id=\"at@)/4txHp~UA7H.0m4l\"><field name=\"VAR\" id=\"Su(-in`7zYq;dr@!]NgV\">x</field></block></value><value name=\"DIVISOR\"><shadow type=\"math_number\" id=\"@*x_xdz1z7E~v2;5k)c+\"><field name=\"NUM\">5</field></shadow></value></block></value><value name=\"B\"><block type=\"math_number\" id=\"1AGz/wQ5_8kSAaX[sCgl\"><field name=\"NUM\">0</field></block></value></block></value><statement name=\"DO0\"><block type=\"tts_play_text\" id=\"PvXPkY_;6@tKMjK`mi6s\"><field name=\"LANG\">ko-KR</field><value name=\"TEXT\"><shadow type=\"text\" id=\"g/e{9ZrSM5,5`fb=ToW9\"><field name=\"TEXT\">5의 배수가 맞습니다.</field></shadow></value></block></statement><statement name=\"ELSE\"><block type=\"tts_play_text\" id=\"U`,{^*iY7z#J:yDkg{v~\"><field name=\"LANG\">ko-KR</field><value name=\"TEXT\"><shadow type=\"text\" id=\"((xI,G47-8NGVd7-mqx=\"><field name=\"TEXT\">5의 배수가 아닙니다.</field></shadow></value></block></statement></block></statement></block></xml>",
+            "objects": [
+                {
+                    "objectId": "obj_cev90nh1",
+                    "objectName": "코디니",
+                    "animationType": "image",
+                    "imageFormat": "svg",
+                    "imageUrls": [
+                        "/images/maker/codiny_turn_front.svg"
+                    ],
+                    "isBackground": false,
+                    "x": 0,
+                    "y": 0,
+                    "width": 90,
+                    "height": 113,
+                    "angle": 0,
+                    "scaleX": 1,
+                    "scaleY": 1,
+                    "flipX": false,
+                    "flipY": false,
+                    "visible": true,
+                    "selectable": true
+                }
+            ],
+            "sounds": []
+        }
+    ],
+    "userdefinedlists": [],
+    "sharedVariables": [],
+    "userDatasets": [],
+    "userExApis": [],
+    "signals": [],
+    "backpackXmls": "[]",
+    "rulerVisible": false,
+    "simpleRegressModels": [],
+    "knnImageModels": [],
+    "knnTextModels": [],
+    "kmeansModels": []
+}
